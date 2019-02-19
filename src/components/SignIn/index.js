@@ -25,13 +25,6 @@ const StyledMap = Styled.div`
     flex-basis: 100%;
 }
 `;
-
-// flex-basis: 59%;
-// border: 2px solid rgb(252,252,252);
-// @media (max-width: 768px) {
-//   flex-basis: 100%;
-// }
-
 const StyledTitle = Styled.h1`
     font-size: 2em;
     color: rgb(35, 123, 226);
@@ -51,7 +44,6 @@ const StyledSubmit = Styled.button`
         opacity: 0.9;        
     }
 `;
-
 const StyledFbGlField = Styled.div`
     padding: 8px 0;    
     margin: 12px 12px 12px 0;
@@ -63,6 +55,7 @@ const StyledFbGlField = Styled.div`
       margin: 6px 22px 6px 0;
     }
 `;
+
 
 const SignInPage = () => (
 
@@ -82,21 +75,6 @@ const SignInPage = () => (
     </React.Fragment>
 );
 
-/*
-const SignInPage = () => (
-    <div>
-        <h1>SignIn</h1>
-        <SignInForm />
-        <PasswordForgetLink />
-        <SignUpLink />
-    </div>
-    <SignInGoogle />
-    <SignInFacebook />
-    <StyledMap className="map-container">
-            <MapExample />
-    </StyledMap>
-);
-*/
 
 const INITIAL_STATE = {
     email: '',

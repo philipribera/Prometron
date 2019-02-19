@@ -2,7 +2,28 @@ import React, { Component } from "react";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import { withFirebase } from "../Firebase";
 
-//import 'leaflet/dist/leaflet.css';
+import Styled from 'styled-components';
+
+
+/*** STYLED COMPONENTS ***/
+const StyledPosDiv = Styled.div` 
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  width: 100%;
+  background-color: rgb(12,12,12);
+  color: rgb(252,252,252);
+  text-shadow: 1px 1px 0.5px rgb(72,72,72);
+  padding: 8px;
+`;
+const StyledCoords = Styled.div`
+  flex-basis: 50%;
+`;
+
+
+
 
 class LocatedTwo extends Component {
   constructor(props) {
@@ -112,49 +133,54 @@ class LocatedTwo extends Component {
             zoom={13}
           />
         ) : null}
-        <div>Geolocation</div>
-        <div>
-          <p>Coords from Browser</p>
-          <Coords position={this.state.browserCoords} />
-          <p>Coords from DB</p>
-          <Coords position={this.state.dbCoords} />
+        <StyledPosDiv className="positition-info">
+
+          <StyledCoords className="coordsBrowser">
+            <p>Coords from Browser</p>
+            <Coords position={this.state.browserCoords} />
+          </StyledCoords>
+          <StyledCoords className="coordsDB">
+            <p>Coords from DB</p>
+            <Coords position={this.state.dbCoords} />
+          </StyledCoords>
+
+        </StyledPosDiv>
         </div>
-      </div>
-    );
-  }
-}
-
-const Coords = props => (
+        );
+      }
+    }
+    
+    const Coords = props => (
   <div>
-    {props.position ? (
-      <div>
-        <div>{props.position.latitude}</div>
-        <div>{props.position.longitude}</div>
-      </div>
-    ) : null}
-  </div>
-);
-
-// send all data of several user as props here
-const MyMap = props => (
+          {props.position ? (
+            <div>
+              <div>{props.position.latitude}</div>
+              <div>{props.position.longitude}</div>
+            </div>
+          ) : null}
+        </div>
+        );
+        
+        // send all data of several user as props here
+        const MyMap = props => (
   <Map
-    zoomControl={false}
-    scrollWheelZoom={false}
-    center={props.position}
-    zoom={props.zoom}
-  >
+          zoomControl={false}
+          scrollWheelZoom={false}
+          center={props.position}
+          zoom={props.zoom}
+        >
 
-    <TileLayer
-      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-    />
-    {props.markers.map((marker, index) => (
-      <Marker key={index} position={Object.values(marker)}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
+          <TileLayer
+            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+          />
+          {props.markers.map((marker, index) => (
+            <Marker key={index} position={Object.values(marker)}>
+              <Popup>
+                A pretty CSS3 popup. <br /> Easily customizable.
         </Popup>
-      </Marker>
-    ))}
-  </Map>
-);
-export default withFirebase(LocatedTwo);
+            </Marker>
+          ))}
+        </Map>
+        );
+        export default withFirebase(LocatedTwo);
