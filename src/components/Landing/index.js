@@ -3,23 +3,33 @@ import React from 'react';
 import LocTwo from '../GeolocatedTwo';
 import Styled from 'styled-components';
 
-const StyledMap = Styled.div`
-    flex-basis: 59%;
-    border: 2px solid rgb(252,252,252);
+/*** STYLED COMPONENTS ***/
+
+const StyledFlexForm = Styled.div`
+    flex-basis: 70%;
     @media (max-width: 768px) {
       flex-basis: 100%;
     }
 `;
+const StyledMap = Styled.div`
+    position: relative;
+    z-index: 9999;
+    flex-basis: 59%;
+    border: 2px solid rgb(252,252,252);
+    @media (max-width: 768px) {
+    flex-basis: 100%;   
+}
+`;
+
 
 const Landing = () => (
-    <div>
+    <StyledFlexForm>
         <h1>Landing</h1>
         <br />
-        <StyledMap className="map-container">
-        <LocTwo />        
+        <StyledMap>
+            <LocTwo />            
         </StyledMap>
-
-    </div>
+    </StyledFlexForm>
 );
 
 export default Landing;
