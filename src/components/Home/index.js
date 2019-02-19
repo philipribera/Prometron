@@ -1,7 +1,7 @@
 import React from 'react';
 import { compose } from "recompose";
 import { withFirebase } from "../Firebase";
-import { AuthUserContext, withAuthorization } from "../Session";
+import { AuthUserContext, withAuthorization, withEmailVerification } from "../Session";
 import LocatedTwo from '../GeolocatedTwo'
 
 const HomePage = (props) => (
@@ -21,5 +21,6 @@ const condition = authUser => !!authUser;
 //export default withAuthorization(condition)(HomePage);
 export default compose(
     withFirebase,
+    withEmailVerification,
     withAuthorization(condition)
   )(HomePage);
