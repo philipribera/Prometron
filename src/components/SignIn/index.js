@@ -163,6 +163,7 @@ class SignInGoogleBase extends Component {
                         username: socialAuthUser.user.displayName,
                         email: socialAuthUser.user.email,
                         roles: [],
+                        position: { latitude: "0", longitude: "0" }
                     });
             })
             .then(() => {
@@ -204,6 +205,7 @@ class SignInFacebookBase extends Component {
                         username: socialAuthUser.additionalUserInfo.profile.name,
                         email: socialAuthUser.additionalUserInfo.profile.email,
                         roles: [],
+                        position: { latitude: "0", longitude: "0" }
                     });
             })
             .then(socialAuthUser => {

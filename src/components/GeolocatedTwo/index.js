@@ -30,7 +30,8 @@ class LocatedTwo extends Component {
     super(props);
     this.state = {
       browserCoords: null,
-      dbCoords: null
+      dbCoords: null,
+      nearbyPlayerCoords: {}
     };
   }
 
@@ -79,6 +80,33 @@ class LocatedTwo extends Component {
       });
   };
 
+  getNearbyPlayerPosition = () => {
+    this.props.firebase.users()
+      .on("value", snapshot => {
+        snapshot.forEach(childSnapshot => {
+          let key = childSnapshot.key;
+          let data = childSnapshot.val();
+          if (key === this.props.userId) {
+            return true;
+          };
+          this.state.nearbyPlayerCoords[key] = data.position;
+
+
+          // if (this.state.nearbyPlayerCoords === null) {
+            // this.setState({nearbyPlayerCoords: {[key]: data.position}}.)
+            // console.log(key)
+            // console.log(this.state.nearbyPlayerCoords.key)
+          // } else {
+            // this.setState(prevState => ({
+            //   nearbyPlayerCoords: prevState.nearbyPlayerCoords[key] = data.position
+            // }));
+            // this.setState(prevState, {nearbyPlayerCoords: {[key]: data.position}})
+          // }
+          // this.state.nearbyPlayerCoords.push({[key]: data.position});
+        });
+      });
+  };
+
   // When user moves >1m
   writeUserPositionToDB = position => {
     const { latitude, longitude } = position;
@@ -96,6 +124,7 @@ class LocatedTwo extends Component {
 
   // Should be activated as soon the user is logged in - almost as landing page...
   componentDidMount() {
+    this.getNearbyPlayerPosition();
     this.getUserPositionFromDB();
     this.watchId = navigator.geolocation.watchPosition(
       this.updatePosition,
@@ -118,12 +147,17 @@ class LocatedTwo extends Component {
   }
 
   render() {
-    const markers = [
-      { latitude: 59.316607, longitude: 18.034689, tooltip: "player 1" },
-      { latitude: 59.307496, longitude: 17.985272, tooltip: "player 2" },
-      { latitude: 59.305496, longitude: 17.985272, tooltip: "player 3" }
-    ];
-    markers.push({ ...this.state.browserCoords })
+    const markers = [];
+    markers.push({ ...this.state.browserCoords });
+    for (let key in this.state.nearbyPlayerCoords) {
+      var obj = this.state.nearbyPlayerCoords[key];
+      markers.push([obj.latitude, obj.longitude])
+      console.log(obj.latitude)
+    }
+    // this.state.nearbyPlayerCoords.forEach(player => {
+    //   console.log(player.latitude)
+    //   markers.push({ ...player })
+    // });
     return (
       <div>
         {this.state.browserCoords ? (
@@ -134,7 +168,6 @@ class LocatedTwo extends Component {
           />
         ) : null}
         <StyledPosDiv className="positition-info">
-
           <StyledCoords className="coordsBrowser">
             <p>Coords from Browser</p>
             <Coords position={this.state.browserCoords} />
@@ -143,7 +176,6 @@ class LocatedTwo extends Component {
             <p>Coords from DB</p>
             <Coords position={this.state.dbCoords} />
           </StyledCoords>
-
         </StyledPosDiv>
         </div>
         );
@@ -151,7 +183,7 @@ class LocatedTwo extends Component {
     }
     
     const Coords = props => (
-  <div>
+        <div>
           {props.position ? (
             <div>
               <div>{props.position.latitude}</div>
@@ -163,7 +195,7 @@ class LocatedTwo extends Component {
         
         // send all data of several user as props here
         const MyMap = props => (
-  <Map
+        <Map
           zoomControl={false}
           scrollWheelZoom={false}
           center={props.position}
@@ -178,7 +210,7 @@ class LocatedTwo extends Component {
             <Marker key={index} position={Object.values(marker)}>
               <Popup>
                 A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
+              </Popup>
             </Marker>
           ))}
         </Map>
