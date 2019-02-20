@@ -7,7 +7,6 @@ import {
   withEmailVerification
 } from "../Session";
 
-import LocTwo from '../GeolocatedTwo'
 import LocatedTwo from '../GeolocatedTwo'
 
 import Chat from "../Chat";
@@ -153,7 +152,6 @@ const HomePage = props => (
         
         <StyledMap className="map-container">
             {`Temporary map`}
-            <LocTwo />
             <LocatedTwo userId={authUser.uid} />
         </StyledMap>
 

@@ -73,7 +73,7 @@ const SignInPage = () => (
         </StyledFlexForm>
 
         <StyledMap className="map-container">
-            <LocTwo />
+            {/* <LocTwo /> */}
         </StyledMap>
     </React.Fragment>
 );

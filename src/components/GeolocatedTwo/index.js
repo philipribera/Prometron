@@ -75,7 +75,6 @@ class LocatedTwo extends Component {
       .child("position")
       .once("value", snapshot => {
         const userPosition = snapshot.val();
-        console.log(JSON.parse(JSON.stringify(userPosition)));
         this.setState({ dbCoords: userPosition });
       });
   };
@@ -86,23 +85,13 @@ class LocatedTwo extends Component {
         snapshot.forEach(childSnapshot => {
           let key = childSnapshot.key;
           let data = childSnapshot.val();
-          if (key === this.props.userId) {
-            return true;
+          console.log(key)
+          console.log(this.props.userId)
+          if (key !== this.props.userId) {
+            const nearbyPlayerCoords = Object.assign(this.state.nearbyPlayerCoords, { [key]: data.position });
+            this.setState({nearbyPlayerCoords: nearbyPlayerCoords})
+            // this.state.nearbyPlayerCoords[key] = data.position;
           };
-          this.state.nearbyPlayerCoords[key] = data.position;
-
-
-          // if (this.state.nearbyPlayerCoords === null) {
-            // this.setState({nearbyPlayerCoords: {[key]: data.position}}.)
-            // console.log(key)
-            // console.log(this.state.nearbyPlayerCoords.key)
-          // } else {
-            // this.setState(prevState => ({
-            //   nearbyPlayerCoords: prevState.nearbyPlayerCoords[key] = data.position
-            // }));
-            // this.setState(prevState, {nearbyPlayerCoords: {[key]: data.position}})
-          // }
-          // this.state.nearbyPlayerCoords.push({[key]: data.position});
         });
       });
   };
@@ -139,27 +128,26 @@ class LocatedTwo extends Component {
         maximumAge: 0,    // always updated
         distanceFilter: 1   // stop updating until at least moved 1 meter
       }
-    );
-  }
-  // To stop following the user
-  componentWillUnmount() {
-    navigator.geolocation.clearWatch(this.watchId);
-  }
-
-  render() {
-    const markers = [];
-    markers.push({ ...this.state.browserCoords });
-    for (let key in this.state.nearbyPlayerCoords) {
-      var obj = this.state.nearbyPlayerCoords[key];
-      markers.push([obj.latitude, obj.longitude])
-      console.log(obj.latitude)
+      );
     }
-    // this.state.nearbyPlayerCoords.forEach(player => {
-    //   console.log(player.latitude)
-    //   markers.push({ ...player })
-    // });
-    return (
-      <div>
+    // To stop following the user
+    componentWillUnmount() {
+      navigator.geolocation.clearWatch(this.watchId);
+    }
+    
+    render() {
+      const markers = [];
+      markers.push({ ...this.state.browserCoords });
+      for (let key in this.state.nearbyPlayerCoords) {
+        var obj = this.state.nearbyPlayerCoords[key];
+        markers.push([obj.latitude, obj.longitude])
+      }
+      // this.state.nearbyPlayerCoords.forEach(player => {
+        //   console.log(player.latitude)
+        //   markers.push({ ...player })
+        // });
+        return (
+          <div>
         {this.state.browserCoords ? (
           <MyMap
             markers={markers}
