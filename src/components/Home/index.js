@@ -6,7 +6,10 @@ import {
   withAuthorization,
   withEmailVerification
 } from "../Session";
-//import LocatedTwo from '../GeolocatedTwo'
+
+import LocTwo from '../GeolocatedTwo'
+import LocatedTwo from '../GeolocatedTwo'
+
 import Chat from "../Chat";
 import Styled from "styled-components";
 
@@ -22,10 +25,10 @@ const StyledFlexContainer = Styled.div`
 `;
 
 const StyledDivs = Styled.div`
-    flex-basis: 50%;    
+    flex-basis: 45%;    
     min-height: 300px;
     padding: 22px;
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
         flex-basis: 100%;
         padding: 12px;
     }
@@ -35,7 +38,9 @@ const StyledDivs = Styled.div`
 `;
 
 const StyledChat = Styled.section`
-    min-height: 300px;
+    flex-basis: 55%;
+    min-width: 332px;
+    min-height: 292px;
     max-height: 500px;
     padding: 12px;
     border: 2px solid rgb(177,177,177);
@@ -45,6 +50,10 @@ const StyledChat = Styled.section`
         text-shadow: 1px 1px 0.5px rgb(252,252,252);
         margin-bottom: 12px;
     }
+    @media (max-width: 767px) {
+        flex-basis: 100%;
+        padding: 12px;
+    }
 `;
 const StyledInput = Styled.input`
     padding: 4px;
@@ -53,9 +62,14 @@ const StyledInput = Styled.input`
 const StyledTarea = Styled.textarea`
     max-height: 300px;
     max-width: 492px;
+    @media (max-width: 767px) {
+        max-width: 330px;
+    }
 `;
 
 const StyledStat = Styled.section`
+    flex-basis: 55%;
+    min-width: 332px;
     min-height: 300px;
     max-height: 500px;
     padding: 12px;
@@ -70,18 +84,32 @@ const StyledStat = Styled.section`
         font-weight: 600;
         padding: 4px;
     }    
+    @media (max-width: 767px) {
+        flex-basis: 100%;
+        padding: 12px;
+    }
 `;
 
 const StyledTextContent = Styled.article`
     padding: 22px;
 `;
 
+const StyledMap = Styled.div`    
+    flex-basis: 79%;
+    border: 2px solid rgb(252,252,252);
+    @media (max-width: 768px) {
+    flex-basis: 100%;
+}`;
+
+
+
 const HomePage = props => (
   <AuthUserContext.Consumer>
     {authUser => (
+        
       <React.Fragment>
         <StyledDivs>
-          <h2>Home Page{authUser.email}</h2>
+          <h3>Home Page{authUser.email}</h3>
           <p>The Home Page is accessible by every signed in user.</p>
         </StyledDivs>
         <StyledDivs>
@@ -119,6 +147,16 @@ const HomePage = props => (
             </StyledTextContent>
           </StyledStat>
         </StyledDivs>
+        
+        <br />
+        
+        
+        <StyledMap className="map-container">
+            {`Temporary map`}
+            <LocTwo />
+            <LocatedTwo userId={authUser.uid} />
+        </StyledMap>
+
       </React.Fragment>
     )}
   </AuthUserContext.Consumer>
