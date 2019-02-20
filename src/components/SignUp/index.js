@@ -5,12 +5,43 @@ import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 import * as ROLES from '../../constants/roles';
 
+import Styled from 'styled-components';
+
 const SignUpPage = () => (
   <div>
     <h1>SignUp</h1>
     <SignUpForm />
   </div>
 );
+
+
+const StyledInput = Styled.input`
+    padding: 4px;
+    margin: 4px    
+`;
+const StyledSubmit = Styled.button`
+    padding: 6px 8px;
+    background-color: rgb(22, 88, 182);
+    color: rgb(244,244,244);
+    cursor: pointer;
+    margin: 12px 0;
+    border-radius: 5px;
+    &:hover {
+        opacity: 0.9;        
+    }
+`;
+const StyledFbGlField = Styled.div`
+    padding: 8px 0;    
+    margin: 12px 12px 12px 0;
+    border-bottom: 2px solid rgb(247,247,247);
+    & form {
+      display: inline;
+    }
+    & button {         
+      margin: 6px 22px 6px 0;
+    }
+`;
+
 
 const INITIAL_STATE = {
   username: '',
@@ -101,46 +132,46 @@ class SignUpFormBase extends Component {
 
     return (
       <form onSubmit={this.onSubmit}>
-        <input
+        <StyledInput
           name="username"
           value={username}
           onChange={this.onChange}
           type="text"
           placeholder="Full Name"
-        />
-        <input
+        /><br />
+        <StyledInput
           name="email"
           value={email}
           onChange={this.onChange}
           type="text"
           placeholder="Email Address"
-        />
-        <input
+        /><br />
+        <StyledInput
           name="passwordOne"
           value={passwordOne}
           onChange={this.onChange}
           type="password"
           placeholder="Password"
-        />
-        <input
+        /><br />
+        <StyledInput
           name="passwordTwo"
           value={passwordTwo}
           onChange={this.onChange}
           type="password"
           placeholder="Confirm Password"
-        />
+        /><br />
         <label>
           Admin:
-          <input
+          <StyledInput
             name="isAdmin"
             type="checkbox"
             checked={isAdmin}
             onChange={this.onChangeCheckbox}
           />
-        </label>
-        <button disabled={isInvalid} type="submit">
+        </label><br />
+        <StyledSubmit disabled={isInvalid} type="submit">
           Sign Up
-        </button>
+        </StyledSubmit>
 
         {error && <p>{error.message}</p>}
       </form>

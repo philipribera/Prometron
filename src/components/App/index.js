@@ -28,11 +28,20 @@ const StyledTitle = Styled.span`
     color: rgb(35, 123, 226);
     text-shadow: 1px 1px 0.5px rgb(252,252,252);
 `;
-
+const StyledH2 = Styled.h2`
+    font-family: Geneva, Verdana, sans-serif;
+    letter-spacing: -0.05em;
+    font-size: 2.05em;
+    font-style: oblique;
+    color: rgb(255, 183, 77);
+    text-shadow: rgb(57, 57, 57) 1px 1px 0.5px;    
+`;
 
 const App = () => (
     <div className="wrapper">
+        
         <h1><StyledTitle>PROMETRON</StyledTitle></h1>
+        <StyledH2>Take a walk with Prometron...</StyledH2>
         <br />
 
         <Router>
