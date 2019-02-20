@@ -63,9 +63,10 @@ const SignInPage = () => (
         <StyledFlexForm>
             <StyledTitle>Sign in</StyledTitle><br />
             <SignInForm />
-            <SignInGoogle />
-            <SignInFacebook />
             <PasswordForgetLink />
+            <br />
+            <SignInGoogle />
+            <SignInFacebook /><br />
             <SignUpLink />
             <StyledFbGlField className="login-FB-GL">
             </StyledFbGlField>
