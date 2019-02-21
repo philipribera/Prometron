@@ -24,6 +24,8 @@ class Firebase {
 
     }
 
+    state = { uid: null}
+
     // *** Auth API ***
 
     doSendEmailVerification = () =>
@@ -53,6 +55,7 @@ class Firebase {
     onAuthUserListener = (next, fallback) =>
         this.auth.onAuthStateChanged(authUser => {
             if (authUser) {
+                this.uid = authUser.uid
                 this.user(authUser.uid)
                     .once('value')
                     .then(snapshot => {
@@ -71,9 +74,13 @@ class Firebase {
                         };
                         next(authUser);
                     });
+                this.user(authUser.uid)
+                .update({ online: true });
             } else {
+                this.user(this.uid)
+                .update({ online: false });
                 fallback();
-            }
+            };
         });
 
     // *** User API ***

@@ -85,12 +85,9 @@ class LocatedTwo extends Component {
         snapshot.forEach(childSnapshot => {
           let key = childSnapshot.key;
           let data = childSnapshot.val();
-          console.log(key)
-          console.log(this.props.userId)
           if (key !== this.props.userId) {
-            const nearbyPlayerCoords = Object.assign(this.state.nearbyPlayerCoords, { [key]: data.position });
-            this.setState({nearbyPlayerCoords: nearbyPlayerCoords})
-            // this.state.nearbyPlayerCoords[key] = data.position;
+            const nearbyPlayerCoords = Object.assign(this.state.nearbyPlayerCoords, { [key]: [data.position , data.online] });
+            this.setState({nearbyPlayerCoords: nearbyPlayerCoords});
           };
         });
       });
@@ -140,12 +137,11 @@ class LocatedTwo extends Component {
       markers.push({ ...this.state.browserCoords });
       for (let key in this.state.nearbyPlayerCoords) {
         var obj = this.state.nearbyPlayerCoords[key];
-        markers.push([obj.latitude, obj.longitude])
-      }
-      // this.state.nearbyPlayerCoords.forEach(player => {
-        //   console.log(player.latitude)
-        //   markers.push({ ...player })
-        // });
+        if (obj[1] === true) {
+          markers.push([obj[0].latitude, obj[0].longitude])
+        };
+      };
+ 
         return (
           <div>
         {this.state.browserCoords ? (
