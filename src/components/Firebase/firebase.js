@@ -13,8 +13,9 @@ const config = {
 
 class Firebase {
     constructor() {
+        this.uid = null;
         app.initializeApp(config);
-
+        
         this.emailAuthProvider = app.auth.EmailAuthProvider;
         this.auth = app.auth();
         this.db = app.database();
@@ -24,7 +25,6 @@ class Firebase {
 
     }
 
-    state = { uid: null}
 
     // *** Auth API ***
 
@@ -55,14 +55,13 @@ class Firebase {
     onAuthUserListener = (next, fallback) =>
         this.auth.onAuthStateChanged(authUser => {
             if (authUser) {
-                this.uid = authUser.uid
                 this.user(authUser.uid)
-                    .once('value')
-                    .then(snapshot => {
-                        const dbUser = snapshot.val();
-                        // default empty roles
-                        if (!dbUser.roles) {
-                            dbUser.roles = [];
+                .once('value')
+                .then(snapshot => {
+                    const dbUser = snapshot.val();
+                    // default empty roles
+                    if (!dbUser.roles) {
+                        dbUser.roles = [];
                         }
                         // merge auth and db user
                         authUser = {
@@ -74,8 +73,9 @@ class Firebase {
                         };
                         next(authUser);
                     });
-                this.user(authUser.uid)
-                .update({ online: true });
+                    this.user(authUser.uid)
+                    .update({ online: true });
+                    this.uid = authUser.uid;
             } else {
                 this.user(this.uid)
                 .update({ online: false });
