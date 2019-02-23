@@ -22,20 +22,38 @@ const StyledFlexContainer = Styled.div`
     height: auto;
     min-height: 492px;
     padding: 22px 12px;
+    @media (max-width: 768px) {
+        padding: 10px;
+    }
 `;
 const StyledTitle = Styled.span`
-    font-size: 2em;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.9em;
     color: rgb(35, 123, 226);
     text-shadow: 1px 1px 0.5px rgb(252,252,252);
+    @media (max-width: 768px) {
+        font-size: 1.7em;
+    }
+    @media (max-width: 468px) {
+        font-size: 1.4em;
+    }
 `;
 const StyledH2 = Styled.h2`
     font-family: Geneva, Verdana, sans-serif;
-    letter-spacing: -0.05em;
-    font-size: 2.05em;
+    font-family: 'Orbitron', sans-serif;    
+    font-size: 1.7em;
     font-style: oblique;
     color: rgb(255, 183, 77);
     text-shadow: rgb(57, 57, 57) 1px 1px 0.5px;    
+    @media (max-width: 768px) {
+        font-size: 1.5em;
+    }
+    @media (max-width: 468px) {
+        font-size: 1.25em;
+    }
 `;
+/*** END STYLED COMPONENTS ***/
+
 
 const App = () => (
     <div className="wrapper">
@@ -48,10 +66,9 @@ const App = () => (
             <div>
                 <Navigation />
                 <hr />
-                <StyledFlexContainer>
-                    <Route exact path={ROUTES.LANDING} component={LandingPage} />
+                <StyledFlexContainer>                    
+                    <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
                     <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
-                    <Route path={ROUTES.SIGN_IN} component={SignInPage} />
                     <Route
                         path={ROUTES.PASSWORD_FORGET}
                         component={PasswordForgetPage}

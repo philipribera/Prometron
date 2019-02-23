@@ -5,8 +5,9 @@ import { SignUpLink } from '../SignUp';
 import { PasswordForgetLink } from '../PasswordForget';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
+import Img from "../../images/landingBg_980.jpg";
 
-import LocTwo from '../GeolocatedTwo'
+//import LocTwo from '../GeolocatedTwo'
 import Styled from 'styled-components';
 
 
@@ -17,14 +18,16 @@ const StyledFlexForm = Styled.div`
       flex-basis: 100%;
     }
 `;
-const StyledMap = Styled.div`
-    z-index: 9999;
+/*
+const StyledMap = Styled.div`    
     flex-basis: 59%;
     border: 2px solid rgb(252,252,252);
     @media (max-width: 768px) {
     flex-basis: 100%;
 }
 `;
+*/
+
 const StyledTitle = Styled.h1`
     font-size: 2em;
     color: rgb(35, 123, 226);
@@ -55,6 +58,22 @@ const StyledFbGlField = Styled.div`
       margin: 6px 22px 6px 0;
     }
 `;
+const StyledImgDiv = Styled.div`    
+    min-height: 500px;
+    background-image: url( ${Img} );  
+    background-repeat: no-repeat;
+	background-position: center;	
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+    background-size: cover;		
+    flex-basis: 59%;
+    border: 2px solid rgb(252,252,252);
+    
+    @media (max-width: 768px) {
+        flex-basis: 100%;
+    }
+`;
 
 
 const SignInPage = () => (
@@ -72,9 +91,8 @@ const SignInPage = () => (
             </StyledFbGlField>
         </StyledFlexForm>
 
-        <StyledMap className="map-container">
-            {/* <LocTwo /> */}
-        </StyledMap>
+        <StyledImgDiv>
+        </StyledImgDiv>
     </React.Fragment>
 );
 

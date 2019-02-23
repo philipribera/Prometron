@@ -36,10 +36,7 @@ const Navigation = () => (
 );
 
 const NavigationAuth = () => (
-    <StyledUl>
-        <StyledLi>
-            <Link to={ROUTES.LANDING}>Landing</Link>
-        </StyledLi>
+    <StyledUl>        
         <StyledLi>
             <Link to={ROUTES.HOME}>Home</Link>
         </StyledLi>
@@ -56,10 +53,7 @@ const NavigationAuth = () => (
 );
 
 const NavigationNonAuth = () => (
-    <StyledUl>
-        <StyledLi>
-            <Link to={ROUTES.LANDING}>Landing</Link>
-        </StyledLi>
+    <StyledUl>        
         <StyledLi>
             <Link to={ROUTES.SIGN_IN}>Sign In</Link>
         </StyledLi>

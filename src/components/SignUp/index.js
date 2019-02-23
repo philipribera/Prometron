@@ -7,14 +7,25 @@ import * as ROLES from '../../constants/roles';
 
 import Styled from 'styled-components';
 
+// THIS IS RENDERED
 const SignUpPage = () => (
-  <div>
-    <h1>SignUp</h1>
+  <div>    
     <SignUpForm />
   </div>
 );
 
 
+/*** STYLED COMPONENETS ***/
+const StyledFlexDiv = Styled.div`
+    flex-basis: 40%;
+    @media (max-width: 768px) {
+      flex-basis: 100%;
+    }
+`;
+const StyledTitle = Styled.h1`
+    font-size: 2em;
+    color: rgb(35, 123, 226);
+`;
 const StyledInput = Styled.input`
     padding: 4px;
     margin: 4px    
@@ -30,17 +41,7 @@ const StyledSubmit = Styled.button`
         opacity: 0.9;        
     }
 `;
-const StyledFbGlField = Styled.div`
-    padding: 8px 0;    
-    margin: 12px 12px 12px 0;
-    border-bottom: 2px solid rgb(247,247,247);
-    & form {
-      display: inline;
-    }
-    & button {         
-      margin: 6px 22px 6px 0;
-    }
-`;
+/*** END ***/
 
 
 const INITIAL_STATE = {
@@ -131,7 +132,11 @@ class SignUpFormBase extends Component {
       username === '';
 
     return (
-      <form onSubmit={this.onSubmit}>
+      <StyledFlexDiv>
+        
+        <form onSubmit={this.onSubmit}>
+        <StyledTitle>Sign up</StyledTitle><br />
+        <br />
         <StyledInput
           name="username"
           value={username}
@@ -159,7 +164,7 @@ class SignUpFormBase extends Component {
           onChange={this.onChange}
           type="password"
           placeholder="Confirm Password"
-        /><br />
+        /><br /><br />
         <label>
           Admin:
           <StyledInput
@@ -174,7 +179,8 @@ class SignUpFormBase extends Component {
         </StyledSubmit>
 
         {error && <p>{error.message}</p>}
-      </form>
+        </form>
+      </StyledFlexDiv>
     );
   }
 }
