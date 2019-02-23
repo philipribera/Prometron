@@ -26,7 +26,6 @@ const StyledCharacter = Styled.div`
     flex-wrap: wrap;
     width: 100%;
     min-height: 302px;
-    max-height: 310px;
     margin-bottom: 32px;
 `;
 
