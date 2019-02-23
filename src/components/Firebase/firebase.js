@@ -19,43 +19,51 @@ class Firebase {
         this.emailAuthProvider = app.auth.EmailAuthProvider;
         this.auth = app.auth();
         this.db = app.database();
-
+        
         this.googleProvider = new app.auth.GoogleAuthProvider();
         this.facebookProvider = new app.auth.FacebookAuthProvider();
-
     }
-
-
+    
     // *** Auth API ***
-
+    presenceListener
+    
     doSendEmailVerification = () =>
-        this.auth.currentUser.sendEmailVerification({
-            url: process.env.REACT_APP_CONFIRMATION_EMAIL_REDIRECT,
-        });
-
+    this.auth.currentUser.sendEmailVerification({
+        url: process.env.REACT_APP_CONFIRMATION_EMAIL_REDIRECT,
+    });
+    
     doCreateUserWithEmailAndPassword = (email, password) =>
-        this.auth.createUserWithEmailAndPassword(email, password);
-
+    this.auth.createUserWithEmailAndPassword(email, password);
+    
     doSignInWithEmailAndPassword = (email, password) =>
-        this.auth.signInWithEmailAndPassword(email, password);
-
+    this.auth.signInWithEmailAndPassword(email, password);
+    
     doSignInWithGoogle = () =>
-        this.auth.signInWithPopup(this.googleProvider);
-
+    this.auth.signInWithPopup(this.googleProvider);
+    
     doSignInWithFacebook = () =>
-        this.auth.signInWithPopup(this.facebookProvider);
-
+    this.auth.signInWithPopup(this.facebookProvider);
+    
     doSignOut = () => this.auth.signOut();
-
+    
     doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
     doPasswordUpdate = password =>
-        this.auth.currentUser.updatePassword(password);
-
+    this.auth.currentUser.updatePassword(password);
+    
     // *** Merge Auth and DB User API *** //
     onAuthUserListener = (next, fallback) =>
-        this.auth.onAuthStateChanged(authUser => {
-            if (authUser) {
-                this.user(authUser.uid)
+    this.auth.onAuthStateChanged(authUser => {
+        if (authUser) {
+
+            // presence checker
+            this.connectedRef().on('value', snapshot => {
+                if (snapshot.val()) {
+                    this.presenceRef(this.auth.currentUser.uid).onDisconnect().remove();
+                    this.presenceRef(this.auth.currentUser.uid).set(true);
+                };
+            });
+            
+            this.user(authUser.uid)
                 .once('value')
                 .then(snapshot => {
                     const dbUser = snapshot.val();
@@ -73,20 +81,19 @@ class Firebase {
                         };
                         next(authUser);
                     });
-                    this.user(authUser.uid)
-                    .update({ online: true });
-                    this.uid = authUser.uid;
             } else {
-                this.user(this.uid)
-                .update({ online: false });
                 fallback();
             };
         });
 
+    
     // *** User API ***
     
     user = uid => this.db.ref(`users/${uid}`);
     users = () => this.db.ref('users');
+    connectedRef = () => this.db.ref('.info/connected');
+    presencesRef = () => this.db.ref(`presence`);
+    presenceRef = uid => this.db.ref(`presence/${uid}`);
 }
 
 export default Firebase;

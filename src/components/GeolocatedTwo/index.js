@@ -31,7 +31,7 @@ class LocatedTwo extends Component {
     this.state = {
       browserCoords: null,
       dbCoords: null,
-      nearbyPlayerCoords: {}
+      onlineUsersCoords: []
     };
   }
 
@@ -79,38 +79,58 @@ class LocatedTwo extends Component {
       });
   };
 
-  getNearbyPlayerPosition = () => {
-    this.props.firebase.users()
+  getOnlineUsers = () => {
+    this.props.firebase.presencesRef()
       .on("value", snapshot => {
-        snapshot.forEach(childSnapshot => {
-          let key = childSnapshot.key;
-          let data = childSnapshot.val();
-          if (key !== this.props.userId) {
-            const nearbyPlayerCoords = Object.assign(this.state.nearbyPlayerCoords, { [key]: [data.position , data.online] });
-            this.setState({nearbyPlayerCoords: nearbyPlayerCoords});
-          };
-        });
+        let onlineUsers = snapshot.val();
+        let userArray = Object.keys(onlineUsers);
+        this.getUsersCoords(userArray);
       });
+    };
+    
+  getUsersCoords = (userArray) => {
+    let onlineUsersCoords = {};
+    userArray.forEach(uid => 
+      this.props.firebase.user(uid).once("value", snapshot => {
+        let data = snapshot.val();
+        onlineUsersCoords[uid] = data.position;
+        this.setState({onlineUsersCoords: onlineUsersCoords})
+        this.updateUsersCoords();
+      })
+    );
   };
-
-  // When user moves >1m
+      
+  updateUsersCoords = () => {
+    console.log(Object.keys(this.state.onlineUsersCoords))
+    Object.keys(this.state.onlineUsersCoords).forEach(uid =>
+      this.props.firebase.user(uid).on("value", snapshot => {
+        if (uid in this.state.onlineUsersCoords) {
+          let data = snapshot.val();
+          const onlineUsersCoords = Object.assign(this.state.onlineUsersCoords, { [uid]: data.position});
+          this.setState({onlineUsersCoords: onlineUsersCoords});
+        };
+      })
+    );
+  };
+              
+              // When user moves >1m
   writeUserPositionToDB = position => {
     const { latitude, longitude } = position;
-
+    
     this.props.firebase
-      // User id - extremely important to get the right user
-      .user(this.props.userId)
-      // Position object
-      .update({ position: { latitude: latitude, longitude: longitude } });
+    // User id - extremely important to get the right user
+    .user(this.props.userId)
+    // Position object
+    .update({ position: { latitude: latitude, longitude: longitude } });
     //this.setState({ dbCoords: position });
-
+    
     // to be sure the data is synced - might add error checking...
     this.getUserPositionFromDB();
   };
-
+  
   // Should be activated as soon the user is logged in - almost as landing page...
   componentDidMount() {
-    this.getNearbyPlayerPosition();
+    this.getOnlineUsers();
     this.getUserPositionFromDB();
     this.watchId = navigator.geolocation.watchPosition(
       this.updatePosition,
@@ -135,68 +155,65 @@ class LocatedTwo extends Component {
     render() {
       const markers = [];
       markers.push({ ...this.state.browserCoords });
-      for (let key in this.state.nearbyPlayerCoords) {
-        var obj = this.state.nearbyPlayerCoords[key];
-        if (obj[1] === true) {
-          markers.push([obj[0].latitude, obj[0].longitude])
-        };
-      };
- 
-        return (
-          <div>
-        {this.state.browserCoords ? (
-          <MyMap
-            markers={markers}
-            position={Object.values(this.state.browserCoords)}
-            zoom={13}
-          />
-        ) : null}
-        <StyledPosDiv className="positition-info">
-          <StyledCoords className="coordsBrowser">
-            <p>Coords from Browser</p>
-            <Coords position={this.state.browserCoords} />
-          </StyledCoords>
-          <StyledCoords className="coordsDB">
-            <p>Coords from DB</p>
-            <Coords position={this.state.dbCoords} />
-          </StyledCoords>
-        </StyledPosDiv>
-        </div>
-        );
-      }
-    }
-    
-    const Coords = props => (
-        <div>
-          {props.position ? (
-            <div>
-              <div>{props.position.latitude}</div>
-              <div>{props.position.longitude}</div>
-            </div>
-          ) : null}
-        </div>
-        );
-        
-        // send all data of several user as props here
-        const MyMap = props => (
-        <Map
-          zoomControl={false}
-          scrollWheelZoom={false}
-          center={props.position}
-          zoom={props.zoom}
-        >
+      Object.keys(this.state.onlineUsersCoords).forEach(uid => {
+        markers.push({ ...this.state.onlineUsersCoords[uid] })
+      });
 
-          <TileLayer
-            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-          />
-          {props.markers.map((marker, index) => (
-            <Marker key={index} position={Object.values(marker)}>
-              <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
-              </Popup>
-            </Marker>
-          ))}
-        </Map>
-        );
+      return (
+        <div>
+      {this.state.browserCoords ? (
+        <MyMap
+          markers={markers}
+          position={Object.values(this.state.browserCoords)}
+          zoom={13}
+        />
+      ) : null}
+      <StyledPosDiv className="positition-info">
+        <StyledCoords className="coordsBrowser">
+          <p>Coords from Browser</p>
+          <Coords position={this.state.browserCoords} />
+        </StyledCoords>
+        <StyledCoords className="coordsDB">
+          <p>Coords from DB</p>
+          <Coords position={this.state.dbCoords} />
+        </StyledCoords>
+      </StyledPosDiv>
+      </div>
+      );
+    }
+  }
+  
+  const Coords = props => (
+    <div>
+      {props.position ? (
+        <div>
+          <div>{props.position.latitude}</div>
+          <div>{props.position.longitude}</div>
+        </div>
+      ) : null}
+    </div>
+    );
+      
+      // send all data of several user as props here
+  const MyMap = props => (
+    <Map
+      zoomControl={false}
+      scrollWheelZoom={false}
+      center={props.position}
+      zoom={props.zoom}
+    >
+
+      <TileLayer
+        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+      />
+      {props.markers.map((marker, index) => (
+        <Marker key={index} position={Object.values(marker)}>
+          <Popup>
+            A pretty CSS3 popup. <br /> Easily customizable.
+          </Popup>
+        </Marker>
+      ))}
+    </Map>
+  );
         export default withFirebase(LocatedTwo);
