@@ -1,42 +1,277 @@
-import React, { Component } from 'react';
-import { compose } from 'recompose';
+import React, { Component } from "react";
+import { compose } from "recompose";
 
-import { AuthUserContext, withAuthorization, withEmailVerification } from '../Session';
-import { withFirebase } from '../Firebase';
-import { PasswordForgetForm } from '../PasswordForget';
-import PasswordChangeForm from '../PasswordChange';
+import {
+  AuthUserContext,
+  withAuthorization,
+  withEmailVerification
+} from "../Session";
+import { withFirebase } from "../Firebase";
+import { PasswordForgetForm } from "../PasswordForget";
+import PasswordChangeForm from "../PasswordChange";
+import Styled from "styled-components";
+import Avatar from "../../images/lillaTrumpo.jpg";
+
+/*** STYLED COMPONENTS ***/
+const StyledFlexContainer = Styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: auto;
+    min-height: 492px;  
+`;
+const StyledCharacter = Styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: max-content;    
+    margin-bottom: 42px;
+    & button {
+      background-color: rgb(216, 124, 45);
+      background-color: rgb(77,77,77);
+      border: 1px solid rgb(202,202,202);
+    }
+    & button:hover {     
+      background-color: rgb(35,35,35);
+      border: 1px solid rgb(254,254,254);      
+    }
+`;
+const StyledAvatar = Styled.figure`
+    flex-basis: 14%;
+    position: relative;
+    & img {
+      width: 210px;
+      max-height: 230px;
+      border: 2px solid rgb(254,254,254);
+    }
+    @media (max-width: 767px) {
+      margin-bottom: 22px;
+    }
+`;
+const StyledStatus = Styled.div`
+    position: absolute;
+    top: 7%;
+    right: 7%;
+    width: 36px; 
+    height: 36px;
+    display: inline-block;
+    border: 1px solid white;        
+    border-radius: 50%;        
+`;
+const StyledCharData = Styled.div`
+    flex-basis: 30%;
+    padding: 12px;
+    & h2 {
+      font-size: 1.8em;
+      color: rgb(251, 151, 0);
+      text-shadow: 1px 1px 0.5px rgb(57,57,57);
+    }
+    @media (max-width: 767px) {
+      flex-basis: 48%;      
+      margin-bottom: 72px;
+    }
+    @media (max-width: 492px) {
+      flex-basis: 100%;      
+    }
+`;
+const StyledStat = Styled.section`
+    flex-basis: 30%;
+    min-width: 332px;
+    min-height: 270px;
+    max-height: 302px;
+    padding: 12px;
+    border: 2px solid rgb(177,177,177);
+    & h2 {
+        color: rgb(29, 134, 226);
+        text-shadow: 1px 1px 0.5px rgb(252,252,252);
+        margin-bottom: 12px;
+    }
+    & span {
+        color: rgb(122,122,222);
+        font-weight: 600;
+        padding: 4px;
+    }    
+    @media (max-width: 767px) {
+        flex-basis: 100%;
+        padding: 12px;
+    }
+`;
+const StyledProfileEdit = Styled.div`
+    display: none;
+`;
+
+const StyledUl = Styled.ul`   
+    display: none;
+    & li {      
+      display: inline;      
+      cursor: pointer;
+      color: rgb(56, 53, 52);
+      text-shadow: 1px 1px 0.5px rgb(255,255,255);
+      font-weight: 600;
+      padding: 0 4px;
+      margin-right: 6px;      
+    }
+    & li:hover {      
+      color: rgb(15,15,15);
+      text-shadow: 1px 1px 0.5px rgb(227,227,227);
+    }
+`;
+
+/*** END ***/
 
 const SIGN_IN_METHODS = [
   {
-    id: 'password',
-    provider: null,
+    id: "password",
+    provider: null
   },
   {
-    id: 'google.com',
-    provider: 'googleProvider',
+    id: "google.com",
+    provider: "googleProvider"
   },
   {
-    id: 'facebook.com',
-    provider: 'facebookProvider',
+    id: "facebook.com",
+    provider: "facebookProvider"
   },
   {
-    id: 'twitter.com',
-    provider: 'twitterProvider',
-  },
+    id: "twitter.com",
+    provider: "twitterProvider"
+  }
 ];
 
-const AccountPage = () => (
-  <AuthUserContext.Consumer>
-    {authUser => (
-      <div>
-        <h1>Account: {authUser.email}</h1>
-        <PasswordForgetForm />
-        <PasswordChangeForm />
-        <LoginManagement authUser={authUser} />
-      </div>
-    )}
-  </AuthUserContext.Consumer>
-);
+const userData = {
+  userName: "LillaTrumpo",
+  meme: "Always on the run..."
+};
+
+const userStatus = {
+  online: true,
+  title: "online"
+};
+
+
+
+/*** NEW CLASS TO HANDLE CHARACTER DATA AND ONLINE STATUS ***/
+class AccountPage extends Component {
+  state = {   
+    backgroundColor: 'rgb(83, 205, 13)'    
+  };
+
+  showStatusChoice = () => {
+    let statUl = document.getElementById("status-ul");
+    if (statUl.style.display === "block") {
+      statUl.style.display = "none";
+    } else {
+      statUl.style.display = "block";
+    }
+  };
+
+  // Change the status light
+  changeStatus = ev => {
+    let trg = ev.target.id;
+    if (trg === "off-line") {
+      this.setState({
+        backgroundColor: "rgb(224, 26, 26)"
+      });
+    } else if(trg === "afk"){
+      this.setState({
+        backgroundColor: "rgb(222, 216, 27)"
+      });
+    }
+    else {
+      this.setState({
+        backgroundColor: "rgb(83, 205, 13)"
+      });
+    }
+  }
+
+  showProfile = () => {
+    document.getElementById("show-profile").style.display = "block";
+  };
+
+  render() {
+    
+    const styles = {
+      backgroundColor: this.state.backgroundColor
+    }
+
+    return (
+      <AuthUserContext.Consumer>
+        {authUser => (
+          <StyledFlexContainer>
+            <StyledCharacter>
+              <StyledAvatar>
+                <figure>
+                  <img src={Avatar} alt="user avatar" />
+                  <StyledStatus
+                    style={ styles }
+                    title={userStatus.title}
+                  />
+                </figure>
+              </StyledAvatar>
+              <StyledCharData>
+                <h2>{userData.userName}</h2>
+                <br />
+                <p><i>{userData.meme}</i></p>
+                <br />
+                <button onClick={this.showProfile}>Edit profile</button>
+                <br />
+
+                <button onClick={this.showStatusChoice}>Change status</button>
+
+                <StyledUl id="status-ul" onClick={this.changeStatus}>
+                  <li id="on-line">Online |</li>
+                  <li id="off-line">Offline |</li>
+                  <li id="afk">Afk</li>
+                </StyledUl>
+              </StyledCharData>
+
+              <StyledStat>
+                <h2>STATISTICS</h2>
+                <br />
+                <div>
+                  <p>
+                    Played Games <span>222</span>
+                  </p>
+                  <br />
+                  <p>
+                    Won Games <span>222</span>
+                  </p>
+                  <br />
+                  <p>
+                    Walked Distance <span>222</span>
+                  </p>
+                  <br />
+                  <p>
+                    Earned Points <span>222</span>
+                  </p>
+                  <br />
+                  <br />
+                </div>
+              </StyledStat>
+            </StyledCharacter>
+
+            <StyledProfileEdit id="show-profile">
+              <h2>{userData.userName}</h2>
+              <br />
+              <h3>
+                <button>Change Avatar</button>
+              </h3>
+              <br />
+              <h3>Your account: {authUser.email}</h3>
+              <br />
+              <h3>Password forget</h3>
+              <PasswordForgetForm />
+              <br />
+              <h3>Password change</h3>
+              <PasswordChangeForm />
+              <LoginManagement authUser={authUser} />
+            </StyledProfileEdit>
+          </StyledFlexContainer>
+        )}
+      </AuthUserContext.Consumer>
+    );
+  }
+}
 
 class LoginManagementBase extends Component {
   constructor(props) {
@@ -44,7 +279,7 @@ class LoginManagementBase extends Component {
 
     this.state = {
       activeSignInMethods: [],
-      error: null,
+      error: null
     };
   }
 
@@ -56,7 +291,7 @@ class LoginManagementBase extends Component {
     this.props.firebase.auth
       .fetchSignInMethodsForEmail(this.props.authUser.email)
       .then(activeSignInMethods =>
-        this.setState({ activeSignInMethods, error: null }),
+        this.setState({ activeSignInMethods, error: null })
       )
       .catch(error => this.setState({ error }));
   };
@@ -71,7 +306,7 @@ class LoginManagementBase extends Component {
   onDefaultLoginLink = password => {
     const credential = this.props.firebase.emailAuthProvider.credential(
       this.props.authUser.email,
-      password,
+      password
     );
 
     this.props.firebase.auth.currentUser
@@ -96,13 +331,11 @@ class LoginManagementBase extends Component {
         <ul>
           {SIGN_IN_METHODS.map(signInMethod => {
             const onlyOneLeft = activeSignInMethods.length === 1;
-            const isEnabled = activeSignInMethods.includes(
-              signInMethod.id,
-            );
+            const isEnabled = activeSignInMethods.includes(signInMethod.id);
 
             return (
               <li key={signInMethod.id}>
-                {signInMethod.id === 'password' ? (
+                {signInMethod.id === "password" ? (
                   <DefaultLoginToggle
                     onlyOneLeft={onlyOneLeft}
                     isEnabled={isEnabled}
@@ -111,14 +344,14 @@ class LoginManagementBase extends Component {
                     onUnlink={this.onUnlink}
                   />
                 ) : (
-                    <SocialLoginToggle
-                      onlyOneLeft={onlyOneLeft}
-                      isEnabled={isEnabled}
-                      signInMethod={signInMethod}
-                      onLink={this.onSocialLoginLink}
-                      onUnlink={this.onUnlink}
-                    />
-                  )}
+                  <SocialLoginToggle
+                    onlyOneLeft={onlyOneLeft}
+                    isEnabled={isEnabled}
+                    signInMethod={signInMethod}
+                    onLink={this.onSocialLoginLink}
+                    onUnlink={this.onUnlink}
+                  />
+                )}
               </li>
             );
           })}
@@ -134,7 +367,7 @@ const SocialLoginToggle = ({
   isEnabled,
   signInMethod,
   onLink,
-  onUnlink,
+  onUnlink
 }) =>
   isEnabled ? (
     <button
@@ -145,26 +378,23 @@ const SocialLoginToggle = ({
       Deactivate {signInMethod.id}
     </button>
   ) : (
-      <button
-        type="button"
-        onClick={() => onLink(signInMethod.provider)}
-      >
-        Link {signInMethod.id}
-      </button>
-    );
+    <button type="button" onClick={() => onLink(signInMethod.provider)}>
+      Link {signInMethod.id}
+    </button>
+  );
 
 class DefaultLoginToggle extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { passwordOne: '', passwordTwo: '' };
+    this.state = { passwordOne: "", passwordTwo: "" };
   }
 
   onSubmit = event => {
     event.preventDefault();
 
     this.props.onLink(this.state.passwordOne);
-    this.setState({ passwordOne: '', passwordTwo: '' });
+    this.setState({ passwordOne: "", passwordTwo: "" });
   };
 
   onChange = event => {
@@ -172,17 +402,11 @@ class DefaultLoginToggle extends Component {
   };
 
   render() {
-    const {
-      onlyOneLeft,
-      isEnabled,
-      signInMethod,
-      onUnlink,
-    } = this.props;
+    const { onlyOneLeft, isEnabled, signInMethod, onUnlink } = this.props;
 
     const { passwordOne, passwordTwo } = this.state;
 
-    const isInvalid =
-      passwordOne !== passwordTwo || passwordOne === '';
+    const isInvalid = passwordOne !== passwordTwo || passwordOne === "";
 
     return isEnabled ? (
       <button
@@ -193,27 +417,26 @@ class DefaultLoginToggle extends Component {
         Deactivate {signInMethod.id}
       </button>
     ) : (
-        <form onSubmit={this.onSubmit}>
-          <input
-            name="passwordOne"
-            value={passwordOne}
-            onChange={this.onChange}
-            type="password"
-            placeholder="New Password"
-          />
-          <input
-            name="passwordTwo"
-            value={passwordTwo}
-            onChange={this.onChange}
-            type="password"
-            placeholder="Confirm New Password"
-          />
-
-          <button disabled={isInvalid} type="submit">
-            Link {signInMethod.id}
-          </button>
-        </form>
-      );
+      <form onSubmit={this.onSubmit}>
+        <input
+          name="passwordOne"
+          value={passwordOne}
+          onChange={this.onChange}
+          type="password"
+          placeholder="New Password"
+        />
+        <input
+          name="passwordTwo"
+          value={passwordTwo}
+          onChange={this.onChange}
+          type="password"
+          placeholder="Confirm New Password"
+        />
+        <button disabled={isInvalid} type="submit">
+          Link {signInMethod.id}
+        </button>
+      </form>
+    );
   }
 }
 
@@ -223,5 +446,5 @@ const condition = authUser => !!authUser;
 
 export default compose(
   withEmailVerification,
-  withAuthorization(condition),
+  withAuthorization(condition)
 )(AccountPage);

@@ -18,16 +18,6 @@ const StyledFlexForm = Styled.div`
       flex-basis: 100%;
     }
 `;
-/*
-const StyledMap = Styled.div`    
-    flex-basis: 59%;
-    border: 2px solid rgb(252,252,252);
-    @media (max-width: 768px) {
-    flex-basis: 100%;
-}
-`;
-*/
-
 const StyledTitle = Styled.h1`
     font-size: 2em;
     color: rgb(35, 123, 226);
@@ -71,7 +61,7 @@ const StyledImgDiv = Styled.div`
     border: 2px solid rgb(252,252,252);
     
     @media (max-width: 768px) {
-        flex-basis: 100%;
+        display: none;
     }
 `;
 

@@ -22,6 +22,12 @@ const StyledLi = Styled.li`
     & button {
       margin-top: 10px;
     }
+    @media (max-width: 767px) {
+        margin-right: 14px;
+        & a {
+            letter-spacing: -0em;
+        }
+    }
 `;
 
 
