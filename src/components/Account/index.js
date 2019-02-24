@@ -51,6 +51,7 @@ const StyledAvatar = Styled.figure`
 `;
 const StyledStatus = Styled.div`
     position: absolute;
+    background-color: ${props => props.backgroundColor};
     top: 7%;
     right: 7%;
     width: 36px; 
@@ -139,31 +140,33 @@ const SIGN_IN_METHODS = [
   }
 ];
 
-const userData = {
-  userName: "LillaTrumpo",
-  meme: "Always on the run..."
-};
-
-const userStatus = {
-  online: true,
-  title: "online"
-};
-
-
-
 /*** NEW CLASS TO HANDLE CHARACTER DATA AND ONLINE STATUS ***/
 class AccountPage extends Component {
-  state = {   
-    backgroundColor: 'rgb(83, 205, 13)',
-    userData: {}    
-  };
+  constructor(props) {
+    super(props);
+
+    this.statusLight="rgb(83, 205, 13)"
+
+    this.state = {
+      userData: {}   
+    };
+  }
   
   fetchUserData = () => {
-    this.props.firebase.user(this.props.userId).on("value", snapshot => {
-      this.setState({userData: snapshot.val()})
+    this.props.firebase.auth.onAuthStateChanged(user => {
+      if (user) {
+        this.userId = user.uid;
+        this.props.firebase.user(this.userId).on("value", snapshot => {
+          this.setState({userData: snapshot.val()})
+        
+        });
+      } else {
+        return
+      };
     });
   };
-  
+
+  // Displays status choices
   showStatusChoice = () => {
     let statUl = document.getElementById("status-ul");
     if (statUl.style.display === "block") {
@@ -172,43 +175,37 @@ class AccountPage extends Component {
       statUl.style.display = "block";
     }
   };
+
+  // Write new status to DB
+  changeStatus = ev => {
+    this.props.firebase.user(this.userId).child("status").set(ev.target.id)
+  };
   
   // Change the status light
-  changeStatus = ev => {
-    let trg = ev.target.id;
-    if (trg === "Invisible") {
-      this.setState({
-        backgroundColor: "rgb(169,169,169)"
-      });
-    } else if(trg === "Idle"){
-      this.setState({
-        backgroundColor: "rgb(222, 216, 27)"
-      });
-    } else if(trg === "Do Not Disturb"){
-      this.setState({
-        backgroundColor: "rgb(255,0,0)"
-      });
-    } else {
-      this.setState({
-        backgroundColor: "rgb(83, 205, 13)"
-      });
+  showStatus = () => {
+    if (this.state.userData.status === "Invisible") {
+      this.statusLight = "rgb(169,169,169)";
+      }
+    else if(this.state.userData.status === "Idle"){
+        this.statusLight = "rgb(222, 216, 27)"
     }
-  }
+    else if(this.state.userData.status === "Do Not Disturb"){
+      this.statusLight = "rgb(255,0,0)"
+    } else {
+      this.statusLight = "rgb(83, 205, 13)"
+    };
+  };
   
   showProfile = () => {
     document.getElementById("show-profile").style.display = "block";
   };
   
   componentDidMount(){
-    this.fetchUserData()
-  }
+    this.fetchUserData();
+  };
   
-  render() {    
-    const styles = {
-      backgroundColor: this.state.backgroundColor
-    }
-    
-    console.log(this.pr);
+  render() {
+    this.showStatus();    
     return (
       <AuthUserContext.Consumer>
         {authUser => (
@@ -218,15 +215,14 @@ class AccountPage extends Component {
                 <figure>
                   <img src={Avatar} alt="user avatar" />
                   <StyledStatus
-                    style={ styles }
-                    title={userStatus.title}
+                    backgroundColor={this.statusLight}
                   />
                 </figure>
               </StyledAvatar>
               <StyledCharData>
-                <h2>{userData.userName}</h2>
+                <h2>{this.state.userData.username}</h2>
                 <br />
-                <p><i>{userData.meme}</i></p>
+                <p><i>{this.state.userData.description}</i></p>
                 <br />
                 <button onClick={this.showProfile}>Edit profile</button>
                 <br />

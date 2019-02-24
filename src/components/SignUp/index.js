@@ -86,7 +86,8 @@ class SignUpFormBase extends Component {
           username,
           email,
           roles,
-          status: "online",
+          status: "Online",
+          description: "",
           position: { latitude: "0", longitude: "0" }
         });
       })
