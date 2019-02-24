@@ -20,45 +20,60 @@ const StyledFlexContainer = Styled.div`
     height: auto;
     min-height: 492px;  
 `;
-
 const StyledCharacter = Styled.div`
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    min-height: 302px;
-    margin-bottom: 32px;
+    height: max-content;    
+    margin-bottom: 42px;
+    & button {
+      background-color: rgb(216, 124, 45);
+      background-color: rgb(77,77,77);
+      border: 1px solid rgb(202,202,202);
+    }
+    & button:hover {     
+      background-color: rgb(35,35,35);
+      border: 1px solid rgb(254,254,254);      
+    }
 `;
-
 const StyledAvatar = Styled.figure`
     flex-basis: 14%;
     position: relative;
     & img {
       width: 210px;
       max-height: 230px;
-      border: 2px solid rgb(177,177,177);
+      border: 2px solid rgb(254,254,254);
+    }
+    @media (max-width: 767px) {
+      margin-bottom: 22px;
     }
 `;
 const StyledStatus = Styled.div`
     position: absolute;
-    top: 4%;
-    right: 5%;
-    width: 37px; 
-    height: 37px;
+    top: 7%;
+    right: 7%;
+    width: 36px; 
+    height: 36px;
     display: inline-block;
     border: 1px solid white;        
-    border-radius: 50%;    
-    background-color: rgb(83, 205, 13);;
+    border-radius: 50%;        
 `;
-
 const StyledCharData = Styled.div`
     flex-basis: 30%;
     padding: 12px;
     & h2 {
+      font-size: 1.8em;
       color: rgb(251, 151, 0);
       text-shadow: 1px 1px 0.5px rgb(57,57,57);
     }
+    @media (max-width: 767px) {
+      flex-basis: 48%;      
+      margin-bottom: 72px;
+    }
+    @media (max-width: 492px) {
+      flex-basis: 100%;      
+    }
 `;
-
 const StyledStat = Styled.section`
     flex-basis: 30%;
     min-width: 332px;
@@ -84,6 +99,24 @@ const StyledStat = Styled.section`
 const StyledProfileEdit = Styled.div`
     display: none;
 `;
+
+const StyledUl = Styled.ul`   
+    display: none;
+    & li {      
+      display: inline;      
+      cursor: pointer;
+      color: rgb(56, 53, 52);
+      text-shadow: 1px 1px 0.5px rgb(255,255,255);
+      font-weight: 600;
+      padding: 0 4px;
+      margin-right: 6px;      
+    }
+    & li:hover {      
+      color: rgb(15,15,15);
+      text-shadow: 1px 1px 0.5px rgb(227,227,227);
+    }
+`;
+
 /*** END ***/
 
 const SIGN_IN_METHODS = [
@@ -107,7 +140,7 @@ const SIGN_IN_METHODS = [
 
 const userData = {
   userName: "LillaTrumpo",
-  meme: "Always on the run"
+  meme: "Always on the run..."
 };
 
 const userStatus = {
@@ -115,62 +148,130 @@ const userStatus = {
   title: "online"
 };
 
-const show = () => {
-  document.getElementById("showProfile").style.display = "block";
-};
 
-const AccountPage = () => (
-  <AuthUserContext.Consumer>
-    {authUser => (
-      <StyledFlexContainer>
-        <StyledCharacter>
-          <StyledAvatar>
-            <figure>
-              <img src={Avatar} />
-              <StyledStatus title={userStatus.title} />
-            </figure>
-          </StyledAvatar>
-          <StyledCharData>
-            <h2>{userData.userName}</h2>
-            <br />
-            <p>{userData.meme}</p><br />
-            <button onClick={show}>Change status</button><br />
-            <button onClick={show}>Edit profile</button>
-          </StyledCharData>
-          <StyledStat>
-            <h2>STATISTICS</h2>
-            <br />
-            <div>
-              <p>
-                Played Games <span>222</span>
-              </p>
-              <br />
-              <p>
-                Won Games <span>222</span>
-              </p><br />
-              <p>
-                Walked Distance <span>222</span>
-              </p>
-              <br />
-              <p>
-                Earned Points <span>222</span>
-              </p>
-              <br />              
-              <br />
-            </div>
-          </StyledStat>
-        </StyledCharacter>
 
-        <StyledProfileEdit id="showProfile">
-          <h1>Account: {authUser.email}</h1>
-          <PasswordForgetForm />
-          <PasswordChangeForm />
-          <LoginManagement authUser={authUser} />
-        </StyledProfileEdit>
-      </StyledFlexContainer>
-    )}
-  </AuthUserContext.Consumer>
-);
+/*** NEW CLASS TO HANDLE CHARACTER DATA AND ONLINE STATUS ***/
+class AccountPage extends Component {
+  state = {   
+    backgroundColor: 'rgb(83, 205, 13)'    
+  };
+
+  showStatusChoice = () => {
+    let statUl = document.getElementById("status-ul");
+    if (statUl.style.display === "block") {
+      statUl.style.display = "none";
+    } else {
+      statUl.style.display = "block";
+    }
+  };
+
+  // Change the status light
+  changeStatus = ev => {
+    let trg = ev.target.id;
+    if (trg === "off-line") {
+      this.setState({
+        backgroundColor: "rgb(224, 26, 26)"
+      });
+    } else if(trg === "afk"){
+      this.setState({
+        backgroundColor: "rgb(222, 216, 27)"
+      });
+    }
+    else {
+      this.setState({
+        backgroundColor: "rgb(83, 205, 13)"
+      });
+    }
+  }
+
+  showProfile = () => {
+    document.getElementById("show-profile").style.display = "block";
+  };
+
+  render() {
+    
+    const styles = {
+      backgroundColor: this.state.backgroundColor
+    }
+
+    return (
+      <AuthUserContext.Consumer>
+        {authUser => (
+          <StyledFlexContainer>
+            <StyledCharacter>
+              <StyledAvatar>
+                <figure>
+                  <img src={Avatar} alt="user avatar" />
+                  <StyledStatus
+                    style={ styles }
+                    title={userStatus.title}
+                  />
+                </figure>
+              </StyledAvatar>
+              <StyledCharData>
+                <h2>{userData.userName}</h2>
+                <br />
+                <p><i>{userData.meme}</i></p>
+                <br />
+                <button onClick={this.showProfile}>Edit profile</button>
+                <br />
+
+                <button onClick={this.showStatusChoice}>Change status</button>
+
+                <StyledUl id="status-ul" onClick={this.changeStatus}>
+                  <li id="on-line">Online |</li>
+                  <li id="off-line">Offline |</li>
+                  <li id="afk">Afk</li>
+                </StyledUl>
+              </StyledCharData>
+
+              <StyledStat>
+                <h2>STATISTICS</h2>
+                <br />
+                <div>
+                  <p>
+                    Played Games <span>222</span>
+                  </p>
+                  <br />
+                  <p>
+                    Won Games <span>222</span>
+                  </p>
+                  <br />
+                  <p>
+                    Walked Distance <span>222</span>
+                  </p>
+                  <br />
+                  <p>
+                    Earned Points <span>222</span>
+                  </p>
+                  <br />
+                  <br />
+                </div>
+              </StyledStat>
+            </StyledCharacter>
+
+            <StyledProfileEdit id="show-profile">
+              <h2>{userData.userName}</h2>
+              <br />
+              <h3>
+                <button>Change Avatar</button>
+              </h3>
+              <br />
+              <h3>Your account: {authUser.email}</h3>
+              <br />
+              <h3>Password forget</h3>
+              <PasswordForgetForm />
+              <br />
+              <h3>Password change</h3>
+              <PasswordChangeForm />
+              <LoginManagement authUser={authUser} />
+            </StyledProfileEdit>
+          </StyledFlexContainer>
+        )}
+      </AuthUserContext.Consumer>
+    );
+  }
+}
 
 class LoginManagementBase extends Component {
   constructor(props) {
