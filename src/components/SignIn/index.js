@@ -182,7 +182,7 @@ class SignInGoogleBase extends Component {
                         username: socialAuthUser.user.displayName,
                         email: socialAuthUser.user.email,
                         roles: [],
-                        status: "",
+                        status: "online",
                         position: { latitude: "0", longitude: "0" }
                     });
             })
@@ -225,7 +225,7 @@ class SignInFacebookBase extends Component {
                         username: socialAuthUser.additionalUserInfo.profile.name,
                         email: socialAuthUser.additionalUserInfo.profile.email,
                         roles: [],
-                        status: "",
+                        status: "online",
                         position: { latitude: "0", longitude: "0" }
                     });
             })

@@ -3,6 +3,7 @@ import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import { withFirebase } from "../Firebase";
 
 import Styled from 'styled-components';
+import { auth } from "firebase";
 
 
 /*** STYLED COMPONENTS ***/
@@ -92,6 +93,9 @@ class LocatedTwo extends Component {
     let onlineUsersCoords = {};
     userArray.forEach(uid => 
       this.props.firebase.user(uid).once("value", snapshot => {
+        if (uid === this.props.userId) {
+          return
+        };
         let data = snapshot.val();
         onlineUsersCoords[uid] = data.position;
         this.setState({onlineUsersCoords: onlineUsersCoords})
@@ -109,8 +113,7 @@ class LocatedTwo extends Component {
           const onlineUsersCoords = Object.assign(this.state.onlineUsersCoords, { [uid]: data.position});
           this.setState({onlineUsersCoords: onlineUsersCoords});
         };
-      })
-    );
+      }));
   };
               
               // When user moves >1m
@@ -216,4 +219,4 @@ class LocatedTwo extends Component {
       ))}
     </Map>
   );
-        export default withFirebase(LocatedTwo);
+export default withFirebase(LocatedTwo);
