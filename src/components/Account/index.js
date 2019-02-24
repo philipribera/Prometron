@@ -242,19 +242,19 @@ class AccountPage extends Component {
                 <br />
                 <div>
                   <p>
-                    Played Games <span>222</span>
+                    Played Games <span>{this.state.userData.username}</span>
                   </p>
                   <br />
                   <p>
-                    Won Games <span>222</span>
+                    Won Games <span>{this.state.userData.username}</span>
                   </p>
                   <br />
                   <p>
-                    Walked Distance <span>222</span>
+                    Walked Distance <span>{this.state.userData.username}</span>
                   </p>
                   <br />
                   <p>
-                    Earned Points <span>222</span>
+                    Earned Points <span>{this.state.userData.username}</span>
                   </p>
                   <br />
                   <br />
@@ -263,7 +263,7 @@ class AccountPage extends Component {
             </StyledCharacter>
 
             <StyledProfileEdit id="show-profile">
-              <h2>{userData.userName}</h2>
+              <h2>{this.state.userData.username}</h2>
               <br />
               <h3>
                 <button>Change Avatar</button>
