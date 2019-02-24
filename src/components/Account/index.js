@@ -11,6 +11,7 @@ import { PasswordForgetForm } from "../PasswordForget";
 import PasswordChangeForm from "../PasswordChange";
 import Styled from "styled-components";
 import Avatar from "../../images/lillaTrumpo.jpg";
+import { database } from "firebase";
 
 /*** STYLED COMPONENTS ***/
 const StyledFlexContainer = Styled.div`
@@ -153,9 +154,16 @@ const userStatus = {
 /*** NEW CLASS TO HANDLE CHARACTER DATA AND ONLINE STATUS ***/
 class AccountPage extends Component {
   state = {   
-    backgroundColor: 'rgb(83, 205, 13)'    
+    backgroundColor: 'rgb(83, 205, 13)',
+    userData: {}    
   };
-
+  
+  fetchUserData = () => {
+    this.props.firebase.user(this.props.userId).on("value", snapshot => {
+      this.setState({userData: snapshot.val()})
+    });
+  };
+  
   showStatusChoice = () => {
     let statUl = document.getElementById("status-ul");
     if (statUl.style.display === "block") {
@@ -164,36 +172,43 @@ class AccountPage extends Component {
       statUl.style.display = "block";
     }
   };
-
+  
   // Change the status light
   changeStatus = ev => {
     let trg = ev.target.id;
-    if (trg === "off-line") {
+    if (trg === "Invisible") {
       this.setState({
-        backgroundColor: "rgb(224, 26, 26)"
+        backgroundColor: "rgb(169,169,169)"
       });
-    } else if(trg === "afk"){
+    } else if(trg === "Idle"){
       this.setState({
         backgroundColor: "rgb(222, 216, 27)"
       });
-    }
-    else {
+    } else if(trg === "Do Not Disturb"){
+      this.setState({
+        backgroundColor: "rgb(255,0,0)"
+      });
+    } else {
       this.setState({
         backgroundColor: "rgb(83, 205, 13)"
       });
     }
   }
-
+  
   showProfile = () => {
     document.getElementById("show-profile").style.display = "block";
   };
-
-  render() {
-    
+  
+  componentDidMount(){
+    this.fetchUserData()
+  }
+  
+  render() {    
     const styles = {
       backgroundColor: this.state.backgroundColor
     }
-
+    
+    console.log(this.pr);
     return (
       <AuthUserContext.Consumer>
         {authUser => (
@@ -219,9 +234,10 @@ class AccountPage extends Component {
                 <button onClick={this.showStatusChoice}>Change status</button>
 
                 <StyledUl id="status-ul" onClick={this.changeStatus}>
-                  <li id="on-line">Online |</li>
-                  <li id="off-line">Offline |</li>
-                  <li id="afk">Afk</li>
+                  <li id="Online">Online |</li>
+                  <li id="Idle">Idle |</li>
+                  <li id="Do Not Disturb">Do Not Disturb |</li>
+                  <li id="Invisible">Invisible</li>
                 </StyledUl>
               </StyledCharData>
 
@@ -285,7 +301,7 @@ class LoginManagementBase extends Component {
 
   componentDidMount() {
     this.fetchSignInMethods();
-  }
+  };
 
   fetchSignInMethods = () => {
     this.props.firebase.auth
@@ -295,6 +311,7 @@ class LoginManagementBase extends Component {
       )
       .catch(error => this.setState({ error }));
   };
+
 
   onSocialLoginLink = provider => {
     this.props.firebase.auth.currentUser
@@ -445,6 +462,7 @@ const LoginManagement = withFirebase(LoginManagementBase);
 const condition = authUser => !!authUser;
 
 export default compose(
+  withFirebase,
   withEmailVerification,
   withAuthorization(condition)
 )(AccountPage);
