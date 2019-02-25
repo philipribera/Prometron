@@ -10,6 +10,7 @@ import {
 import LocatedTwo from "../GeolocatedTwo";
 //import Chat from "../Chat";
 import Styled from "styled-components";
+import HomeMap from "../HomeMap";
 
 
 /*** STYLED COMPONENTS ***/
@@ -125,7 +126,7 @@ const HomePage = props => (
           </StyledDivs>
 
           <StyledMap className="map-container">           
-            <LocatedTwo userId={authUser.uid} />
+            <HomeMap userId={authUser.uid} />
           </StyledMap>
 
           <StyledChat>
