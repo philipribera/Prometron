@@ -41,9 +41,7 @@ const StyledH1 = Styled.h1`
     cursor: pointer;   
     &:hover {
       background: rgb(35,35,35);
-      color: rgb(241, 153, 47);      
-      /*text-shadow: rgb(252,255,255) 1px 1px 0.5px;         
-      text-shadow: rgb(255,255,255) 0.5px 1px 0.5px;*/         
+      color: rgb(241, 153, 47);               
     }
     @media (max-width: 767px) {
       font-size: 2em;
@@ -89,31 +87,6 @@ const StyledTarea = Styled.textarea`
         max-width: 330px;
     }
 `;
-/*
-const StyledStat = Styled.section`
-    flex-basis: 55%;
-    min-width: 332px;
-    min-height: 300px;
-    max-height: 500px;
-    padding: 12px;
-    border: 2px solid rgb(177,177,177);
-    & h2 {
-        color: rgb(29, 134, 226);
-        text-shadow: 1px 1px 0.5px rgb(252,252,252);
-        margin-bottom: 12px;
-    }
-    & span {
-        color: rgb(122,122,222);
-        font-weight: 600;
-        padding: 4px;
-    }    
-    @media (max-width: 767px) {
-        flex-basis: 100%;
-        padding: 12px;
-    }
-`;
-*/
-
 
 
 const HomePage = props => (
