@@ -88,6 +88,10 @@ button:hover {
   display: none;
 }
 
+.leaflet-popup-content-wrapper {
+  border-radius: 0;
+}
+
 /*** MEDIA QUERIES ***/
 
 @media screen and (max-width: 991px) {	

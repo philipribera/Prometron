@@ -11,6 +11,7 @@ import Styled from 'styled-components';
 
 
 /*** STYLED COMPONENTS ***/
+
 const StyledForm = Styled.form`
     display: none;
     padding: 8px 0;
@@ -22,6 +23,7 @@ const StyledForm = Styled.form`
 	    margin: 6px 8px 6px 10px;
     }  
 `;
+
 const StyledAvatar = Styled.figure`
     flex-basis: 14%;
     position: relative;
@@ -35,6 +37,7 @@ const StyledAvatar = Styled.figure`
       margin-bottom: 22px;
     }
 `;
+
 const StyledStatus = Styled.div`
     position: absolute;
     background-color: ${props => props.backgroundColor};
@@ -46,6 +49,7 @@ const StyledStatus = Styled.div`
     border: 1px solid white;        
     border-radius: 50%;        
 `;
+
 const StyledUl = Styled.ul`   
     display: none;
     & li {      
@@ -62,6 +66,7 @@ const StyledUl = Styled.ul`
       text-shadow: 1px 1px 0.5px rgb(227,227,227);
     }
 `;
+
 const StyledCharData = Styled.div`
     flex-basis: 30%;
     padding: 12px;
@@ -78,6 +83,7 @@ const StyledCharData = Styled.div`
       flex-basis: 100%;      
     }
 `;
+
 /*** END ***/
 
 /*** NEW CLASS TO HANDLE CHARACTER DATA AND ONLINE STATUS ***/
@@ -116,7 +122,6 @@ class Avatars extends Component {
     
     // Change the status light
     showStatus = () => {
-
       if (this.state.userData.status === "Invisible") {
         this.statusLight = "rgb(169,169,169)";
         }
@@ -174,12 +179,8 @@ class Avatars extends Component {
         return (
             <article className="choose-avatar">
                 <StyledAvatar>
-                    <figure onClick={this.showAvatarList}>
-                        <img src={this.avatar} alt="user avatar" />
-                        <StyledStatus
-                            backgroundColor={this.statusLight}
-                        />
-                    </figure>
+                    <img src={this.avatar} alt="user avatar" />
+                    <StyledStatus backgroundColor={this.statusLight} />
                 </StyledAvatar>
 
                 <StyledForm id="show-avatars" onClick={this.changeAvatar} >
