@@ -23,9 +23,6 @@ const StyledCoords = Styled.div`
   flex-basis: 50%;
 `;
 
-
-
-
 class LocatedTwo extends Component {
   constructor(props) {
     super(props);
@@ -98,9 +95,10 @@ class LocatedTwo extends Component {
         };
         let data = snapshot.val();
         onlineUsersCoords[uid] = data.position;
-        if (this.calculateDistance(this.state.browserCoords.latitude, this.state.browserCoords.longitude, data.position.latitude, data.position.longitude) < 1000)
-        this.setState({onlineUsersCoords: onlineUsersCoords})
-        this.updateUsersCoords();
+        if (this.calculateDistance(this.state.browserCoords.latitude, this.state.browserCoords.longitude, data.position.latitude, data.position.longitude) < 1000) {
+            this.setState({onlineUsersCoords: onlineUsersCoords})
+            this.updateUsersCoords();
+        };
       })
     );
   };

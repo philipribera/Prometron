@@ -10,15 +10,8 @@ import { withFirebase } from "../Firebase";
 import { PasswordForgetForm } from "../PasswordForget";
 import PasswordChangeForm from "../PasswordChange";
 import Styled from "styled-components";
-// Avatars
-import AvTrumpo from "../../images/lillaTrumpo.jpg";
-/*import AvGirl from "../../images/girlAv_300.png";
-import AvDancer from "../../images/dancerAv_300.png";
-import AvPinguin from "../../images/pinguinAv_300.png";
-import AvBlue from "../../images/blueAv_300.png";
-*/
-import Avatars from '../Avatars';
-import { database } from "firebase";
+
+import Statistics from '../Statistics';
 
 /*** STYLED COMPONENTS ***/
 const StyledFlexContainer = Styled.div`
@@ -85,28 +78,7 @@ const StyledCharData = Styled.div`
       flex-basis: 100%;      
     }
 `;
-const StyledStat = Styled.section`
-    flex-basis: 30%;
-    min-width: 332px;
-    min-height: 270px;
-    max-height: 302px;
-    padding: 12px;
-    border: 2px solid rgb(177,177,177);
-    & h2 {
-        color: rgb(29, 134, 226);
-        text-shadow: 1px 1px 0.5px rgb(252,252,252);
-        margin-bottom: 12px;
-    }
-    & span {
-        color: rgb(122,122,222);
-        font-weight: 600;
-        padding: 4px;
-    }    
-    @media (max-width: 767px) {
-        flex-basis: 100%;
-        padding: 12px;
-    }
-`;
+
 const StyledProfileEdit = Styled.div`
     display: none;
 `;
@@ -157,9 +129,16 @@ class AccountPage extends Component {
     this.statusLight="rgb(83, 205, 13)"
 
     this.state = {
-      userData: {}   
+      userData: {
+        statistics: {
+          playedgames: 0,
+          wongames: 0,
+          walkeddistance: 0,
+          points: 0,
+        }
+      }
     };
-  }
+  };
   
   fetchUserData = () => {
     this.props.firebase.auth.onAuthStateChanged(user => {
@@ -213,7 +192,7 @@ class AccountPage extends Component {
   };
   
   render() {
-    this.showStatus();   
+    this.showStatus();
     return (
       <AuthUserContext.Consumer>
         {authUser => (
@@ -241,30 +220,8 @@ class AccountPage extends Component {
 
               </StyledCharData>
 
-
-              <StyledStat>
-                <h2>STATISTICS</h2>
-                <br />
-                <div>
-                  <p>
-                    Played Games <span>{this.state.userData.username}</span>
-                  </p>
-                  <br />
-                  <p>
-                    Won Games <span>{this.state.userData.username}</span>
-                  </p>
-                  <br />
-                  <p>
-                    Walked Distance <span>{this.state.userData.username}</span>
-                  </p>
-                  <br />
-                  <p>
-                    Earned Points <span>{this.state.userData.username}</span>
-                  </p>
-                  <br />
-                  <br />
-                </div>
-              </StyledStat>
+              <Statistics userId={authUser.uid}/>
+              
             </StyledCharacter>
 
             <StyledProfileEdit id="show-profile">
