@@ -14,6 +14,7 @@ import Styled from "styled-components";
 import Avatars from '../Avatars';
 import { database } from "firebase";
 
+
 /*** STYLED COMPONENTS ***/
 const StyledFlexContainer = Styled.div`
     display: flex;
@@ -63,10 +64,10 @@ const StyledStat = Styled.section`
     }
 `;
 */
+
 const StyledProfileEdit = Styled.div`
     display: none;
 `;
-
 /*** END ***/
 
 
@@ -92,7 +93,7 @@ const SIGN_IN_METHODS = [
 
 const AccountPage = () => (
 
-  <AuthUserContext.Consumer>
+<AuthUserContext.Consumer>
     {authUser => (
       <StyledFlexContainer>
         <StyledCharacter>
@@ -291,66 +292,6 @@ class DefaultLoginToggle extends Component {
       );
   }
 }
-
-
-/*
-class DefaultLoginToggle extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { passwordOne: "", passwordTwo: "" };
-  }
-
-  onSubmit = event => {
-    event.preventDefault();
-
-    this.props.onLink(this.state.passwordOne);
-    this.setState({ passwordOne: "", passwordTwo: "" });
-  };
-
-  onChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-
-  render() {
-    const { onlyOneLeft, isEnabled, signInMethod, onUnlink } = this.props;
-
-    const { passwordOne, passwordTwo } = this.state;
-
-    const isInvalid = passwordOne !== passwordTwo || passwordOne === "";
-
-    return isEnabled ? (
-      <button
-        type="button"
-        onClick={() => onUnlink(signInMethod.id)}
-        disabled={onlyOneLeft}
-      >
-        Deactivate {signInMethod.id}
-      </button>
-    ) : (
-        <form onSubmit={this.onSubmit}>
-          <input
-            name="passwordOne"
-            value={passwordOne}
-            onChange={this.onChange}
-            type="password"
-            placeholder="New Password"
-          />
-          <input
-            name="passwordTwo"
-            value={passwordTwo}
-            onChange={this.onChange}
-            type="password"
-            placeholder="Confirm New Password"
-          />
-          <button disabled={isInvalid} type="submit">
-            Link {signInMethod.id}
-          </button>
-        </form>
-      );
-  }
-}
-*/
 
 const LoginManagement = withFirebase(LoginManagementBase);
 
