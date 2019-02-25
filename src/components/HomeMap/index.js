@@ -5,8 +5,6 @@ import { withFirebase } from "../Firebase";
 import PopupFactory from "../PopupFactory";
 
 import Styled from 'styled-components';
-import { auth } from "firebase";
-
 
 /*** STYLED COMPONENTS ***/
 const StyledPosDiv = Styled.div` 
@@ -24,12 +22,6 @@ const StyledPosDiv = Styled.div`
 const StyledCoords = Styled.div`
   flex-basis: 50%;
 `;
-
-const Popuptest = Styled.div`
-  width: 300px;
-  height: 100px;
-  background-color: red;
-`
 
 class LocatedTwo extends Component {
   constructor(props) {
