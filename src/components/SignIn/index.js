@@ -174,6 +174,7 @@ class SignInGoogleBase extends Component {
                         roles: [],
                         status: "Online",
                         description: "",
+                        avatar: "girl",
                         statistics: {playedgames: 0, wongames: 0, walkeddistance: 0, points: 0},
                         position: { latitude: "0", longitude: "0" }
                     });
@@ -219,6 +220,7 @@ class SignInFacebookBase extends Component {
                         roles: [],
                         status: "Online",
                         description: "",
+                        avatar: "girl",
                         statistics: {playedgames: 0, wongames: 0, walkeddistance: 0, points: 0},
                         position: { latitude: "0", longitude: "0" }
                     });

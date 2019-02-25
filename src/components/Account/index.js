@@ -10,7 +10,6 @@ import { withFirebase } from "../Firebase";
 import { PasswordForgetForm } from "../PasswordForget";
 import PasswordChangeForm from "../PasswordChange";
 import Styled from "styled-components";
-import Avatar from "../../images/lillaTrumpo.jpg";
 
 import Statistics from '../Statistics';
 
@@ -38,6 +37,7 @@ const StyledCharacter = Styled.div`
       border: 1px solid rgb(254,254,254);      
     }
 `;
+/*
 const StyledAvatar = Styled.figure`
     flex-basis: 14%;
     position: relative;
@@ -61,6 +61,7 @@ const StyledStatus = Styled.div`
     border: 1px solid white;        
     border-radius: 50%;        
 `;
+*/
 const StyledCharData = Styled.div`
     flex-basis: 30%;
     padding: 12px;
@@ -197,14 +198,9 @@ class AccountPage extends Component {
         {authUser => (
           <StyledFlexContainer>
             <StyledCharacter>
-              <StyledAvatar>
-                <figure>
-                  <img src={Avatar} alt="user avatar" />
-                  <StyledStatus
-                    backgroundColor={this.statusLight}
-                  />
-                </figure>
-              </StyledAvatar>
+              
+              <Avatars userId={authUser.uid}/>
+
               <StyledCharData>
                 <h2>{this.state.userData.username}</h2>
                 <br />
@@ -221,6 +217,7 @@ class AccountPage extends Component {
                   <li id="Do Not Disturb">Do Not Disturb |</li>
                   <li id="Invisible">Invisible</li>
                 </StyledUl>
+
               </StyledCharData>
 
               <Statistics userId={authUser.uid}/>
@@ -231,7 +228,7 @@ class AccountPage extends Component {
               <h2>{this.state.userData.username}</h2>
               <br />
               <h3>
-                <button>Change Avatar</button>
+                <button onClick={this.changeAvatar}>Change Avatar</button>
               </h3>
               <br />
               <h3>Your account: {authUser.email}</h3>
