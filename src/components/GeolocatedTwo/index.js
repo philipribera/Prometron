@@ -24,8 +24,6 @@ const StyledCoords = Styled.div`
 `;
 
 
-
-
 class LocatedTwo extends Component {
   constructor(props) {
     super(props);
