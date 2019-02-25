@@ -40,9 +40,7 @@ const StyledH1 = Styled.h1`
     cursor: pointer;   
     &:hover {
       background: rgb(35,35,35);
-      color: rgb(241, 153, 47);      
-      /*text-shadow: rgb(252,255,255) 1px 1px 0.5px;         
-      text-shadow: rgb(255,255,255) 0.5px 1px 0.5px;*/         
+      color: rgb(241, 153, 47);               
     }
     @media (max-width: 767px) {
       font-size: 2em;

@@ -25,6 +25,9 @@ const StyledFlexContainer = Styled.div`
     @media (max-width: 768px) {
         padding: 10px;
     }
+    @media (max-width: 468px) {
+        padding: 0;
+    }
 `;
 const StyledTitle = Styled.span`
     font-family: 'Orbitron', sans-serif;
@@ -35,7 +38,7 @@ const StyledTitle = Styled.span`
         font-size: 1.7em;
     }
     @media (max-width: 468px) {
-        font-size: 1.4em;
+        font-size: 1.4em;       
     }
 `;
 const StyledH2 = Styled.h2`
