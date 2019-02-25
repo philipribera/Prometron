@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import { withFirebase } from "../Firebase";
 
+import PopupFactory from "../PopupFactory";
+
 import Styled from 'styled-components';
 import { auth } from "firebase";
 
@@ -22,6 +24,12 @@ const StyledPosDiv = Styled.div`
 const StyledCoords = Styled.div`
   flex-basis: 50%;
 `;
+
+const Popuptest = Styled.div`
+  width: 300px;
+  height: 100px;
+  background-color: red;
+`
 
 class LocatedTwo extends Component {
   constructor(props) {
@@ -95,7 +103,7 @@ class LocatedTwo extends Component {
         };
         let data = snapshot.val();
         onlineUsersCoords[uid] = data.position;
-        if (this.calculateDistance(this.state.browserCoords.latitude, this.state.browserCoords.longitude, data.position.latitude, data.position.longitude) < 1000) {
+        if (this.calculateDistance(this.state.browserCoords.latitude, this.state.browserCoords.longitude, data.position.latitude, data.position.longitude) < 2000) {
             this.setState({onlineUsersCoords: onlineUsersCoords})
             this.updateUsersCoords();
         };
@@ -104,7 +112,6 @@ class LocatedTwo extends Component {
   };
       
   updateUsersCoords = () => {
-    console.log(Object.keys(this.state.onlineUsersCoords))
     Object.keys(this.state.onlineUsersCoords).forEach(uid =>
       this.props.firebase.user(uid).on("value", snapshot => {
         if (uid in this.state.onlineUsersCoords) {
@@ -152,13 +159,18 @@ class LocatedTwo extends Component {
     // To stop following the user
     componentWillUnmount() {
       navigator.geolocation.clearWatch(this.watchId);
+      this.props.firebase.user(this.props.userId).off();
+      const users = Object.keys(this.state.onlineUsersCoords);
+      users.forEach(user => {
+        this.props.firebase.user(user).off()
+      });
     }
     
     render() {
       const markers = [];
       markers.push({ ...this.state.browserCoords });
       Object.keys(this.state.onlineUsersCoords).forEach(uid => {
-        markers.push({ ...this.state.onlineUsersCoords[uid], uid })
+        markers.push({ ...this.state.onlineUsersCoords[uid] })
       });
 
       return (
@@ -168,6 +180,7 @@ class LocatedTwo extends Component {
           markers={markers}
           position={Object.values(this.state.browserCoords)}
           zoom={13}
+          onlineUsers={Object.keys(this.state.onlineUsersCoords)}
         />
       ) : null}
       <StyledPosDiv className="positition-info">
@@ -195,10 +208,6 @@ class LocatedTwo extends Component {
       ) : null}
     </div>
     );
-
-  const markerClickHandler = (uid) => {
-    console.log(uid)
-  };
       
   // send all data of several user as props here
   const MyMap = props => (
@@ -214,7 +223,13 @@ class LocatedTwo extends Component {
         url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
       />
       {props.markers.map((marker, index) => (
-        <Marker key={index} position={Object.values(marker)} onclick={markerClickHandler()}>
+        <Marker key={index} position={Object.values(marker)}>
+        {index !== 0 ? 
+          <Popup>
+              <PopupFactory uid={props.onlineUsers[index - 1]}/>
+          </Popup>
+          : null
+        }
         </Marker>
       ))}
     </Map>

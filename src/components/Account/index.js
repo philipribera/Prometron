@@ -38,31 +38,6 @@ const StyledCharacter = Styled.div`
     }
 `;
 
-/*
-const StyledStat = Styled.section`
-    flex-basis: 30%;
-    min-width: 332px;
-    min-height: 270px;
-    max-height: 302px;
-    padding: 12px;
-    border: 2px solid rgb(177,177,177);
-    & h2 {
-        color: rgb(29, 134, 226);
-        text-shadow: 1px 1px 0.5px rgb(252,252,252);
-        margin-bottom: 12px;
-    }
-    & span {
-        color: rgb(122,122,222);
-        font-weight: 600;
-        padding: 4px;
-    }    
-    @media (max-width: 767px) {
-        flex-basis: 100%;
-        padding: 12px;
-    }
-`;
-*/
-
 const StyledProfileEdit = Styled.div`
     display: none;
 `;
