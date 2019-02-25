@@ -157,8 +157,7 @@ class AccountPage extends Component {
       if (user) {
         this.userId = user.uid;
         this.props.firebase.user(this.userId).on("value", snapshot => {
-          this.setState({userData: snapshot.val()})
-        
+          this.setState({userData: snapshot.val()}) 
         });
       } else {
         return
@@ -205,7 +204,7 @@ class AccountPage extends Component {
   };
   
   render() {
-    this.showStatus();    
+    this.showStatus();   
     return (
       <AuthUserContext.Consumer>
         {authUser => (
