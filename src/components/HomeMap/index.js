@@ -158,7 +158,7 @@ class LocatedTwo extends Component {
       const markers = [];
       markers.push({ ...this.state.browserCoords });
       Object.keys(this.state.onlineUsersCoords).forEach(uid => {
-        markers.push({ ...this.state.onlineUsersCoords[uid] })
+        markers.push({ ...this.state.onlineUsersCoords[uid], uid })
       });
 
       return (
@@ -195,8 +195,12 @@ class LocatedTwo extends Component {
       ) : null}
     </div>
     );
+
+  const markerClickHandler = (uid) => {
+    console.log(uid)
+  };
       
-      // send all data of several user as props here
+  // send all data of several user as props here
   const MyMap = props => (
     <Map
       zoomControl={false}
@@ -210,10 +214,7 @@ class LocatedTwo extends Component {
         url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
       />
       {props.markers.map((marker, index) => (
-        <Marker key={index} position={Object.values(marker)}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
+        <Marker key={index} position={Object.values(marker)} onclick={markerClickHandler()}>
         </Marker>
       ))}
     </Map>

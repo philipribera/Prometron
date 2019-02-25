@@ -11,9 +11,8 @@ import { PasswordForgetForm } from "../PasswordForget";
 import PasswordChangeForm from "../PasswordChange";
 import Styled from "styled-components";
 
+import Statistics from '../Statistics';
 import Avatars from '../Avatars';
-import { database } from "firebase";
-
 
 /*** STYLED COMPONENTS ***/
 const StyledFlexContainer = Styled.div`

@@ -7,7 +7,6 @@ import {
   withEmailVerification
 } from "../Session";
 
-import LocatedTwo from "../GeolocatedTwo";
 //import Chat from "../Chat";
 import Styled from "styled-components";
 import HomeMap from "../HomeMap";
@@ -76,10 +75,12 @@ const StyledChat = Styled.section`
         padding: 12px;
     }
 `;
+
 const StyledInput = Styled.input`
     padding: 4px;
     margin: 4px    
 `;
+
 const StyledTarea = Styled.textarea`
     max-height: 300px;
     max-width: 492px;
@@ -87,7 +88,6 @@ const StyledTarea = Styled.textarea`
         max-width: 330px;
     }
 `;
-
 
 const HomePage = props => (
   <AuthUserContext.Consumer>
@@ -119,7 +119,6 @@ const HomePage = props => (
 
 const condition = authUser => !!authUser;
 
-//export default withAuthorization(condition)(HomePage);
 export default compose(
   withFirebase,
   withEmailVerification,
