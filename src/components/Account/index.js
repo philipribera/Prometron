@@ -11,7 +11,8 @@ import { PasswordForgetForm } from "../PasswordForget";
 import PasswordChangeForm from "../PasswordChange";
 import Styled from "styled-components";
 import Avatar from "../../images/lillaTrumpo.jpg";
-import { database } from "firebase";
+
+import Statistics from '../Statistics';
 
 /*** STYLED COMPONENTS ***/
 const StyledFlexContainer = Styled.div`
@@ -76,28 +77,7 @@ const StyledCharData = Styled.div`
       flex-basis: 100%;      
     }
 `;
-const StyledStat = Styled.section`
-    flex-basis: 30%;
-    min-width: 332px;
-    min-height: 270px;
-    max-height: 302px;
-    padding: 12px;
-    border: 2px solid rgb(177,177,177);
-    & h2 {
-        color: rgb(29, 134, 226);
-        text-shadow: 1px 1px 0.5px rgb(252,252,252);
-        margin-bottom: 12px;
-    }
-    & span {
-        color: rgb(122,122,222);
-        font-weight: 600;
-        padding: 4px;
-    }    
-    @media (max-width: 767px) {
-        flex-basis: 100%;
-        padding: 12px;
-    }
-`;
+
 const StyledProfileEdit = Styled.div`
     display: none;
 `;
@@ -212,8 +192,6 @@ class AccountPage extends Component {
   
   render() {
     this.showStatus();
-    const stats = this.state.userData.statistics;
-    console.log(stats.playedgames)
     return (
       <AuthUserContext.Consumer>
         {authUser => (
@@ -245,29 +223,8 @@ class AccountPage extends Component {
                 </StyledUl>
               </StyledCharData>
 
-              <StyledStat>
-                <h2>STATISTICS</h2>
-                <br />
-                <div>
-                  <p>
-                    Played Games <span>{this.state.userData.statistics.playedgames}</span>
-                  </p>
-                  <br />
-                  <p>
-                    Won Games <span>{this.state.userData.statistics.wongames}</span>
-                  </p>
-                  <br />
-                  <p>
-                    Walked Distance <span>{this.state.userData.statistics.walkeddistance}km</span>
-                  </p>
-                  <br />
-                  <p>
-                    Earned Points <span>{this.state.userData.statistics.points}</span>
-                  </p>
-                  <br />
-                  <br />
-                </div>
-              </StyledStat>
+              <Statistics userId={authUser.uid}/>
+              
             </StyledCharacter>
 
             <StyledProfileEdit id="show-profile">
