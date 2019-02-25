@@ -25,8 +25,7 @@ const StyledFlexContainer = Styled.div`
 const StyledCharacter = Styled.div`
     display: flex;
     flex-wrap: wrap;
-    width: 100%;
-    height: max-content;    
+    flex-basis: 100%;
     margin-bottom: 42px;
     & button {
       background-color: rgb(216, 124, 45);

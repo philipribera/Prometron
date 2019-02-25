@@ -1,230 +1,297 @@
 import React, { Component } from "react";
+import { compose } from "recompose";
+
+import {
+  AuthUserContext,
+  withAuthorization,
+  withEmailVerification
+} from "../Session";
 import { withFirebase } from "../Firebase";
-// Avatars
-import AvTrumpo from "../../images/lillaTrumpo.jpg";
-import AvGirl from "../../images/girlAv_300.png";
-import AvDancer from "../../images/dancerAv_300.png";
-import AvPenguin from "../../images/pinguinAv_300.png";
-import AvBlue from "../../images/blueAv_300.png";
+import { PasswordForgetForm } from "../PasswordForget";
+import PasswordChangeForm from "../PasswordChange";
+import Styled from "styled-components";
 
-import Styled from 'styled-components';
-
+import Statistics from '../Statistics';
+import Avatars from '../Avatars';
 
 /*** STYLED COMPONENTS ***/
-
-const StyledForm = Styled.form`
-    display: none;
-    padding: 8px 0;
-    & label {
-        cursor: pointer;        
-    }
-    & input {
-        padding: 2px;
-	    margin: 6px 8px 6px 10px;
-    }  
+const StyledFlexContainer = Styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: auto;
+    min-height: 492px;  
 `;
-
-const StyledAvatar = Styled.figure`
-    flex-basis: 14%;
-    position: relative;
-    & img {
-      width: 210px;
-      min-width: 210px;      
-      min-height: 230px;
-      border: 2px solid rgb(254,254,254);
+const StyledCharacter = Styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 100%;
+    margin-bottom: 42px;
+    & button {
+      background-color: rgb(216, 124, 45);
+      background-color: rgb(77,77,77);
+      border: 1px solid rgb(202,202,202);
     }
-    @media (max-width: 767px) {
-      margin-bottom: 22px;
+    & button:hover {     
+      background-color: rgb(35,35,35);
+      border: 1px solid rgb(254,254,254);      
     }
 `;
 
-const StyledStatus = Styled.div`
-    position: absolute;
-    background-color: ${props => props.backgroundColor};
-    top: 7%;
-    right: 7%;
-    width: 36px; 
-    height: 36px;
-    display: inline-block;
-    border: 1px solid white;        
-    border-radius: 50%;        
-`;
-
-const StyledUl = Styled.ul`   
-    display: none;
-    & li {      
-      display: inline;      
-      cursor: pointer;
-      color: rgb(56, 53, 52);
-      text-shadow: 1px 1px 0.5px rgb(255,255,255);
-      font-weight: 600;
-      padding: 0 4px;
-      margin-right: 6px;      
-    }
-    & li:hover {      
-      color: rgb(15,15,15);
-      text-shadow: 1px 1px 0.5px rgb(227,227,227);
-    }
-`;
-
-const StyledCharData = Styled.div`
+/*
+const StyledStat = Styled.section`
     flex-basis: 30%;
+    min-width: 332px;
+    min-height: 270px;
+    max-height: 302px;
     padding: 12px;
+    border: 2px solid rgb(177,177,177);
     & h2 {
-      font-size: 1.8em;
-      color: rgb(251, 151, 0);
-      text-shadow: 1px 1px 0.5px rgb(57,57,57);
+        color: rgb(29, 134, 226);
+        text-shadow: 1px 1px 0.5px rgb(252,252,252);
+        margin-bottom: 12px;
     }
+    & span {
+        color: rgb(122,122,222);
+        font-weight: 600;
+        padding: 4px;
+    }    
     @media (max-width: 767px) {
-      flex-basis: 48%;      
-      margin-bottom: 72px;
-    }
-    @media (max-width: 492px) {
-      flex-basis: 100%;      
+        flex-basis: 100%;
+        padding: 12px;
     }
 `;
+*/
 
+const StyledProfileEdit = Styled.div`
+    display: none;
+`;
 /*** END ***/
 
-/*** NEW CLASS TO HANDLE CHARACTER DATA AND ONLINE STATUS ***/
-class Avatars extends Component {
-    constructor(props) {
-      super(props);
 
-      this.userId = null;
-      this.statusLight="rgb(83, 205, 13)"
-      
-      this.state = {
-        userData: {}   
-      };
-    }    
+const SIGN_IN_METHODS = [
+  {
+    id: "password",
+    provider: null
+  },
+  {
+    id: "google.com",
+    provider: "googleProvider"
+  },
+  {
+    id: "facebook.com",
+    provider: "facebookProvider"
+  },
+  {
+    id: "twitter.com",
+    provider: "twitterProvider"
+  }
+];
 
-    fetchUserData = () => {
-        this.props.firebase.user(this.props.userId).on("value", snapshot => {
-            this.setState({userData: snapshot.val()})
-        });      
+
+const AccountPage = () => (
+
+<AuthUserContext.Consumer>
+    {authUser => (
+      <StyledFlexContainer>
+        <StyledCharacter>
+          <Avatars userId={authUser.uid} />
+        </StyledCharacter>
+
+        <StyledProfileEdit id="show-profile">
+          <h3>Your account: {authUser.email}</h3>
+          <br />
+          <h3>Password forget</h3>
+          <PasswordForgetForm />
+          <br />
+          <h3>Password change</h3>
+          <PasswordChangeForm />
+          <LoginManagement authUser={authUser} />
+        </StyledProfileEdit>
+      </StyledFlexContainer>
+    )}
+  </AuthUserContext.Consumer>
+);
+
+
+class LoginManagementBase extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      activeSignInMethods: [],
+      error: null
     };
-  
-    // Displays status choices
-    showStatusChoice = () => {
-      let statUl = document.getElementById("status-ul");
-      if (statUl.style.display === "block") {
-        statUl.style.display = "none";
-      } else {
-        statUl.style.display = "block";
-      }
-    };
-  
-    // Write new status to DB
-    changeStatus = ev => {
-      this.props.firebase.user(this.props.userId).child("status").set(ev.target.id)
-    };
-    
-    // Change the status light
-    showStatus = () => {
-      if (this.state.userData.status === "Invisible") {
-        this.statusLight = "rgb(169,169,169)";
-        }
-      else if(this.state.userData.status === "Idle"){
-          this.statusLight = "rgb(222, 216, 27)"
-      }
-      else if(this.state.userData.status === "Do Not Disturb"){
-        this.statusLight = "rgb(255,0,0)"
-      } else {
-        this.statusLight = "rgb(83, 205, 13)"
-      };
-    };
-    
-    showProfile = () => {
-      document.getElementById("show-profile").style.display = "block";
-    };
-    
-    componentDidMount(){
-      this.fetchUserData();
-    };
+  }
 
-    /*** SHOW AVATAR CHOICES ***/
-    showAvatarList = () => {
-        document.getElementById("show-avatars").style.display = "block";
-    };
+  componentDidMount() {
+    this.props.firebase.auth
+      .fetchSignInMethodsForEmail(this.props.authUser.email)
+      .then(activeSignInMethods =>
+        this.setState({ activeSignInMethods, error: null }),
+      )
+      .catch(error => this.setState({ error }));
+  }
 
-    // Write avatar to DB
-    changeAvatar = (ev) => {
-        this.props.firebase.user(this.props.userId).child("avatar").set(ev.target.id);
-    }
-
-    showAvatar = () => {
-        if (this.state.userData.avatar === "girl") {
-            this.avatar = AvGirl;
-        }
-        else if (this.state.userData.avatar === "dancer") {
-            this.avatar = AvDancer;
-        }
-        else if (this.state.userData.avatar === "penguin") {
-            this.avatar = AvPenguin;
-        } 
-        else if (this.state.userData.avatar === "blue") {
-            this.avatar = AvBlue;
-        } else {
-            // Enter empty img
-            this.avatar = "";
-        }
-    } 
+  fetchSignInMethods = () => {
+    this.props.firebase.auth
+      .fetchSignInMethodsForEmail(this.props.authUser.email)
+      .then(activeSignInMethods =>
+        this.setState({ activeSignInMethods, error: null })
+      )
+      .catch(error => this.setState({ error }));
+  };
 
 
-    render() {
-        this.showStatus();
-        this.showAvatar(); 
+  onSocialLoginLink = provider => {
+    this.props.firebase.auth.currentUser
+      .linkWithPopup(this.props.firebase[provider])
+      .then(this.fetchSignInMethods)
+      .catch(error => this.setState({ error }));
+  };
 
-        return (
-            <article className="choose-avatar">
-                <StyledAvatar>
-                    <img src={this.avatar} alt="user avatar" />
-                    <StyledStatus backgroundColor={this.statusLight} />
-                </StyledAvatar>
+  onDefaultLoginLink = password => {
+    const credential = this.props.firebase.emailAuthProvider.credential(
+      this.props.authUser.email,
+      password
+    );
 
-                <StyledForm id="show-avatars" onClick={this.changeAvatar} >
-                    <h3 className="input-title">Choose your avatar</h3>
-                    <label>
-                        <input type="radio" name="avatar" value="girl" id="girl" checked={this.state.userData.avatar === "girl" ? true : false } />
-                        Girl
-                    </label>
-                    <label><input type="radio" name="avatar" value="dancer" id="dancer" />
-                        Dancer
-                    </label>
-                    <label>
-                        <input type="radio" name="avatar" value="blue" id="blue" />
-                        Blue
-                    </label>
-                    <label>
-                        <input type="radio" name="avatar" value="penguin" id="penguin" />
-                        Penguin
-                    </label>
-                </StyledForm>
+    this.props.firebase.auth.currentUser
+      .linkAndRetrieveDataWithCredential(credential)
+      .then(this.fetchSignInMethods)
+      .catch(error => this.setState({ error }));
+  };
 
+  onUnlink = providerId => {
+    this.props.firebase.auth.currentUser
+      .unlink(providerId)
+      .then(this.fetchSignInMethods)
+      .catch(error => this.setState({ error }));
+  };
 
-                <StyledCharData>
-                    <h2>{this.state.userData.username}</h2>
-                    <br />
-                    <p><i>{this.state.userData.description}</i></p>
-                    <br />
-                    <button onClick={this.showProfile}>Edit profile</button>
-                    <br />
+  render() {
+    const { activeSignInMethods, error } = this.state;
 
-                    <button onClick={this.showStatusChoice}>Change status</button>
+    return (
+      <div>
+        Sign In Methods:
+        <ul>
+          {SIGN_IN_METHODS.map(signInMethod => {
+            const onlyOneLeft = activeSignInMethods.length === 1;
+            const isEnabled = activeSignInMethods.includes(signInMethod.id);
 
-                    <StyledUl id="status-ul" onClick={this.changeStatus}>
-                        <li id="Online">Online |</li>
-                        <li id="Idle">Idle |</li>
-                        <li id="Do Not Disturb">Do Not Disturb |</li>
-                        <li id="Invisible">Invisible</li>
-                    </StyledUl>
-
-                </StyledCharData>
-
-            </article >
-        );
-    }
+            return (
+              <li key={signInMethod.id}>
+                {signInMethod.id === "password" ? (
+                  <DefaultLoginToggle
+                    onlyOneLeft={onlyOneLeft}
+                    isEnabled={isEnabled}
+                    signInMethod={signInMethod}
+                    onLink={this.onDefaultLoginLink}
+                    onUnlink={this.onUnlink}
+                  />
+                ) : (
+                    <SocialLoginToggle
+                      onlyOneLeft={onlyOneLeft}
+                      isEnabled={isEnabled}
+                      signInMethod={signInMethod}
+                      onLink={this.onSocialLoginLink}
+                      onUnlink={this.onUnlink}
+                    />
+                  )}
+              </li>
+            );
+          })}
+        </ul>
+        {error && error.message}
+      </div>
+    );
+  }
 }
 
-export default withFirebase(Avatars);
+const SocialLoginToggle = ({
+  onlyOneLeft,
+  isEnabled,
+  signInMethod,
+  onLink,
+  onUnlink
+}) =>
+  isEnabled ? (
+    <button
+      type="button"
+      onClick={() => onUnlink(signInMethod.id)}
+      disabled={onlyOneLeft}
+    >
+      Deactivate {signInMethod.id}
+    </button>
+  ) : (
+      <button type="button" onClick={() => onLink(signInMethod.provider)}>
+        Link {signInMethod.id}
+      </button>
+    );
+
+
+class DefaultLoginToggle extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { passwordOne: '', passwordTwo: '' };
+  }
+  onSubmit = event => {
+    event.preventDefault();
+    this.props.onLink(this.state.passwordOne);
+    this.setState({ passwordOne: '', passwordTwo: '' });
+  };
+  onChange = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+  render() {
+    const {
+      onlyOneLeft,
+      isEnabled,
+      signInMethod,
+      onUnlink,
+    } = this.props;
+    const { passwordOne, passwordTwo } = this.state;
+    const isInvalid =
+      passwordOne !== passwordTwo || passwordOne === '';
+    return isEnabled ? (
+      <button
+        type="button"
+        onClick={() => onUnlink(signInMethod.id)}
+        disabled={onlyOneLeft}
+      >
+        Deactivate {signInMethod.id}
+      </button>
+    ) : (
+        <form onSubmit={this.onSubmit}>
+          <input
+            name="passwordOne"
+            value={passwordOne}
+            onChange={this.onChange}
+            type="password"
+            placeholder="New Password"
+          />
+          <input
+            name="passwordTwo"
+            value={passwordTwo}
+            onChange={this.onChange}
+            type="password"
+            placeholder="Confirm New Password"
+          />
+          <button disabled={isInvalid} type="submit">
+            Link {signInMethod.id}
+          </button>
+        </form>
+      );
+  }
+}
+
+const LoginManagement = withFirebase(LoginManagementBase);
+
+const condition = authUser => !!authUser;
+
+export default compose(
+  withFirebase,
+  withEmailVerification,
+  withAuthorization(condition)
+)(AccountPage);
