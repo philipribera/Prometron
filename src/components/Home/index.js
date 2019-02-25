@@ -7,7 +7,6 @@ import {
   withEmailVerification
 } from "../Session";
 
-import LocatedTwo from "../GeolocatedTwo";
 //import Chat from "../Chat";
 import Styled from "styled-components";
 import HomeMap from "../HomeMap";
@@ -78,10 +77,12 @@ const StyledChat = Styled.section`
         padding: 12px;
     }
 `;
+
 const StyledInput = Styled.input`
     padding: 4px;
     margin: 4px    
 `;
+
 const StyledTarea = Styled.textarea`
     max-height: 300px;
     max-width: 492px;
@@ -89,32 +90,6 @@ const StyledTarea = Styled.textarea`
         max-width: 330px;
     }
 `;
-/*
-const StyledStat = Styled.section`
-    flex-basis: 55%;
-    min-width: 332px;
-    min-height: 300px;
-    max-height: 500px;
-    padding: 12px;
-    border: 2px solid rgb(177,177,177);
-    & h2 {
-        color: rgb(29, 134, 226);
-        text-shadow: 1px 1px 0.5px rgb(252,252,252);
-        margin-bottom: 12px;
-    }
-    & span {
-        color: rgb(122,122,222);
-        font-weight: 600;
-        padding: 4px;
-    }    
-    @media (max-width: 767px) {
-        flex-basis: 100%;
-        padding: 12px;
-    }
-`;
-*/
-
-
 
 const HomePage = props => (
   <AuthUserContext.Consumer>
@@ -146,7 +121,6 @@ const HomePage = props => (
 
 const condition = authUser => !!authUser;
 
-//export default withAuthorization(condition)(HomePage);
 export default compose(
   withFirebase,
   withEmailVerification,
