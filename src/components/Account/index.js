@@ -148,9 +148,16 @@ class AccountPage extends Component {
     this.statusLight="rgb(83, 205, 13)"
 
     this.state = {
-      userData: {}   
+      userData: {
+        statistics: {
+          playedgames: 0,
+          wongames: 0,
+          walkeddistance: 0,
+          points: 0,
+        }
+      }
     };
-  }
+  };
   
   fetchUserData = () => {
     this.props.firebase.auth.onAuthStateChanged(user => {
@@ -204,7 +211,9 @@ class AccountPage extends Component {
   };
   
   render() {
-    this.showStatus();   
+    this.showStatus();
+    const stats = this.state.userData.statistics;
+    console.log(stats.playedgames)
     return (
       <AuthUserContext.Consumer>
         {authUser => (
@@ -241,19 +250,19 @@ class AccountPage extends Component {
                 <br />
                 <div>
                   <p>
-                    Played Games <span>{this.state.userData.username}</span>
+                    Played Games <span>{this.state.userData.statistics.playedgames}</span>
                   </p>
                   <br />
                   <p>
-                    Won Games <span>{this.state.userData.username}</span>
+                    Won Games <span>{this.state.userData.statistics.wongames}</span>
                   </p>
                   <br />
                   <p>
-                    Walked Distance <span>{this.state.userData.username}</span>
+                    Walked Distance <span>{this.state.userData.statistics.walkeddistance}km</span>
                   </p>
                   <br />
                   <p>
-                    Earned Points <span>{this.state.userData.username}</span>
+                    Earned Points <span>{this.state.userData.statistics.points}</span>
                   </p>
                   <br />
                   <br />
