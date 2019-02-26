@@ -4,25 +4,6 @@ import { withFirebase } from "../Firebase";
 
 import PopupFactory from "../PopupFactory";
 
-import Styled from 'styled-components';
-
-/*** STYLED COMPONENTS ***/
-const StyledPosDiv = Styled.div` 
-  display: flex;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  z-index: 999;
-  width: 100%;
-  background-color: rgb(12,12,12);
-  color: rgb(252,252,252);
-  text-shadow: 1px 1px 0.5px rgb(72,72,72);
-  padding: 8px;
-`;
-const StyledCoords = Styled.div`
-  flex-basis: 50%;
-`;
-
 class LocatedTwo extends Component {
   constructor(props) {
     super(props);
@@ -175,31 +156,10 @@ class LocatedTwo extends Component {
           onlineUsers={Object.keys(this.state.onlineUsersCoords)}
         />
       ) : null}
-      <StyledPosDiv className="positition-info">
-        <StyledCoords className="coordsBrowser">
-          <p>Coords from Browser</p>
-          <Coords position={this.state.browserCoords} />
-        </StyledCoords>
-        <StyledCoords className="coordsDB">
-          <p>Coords from DB</p>
-          <Coords position={this.state.dbCoords} />
-        </StyledCoords>
-      </StyledPosDiv>
       </div>
       );
     }
   }
-  
-  const Coords = props => (
-    <div>
-      {props.position ? (
-        <div>
-          <div>{props.position.latitude}</div>
-          <div>{props.position.longitude}</div>
-        </div>
-      ) : null}
-    </div>
-    );
       
   // send all data of several user as props here
   const MyMap = props => (
