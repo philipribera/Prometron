@@ -10,7 +10,7 @@ import {
 //import Chat from "../Chat";
 import Styled from "styled-components";
 import HomeMap from "../HomeMap";
-
+import GameMap from "../GameMap";
 
 /*** STYLED COMPONENTS ***/
 const StyledFlexContainer = Styled.div`

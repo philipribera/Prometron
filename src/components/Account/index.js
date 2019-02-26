@@ -76,13 +76,11 @@ const AccountPage = () => (
         <StyledProfileEdit id="show-profile">
           <h3>Your account: {authUser.email}</h3>
           <br />
-          <h3>Password forget</h3>
-          <PasswordForgetForm />
-          <br />
           <h3>Password change</h3>
           <PasswordChangeForm />
           <LoginManagement authUser={authUser} />
         </StyledProfileEdit>
+        <Statistics userId={authUser.uid} />
       </StyledFlexContainer>
     )}
   </AuthUserContext.Consumer>
@@ -149,8 +147,7 @@ class LoginManagementBase extends Component {
 
     return (
       <div>
-        Sign In Methods:
-        <ul>
+        <ul style={{padding: "0"}}>
           {SIGN_IN_METHODS.map(signInMethod => {
             const onlyOneLeft = activeSignInMethods.length === 1;
             const isEnabled = activeSignInMethods.includes(signInMethod.id);

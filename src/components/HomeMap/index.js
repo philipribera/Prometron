@@ -130,7 +130,7 @@ class LocatedTwo extends Component {
   };
   
   // Should be activated as soon the user is logged in - almost as landing page...
-  componentDidMount() {
+  componentWillMount() {
     this.getOnlineUsers();
     this.getUserPositionFromDB();
     this.watchId = navigator.geolocation.watchPosition(
