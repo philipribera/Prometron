@@ -11,10 +11,9 @@ const StyledContainer = Styled.div`
 `;
 
 
-
 const Chat = ({ firebase }) => (
     <StyledContainer>
-
+        
     </StyledContainer>
 );
 
