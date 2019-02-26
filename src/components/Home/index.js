@@ -1,6 +1,9 @@
 import React from "react";
 import { compose } from "recompose";
 import { withFirebase } from "../Firebase";
+import { Link } from 'react-router-dom';
+import * as ROUTES from '../../constants/routes';
+
 import {
   AuthUserContext,
   withAuthorization,
@@ -10,7 +13,7 @@ import {
 //import Chat from "../Chat";
 import Styled from "styled-components";
 import HomeMap from "../HomeMap";
-import GameMap from "../GameMap";
+//import GameMap from "../GameMap";
 
 /*** STYLED COMPONENTS ***/
 const StyledFlexContainer = Styled.div`
@@ -95,7 +98,7 @@ const HomePage = props => (
         <StyledFlexContainer>
           
           <StyledDivs>
-            <StyledH1>ENTER GAME</StyledH1>
+            <Link to={ROUTES.GAME}><StyledH1>Enter Game</StyledH1></Link>
           </StyledDivs>
 
           <StyledMap className="map-container">           

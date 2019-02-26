@@ -9,11 +9,12 @@ import AvBlue from "../../images/blueAv_300.png";
 import Styled from 'styled-components';
 
 const Wrapper = Styled.div`
-    display: flex;
-    height: 80px;
-    width: 200px;
+    display: inline-block;
+    height: 82px;
+    width: 212px;    
 `;
 
+/*
 const StyledAvatar = Styled.div`
     position: relative;
     display: flex;
@@ -21,6 +22,7 @@ const StyledAvatar = Styled.div`
     padding: 5px 5px;
     background-image: url(${props => props.avatar});
     background-size: cover;
+    background-position: center;
     width: 70px;
     min-width: 70px;      
     min-height: 76.67px;
@@ -29,6 +31,25 @@ const StyledAvatar = Styled.div`
         width: 100%;
         border: 2px solid rgb(254,254,254);
     }
+`;
+*/
+
+
+const StyledPic = Styled.div`
+    display: inline-block;
+    width: 40%;
+    height: inherit;
+    min-width: 70px;
+    padding: 0 5px;
+    background-image: url(${props => props.avatar});
+    background-size: cover;
+    background-position: center;
+`;
+const StyledPicInfo = Styled.div`
+    display: inline-block;
+    width: 60%;
+    min-width: 120px;
+    padding-left: 10px;    
 `;
 
 const StyledStatus = Styled.div`
@@ -42,9 +63,9 @@ const StyledStatus = Styled.div`
 `;
 
 const StyledCharData = Styled.div`
-    padding-left: 10px;
     color: rgb(251, 151, 0);
-    text-shadow: 1px 1px 0.5px rgb(57,57,57);
+    text-shadow: 1px 1px 0.5px rgb(157,157,157);
+    margin-bottom: 6px;
     p {
         text-shadow: none;
         margin: 0;
@@ -52,19 +73,25 @@ const StyledCharData = Styled.div`
     }
 `;
 
-const InfoWrapper = Styled.div`
+/*
+const InfoWrapper = Styled.div`    
     display: flex;
     width: 100%;
     flex-direction: column;
     align-items: center;
 `;
+*/
 
 const ButtonContainer = Styled.div`
     display: flex;
     margin: 0 auto;
+    margin-bottom: 4px;
     button {
         font-size: 12px;
         margin: 0;
+        &:first-of-type {
+            margin-right: 5px;
+        }
     }
 `;
     
@@ -121,10 +148,10 @@ class PopupFactory extends React.Component {
         this.showStatus();
         return (
             <Wrapper>
-                <StyledAvatar avatar={this.avatar}>
+                <StyledPic avatar={this.avatar}>
                     <StyledStatus backgroundColor={this.statusLight} />
-                </StyledAvatar>
-                <InfoWrapper>
+                </StyledPic>
+                <StyledPicInfo>
                     <StyledCharData>
                         <h2>{this.state.data.username}</h2>
                         <p><i>{this.state.data.description}</i></p>
@@ -134,7 +161,7 @@ class PopupFactory extends React.Component {
                         <button>Add</button>
                         <button>Message</button>
                     </ButtonContainer>
-                </InfoWrapper>
+                </StyledPicInfo>
             </Wrapper>
         )
     }
