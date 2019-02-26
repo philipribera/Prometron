@@ -26,16 +26,7 @@ const StyledCharacter = Styled.div`
     display: flex;
     flex-wrap: wrap;
     flex-basis: 100%;
-    margin-bottom: 42px;
-    & button {
-      background-color: rgb(216, 124, 45);
-      background-color: rgb(77,77,77);
-      border: 1px solid rgb(202,202,202);
-    }
-    & button:hover {     
-      background-color: rgb(35,35,35);
-      border: 1px solid rgb(254,254,254);      
-    }
+    margin-bottom: 42px;        
 `;
 
 const StyledProfileEdit = Styled.div`

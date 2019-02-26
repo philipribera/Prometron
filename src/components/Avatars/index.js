@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withFirebase } from "../Firebase";
 // Avatars
-import AvTrumpo from "../../images/lillaTrumpo.jpg";
+//import AvTrumpo from "../../images/lillaTrumpo.jpg";
 import AvGirl from "../../images/girlAv_300.png";
 import AvDancer from "../../images/dancerAv_300.png";
 import AvPenguin from "../../images/pinguinAv_300.png";
@@ -9,30 +9,45 @@ import AvBlue from "../../images/blueAv_300.png";
 import Styled from "styled-components";
 
 /*** STYLED COMPONENTS ***/
-const StyledForm = Styled.form`
+const StyledAvatarsList = Styled.div`
     display: none;
-    padding: 8px 0;
-    & label {
-        cursor: pointer;        
-    }
-    & input {
-        padding: 2px;
-	    margin: 6px 8px 6px 10px;
+    padding: 4px 0;
+    margin: 4px 0;
+    & select {
+      padding: 4px;
+      background-color: rgb(55,55,55);    
+      color: rgb(247,247,247);
+      border: 1px solid rgb(252,252,252);
     }  
 `;
-const StyledAvatar = Styled.figure`
+const StyledAvatar = Styled.div`
     flex-basis: 14%;
-    position: relative;
-    background: mediumvioletred;
-    & img {
-      width: 210px;
-      min-width: 210px;      
-      min-height: 240px;
-      border: 2px solid rgb(254,254,254);
-    }
+    position: relative;   
     @media (max-width: 767px) {
       margin: 22px 0;
     }
+`;
+const StyledFigure = Styled.figure`  
+  & img {
+    width: 210px;
+    min-width: 210px;      
+    min-height: 240px;
+    background: mediumvioletred;
+    padding: 4px 4px 0px 4px;
+    border: 2px solid rgb(254,254,254);
+  }
+`;
+const StyledNameTitle = Styled.h2`
+  display: inline;
+  margin-right: 22px;
+`;
+const StyledEditButton = Styled.button`
+  background-color: rgb(247,247,247);
+  color: rgb(97,97,97);
+  border: 1px solid rgb(177,177,177);     
+  &:hover {   
+    color: rgb(17,17,17);
+    border: 1px solid rgb(202,202,202);     
 `;
 const StyledStatus = Styled.div`
     position: absolute;
@@ -45,44 +60,24 @@ const StyledStatus = Styled.div`
     border: 1px solid white;        
     border-radius: 50%;        
 `;
-/*
-const StyledUl = Styled.ul`   
-    display: none;
-    & li {      
-      display: inline;      
-      cursor: pointer;
-      color: rgb(56, 53, 52);
-      text-shadow: 1px 1px 0.5px rgb(255,255,255);
-      font-weight: 600;
-      padding: 0 4px;
-      margin-right: 6px;      
-    }
-    & li:hover {      
-      color: rgb(15,15,15);
-      text-shadow: 1px 1px 0.5px rgb(227,227,227);
-    }
-`;
-*/
 const StyledSel = Styled.div`
   position: relative;
   font-family: Arial;
+  margin: 4px 0;
   & select {
     padding: 4px;
     background-color: rgb(55,55,55);    
     color: rgb(247,247,247);
     border: 1px solid rgb(252,252,252);
   }   
-`; 
-
-const AvatarTitle = Styled.h3`
-  color: rgb(255,255,255);
-  text-shadow: 1px 1px 0.5px rgb(77,77,77);
-  margin: 12px 0;
 `;
-
+const SelectTitle = Styled.h4`
+  color: rgb(99, 99, 99);
+  margin-bottom: 4px;
+`;
 const StyledCharData = Styled.div`
     flex-basis: 30%;
-    padding: 12px;
+    padding: 0 12px;
     & h2 {
       font-size: 1.85em;
       color: rgb(251, 151, 0);
@@ -165,7 +160,7 @@ class Avatars extends Component {
     this.props.firebase
       .user(this.props.userId)
       .child("avatar")
-      .set(ev.target.id);
+      .set(ev.target.value);
   };
 
   showAvatar = () => {
@@ -190,28 +185,28 @@ class Avatars extends Component {
     return (
       <React.Fragment>
         <section className="choose-avatar">
-          
           <StyledAvatar>
-            <figure onClick={this.showAvatarList}>
+            <StyledFigure onClick={this.showAvatarList}>
               <img src={this.avatar} alt="user avatar" />
               <StyledStatus backgroundColor={this.statusLight} />
-            </figure>
+            </StyledFigure>
           </StyledAvatar>
         </section>
 
-        <StyledCharData>
-          <h2>{this.state.userData.username}</h2>
+        <StyledCharData>         
+
+          <StyledNameTitle>{this.state.userData.username}</StyledNameTitle>
+          <StyledEditButton onClick={this.showProfile}>Edit profile</StyledEditButton>
+          <br />
           <br />
           <p>
             <i>{this.state.userData.description}</i>
           </p>
-          <br />
-          <button onClick={this.showProfile}>Edit profile</button>
-          <br />
-          <br />
+          <br />          
 
           <StyledSel id="status-ul" onClick={this.changeStatus}>
-            <select id="race">
+            <SelectTitle>Set your status</SelectTitle>
+            <select id="status">
               <option value="Online">Online</option>
               <option value="Idle">Idle</option>
               <option value="Do Not Disturb">Do not disturb</option>
@@ -219,32 +214,16 @@ class Avatars extends Component {
             </select>
             <br />
           </StyledSel>
-
-          <StyledForm id="show-avatars" onClick={this.changeAvatar}>
-            <AvatarTitle className="input-title">Choose your avatar</AvatarTitle>
-            <label>
-              <input
-                type="radio"
-                name="avatar"
-                value="girl"
-                id="girl"
-                checked={this.state.userData.avatar === "girl" ? true : false}
-              />
-              Girl
-            </label>
-            <label>
-              <input type="radio" name="avatar" value="dancer" id="dancer" />
-              Dancer
-            </label>
-            <label>
-              <input type="radio" name="avatar" value="blue" id="blue" />
-              Blue
-            </label>
-            <label>
-              <input type="radio" name="avatar" value="penguin" id="penguin" />
-              Penguin
-            </label>
-          </StyledForm>
+          <StyledAvatarsList id="show-avatars" onClick={this.changeAvatar}>
+            <SelectTitle>Choose Avatar</SelectTitle>
+            <select id="avatar">
+              <option value="girl">Girl</option>
+              <option value="dancer">Travolta</option>
+              <option value="blue">Blue</option>
+              <option value="penguin">Penguin</option>
+            </select>
+            <br />
+          </StyledAvatarsList>
         </StyledCharData>
       </React.Fragment>
     );

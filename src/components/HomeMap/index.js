@@ -17,7 +17,8 @@ const StyledPosDiv = Styled.div`
   background-color: rgb(12,12,12);
   color: rgb(252,252,252);
   text-shadow: 1px 1px 0.5px rgb(72,72,72);
-  padding: 8px;
+  padding: 6px;
+  opacity: 0.6;
 `;
 const StyledCoords = Styled.div`
   flex-basis: 50%;
@@ -95,10 +96,10 @@ class LocatedTwo extends Component {
         };
         let data = snapshot.val();
         onlineUsersCoords[uid] = data.position;
-        if (this.calculateDistance(this.state.browserCoords.latitude, this.state.browserCoords.longitude, data.position.latitude, data.position.longitude) < 2000) {
+        // if (this.calculateDistance(this.state.browserCoords.latitude, this.state.browserCoords.longitude, data.position.latitude, data.position.longitude) < 2000) {
             this.setState({onlineUsersCoords: onlineUsersCoords})
             this.updateUsersCoords();
-        };
+        // };
       })
     );
   };
