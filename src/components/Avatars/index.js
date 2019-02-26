@@ -76,7 +76,7 @@ const SelectTitle = Styled.h4`
   margin-bottom: 4px;
 `;
 const StyledCharData = Styled.div`
-    flex-basis: 30%;
+    flex-basis: 50%;
     padding: 0 12px;
     & h2 {
       font-size: 1.85em;

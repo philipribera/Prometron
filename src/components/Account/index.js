@@ -26,7 +26,7 @@ const StyledCharacter = Styled.div`
     display: flex;
     flex-wrap: wrap;
     flex-basis: 100%;
-    flex-basis: 54%;
+    flex-basis: 60%;
     margin-bottom: 42px;   
     @media (max-width: 767px) {
       flex-basis: 100%
