@@ -34,7 +34,6 @@ const StyledAvatar = Styled.div`
 `;
 */
 
-
 const StyledPic = Styled.div`
     display: inline-block;
     width: 40%;
