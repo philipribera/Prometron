@@ -26,7 +26,11 @@ const StyledCharacter = Styled.div`
     display: flex;
     flex-wrap: wrap;
     flex-basis: 100%;
-    margin-bottom: 42px;        
+    flex-basis: 54%;
+    margin-bottom: 42px;   
+    @media (max-width: 767px) {
+      flex-basis: 100%
+    }     
 `;
 
 const StyledProfileEdit = Styled.div`
