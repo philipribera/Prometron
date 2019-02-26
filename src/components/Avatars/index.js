@@ -6,7 +6,6 @@ import AvGirl from "../../images/girlAv_300.png";
 import AvDancer from "../../images/dancerAv_300.png";
 import AvPenguin from "../../images/pinguinAv_300.png";
 import AvBlue from "../../images/blueAv_300.png";
-
 import Styled from "styled-components";
 
 /*** STYLED COMPONENTS ***/
@@ -32,7 +31,7 @@ const StyledAvatar = Styled.figure`
       border: 2px solid rgb(254,254,254);
     }
     @media (max-width: 767px) {
-      margin-bottom: 22px;
+      margin: 22px 0;
     }
 `;
 const StyledStatus = Styled.div`
@@ -191,7 +190,7 @@ class Avatars extends Component {
     return (
       <React.Fragment>
         <section className="choose-avatar">
-          <br />
+          
           <StyledAvatar>
             <figure onClick={this.showAvatarList}>
               <img src={this.avatar} alt="user avatar" />
