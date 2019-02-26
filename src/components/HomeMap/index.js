@@ -76,10 +76,10 @@ class LocatedTwo extends Component {
         };
         let data = snapshot.val();
         onlineUsersCoords[uid] = data.position;
-        if (this.calculateDistance(this.state.browserCoords.latitude, this.state.browserCoords.longitude, data.position.latitude, data.position.longitude) < 2000) {
+        // if (this.calculateDistance(this.state.browserCoords.latitude, this.state.browserCoords.longitude, data.position.latitude, data.position.longitude) < 2000) {
             this.setState({onlineUsersCoords: onlineUsersCoords})
             this.updateUsersCoords();
-        };
+        // };
       })
     );
   };
