@@ -9,7 +9,7 @@ const StyledStat = Styled.section`
     min-height: 270px;
     max-height: 302px;
     padding: 12px;
-    border: 2px solid rgb(177,177,177);
+    border: 2px solid rgb(192,192,192);
     & h2 {
         color: rgb(29, 134, 226);
         text-shadow: 1px 1px 0.5px rgb(252,252,252);

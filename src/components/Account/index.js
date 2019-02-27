@@ -21,18 +21,19 @@ const StyledFlexContainer = Styled.div`
     width: 100%;
     height: auto;
     min-height: 492px;  
+    @media (max-width: 767px) {
+      margin-top: 22px;
+    } 
 `;
 const StyledCharacter = Styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    flex-basis: 100%;
+    display: flex;    
     flex-basis: 54%;
     margin-bottom: 42px;   
     @media (max-width: 767px) {
+      flex-wrap: wrap;
       flex-basis: 100%
     }     
 `;
-
 const StyledProfileEdit = Styled.div`
     display: none;
 `;

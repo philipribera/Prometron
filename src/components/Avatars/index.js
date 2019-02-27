@@ -21,10 +21,10 @@ const StyledAvatarsList = Styled.div`
     }  
 `;
 const StyledAvatar = Styled.div`
-    flex-basis: 14%;
+    /*flex-basis: 14%;*/
     position: relative;   
     @media (max-width: 767px) {
-      margin: 22px 0;
+      
     }
 `;
 const StyledFigure = Styled.figure`  
@@ -34,8 +34,27 @@ const StyledFigure = Styled.figure`
     min-height: 240px;
     background: mediumvioletred;
     padding: 4px 4px 0px 4px;
+    margin-bottom: 12px;
     border: 2px solid rgb(254,254,254);
   }
+`;
+const StyledCharData = Styled.div`
+    flex-basis: 44%;
+    min-width: 282px;
+    padding: 0 12px;
+    & h2 {
+      font-size: 1.85em;
+      color: rgb(251, 151, 0);
+      text-shadow: 1px 1px 0.5px rgb(57,57,57);
+    }
+    @media (max-width: 767px) {
+      flex-basis: 50%;    
+      padding: 0 10px;  
+      margin-bottom: 72px;
+    }
+    @media (max-width: 492px) {
+      flex-basis: 100%;      
+    }
 `;
 const StyledNameTitle = Styled.h2`
   display: inline;
@@ -63,7 +82,6 @@ const StyledStatus = Styled.div`
 const StyledSel = Styled.div`
   position: relative;
   font-family: Arial;
-  margin: 4px 0;
   & select {
     padding: 4px;
     background-color: rgb(55,55,55);    
@@ -74,22 +92,6 @@ const StyledSel = Styled.div`
 const SelectTitle = Styled.h4`
   color: rgb(99, 99, 99);
   margin-bottom: 4px;
-`;
-const StyledCharData = Styled.div`
-    flex-basis: 30%;
-    padding: 0 12px;
-    & h2 {
-      font-size: 1.85em;
-      color: rgb(251, 151, 0);
-      text-shadow: 1px 1px 0.5px rgb(57,57,57);
-    }
-    @media (max-width: 767px) {
-      flex-basis: 48%;      
-      margin-bottom: 72px;
-    }
-    @media (max-width: 492px) {
-      flex-basis: 100%;      
-    }
 `;
 /*** END ***/
 

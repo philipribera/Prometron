@@ -27,14 +27,9 @@ input {
     padding: 4px;
     margin: 4px    
 }
-
-ul {
-  padding: 10px;
-}
 li {
     list-style-type: none;
 }
-
 a {
   text-decoration: none;
 }
