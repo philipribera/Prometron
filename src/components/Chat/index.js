@@ -12,19 +12,29 @@ import Styled from 'styled-components';
 
 
 /*** STYLED COMPONENETS ***/
-const StyledMessageBox = Styled.div`
-  max-height: 300px;
-  max-width: 492px;
+const StyledMessageBox = Styled.div`  
+  max-width: 492px;  
   background-color: rgb(37,37,37);
   color: rgb(244,244,244);
-  padding: 4px;
+  padding: 4px;  
+  border: 2px solid rgb(206,202,202);
+  & ul {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 220px;
+  }  
   @media (max-width: 767px) {
     max-width: 330px;
   }
 `;
 const StyledInput = Styled.input`
-    padding: 4px;
-    margin: 4px    
+    background-color: rgb(249, 249, 249);
+    padding: 6px;  
+    margin: 0;
+`;
+const StyledSubmit = Styled.button`    
+    background-color: rgb(47,47,47);
+    margin-left: 8px;
 `;
 /*** END ***/
 
@@ -67,7 +77,7 @@ class MessagesBase extends Component {
       text: '',
       loading: false,
       messages: [],
-      limit: 5,
+      limit: 8,
     };
   }
 
@@ -141,7 +151,7 @@ class MessagesBase extends Component {
   };
 
   render() {
-    const { users } = this.props;
+    const { users } = this.props;    
     const { text, messages, loading } = this.state;
 
     return (
@@ -149,9 +159,7 @@ class MessagesBase extends Component {
         {authUser => (
           <div>
             
-
             {loading && <div>Loading ...</div>}
-
 
             <StyledMessageBox>
               {messages && (
@@ -162,8 +170,8 @@ class MessagesBase extends Component {
                       ? users[message.userId]
                       : { userId: message.userId },
                   }))}
-                  onEditMessage={this.onEditMessage}
-                  onRemoveMessage={this.onRemoveMessage}
+                  //onEditMessage={this.onEditMessage}
+                  //onRemoveMessage={this.onRemoveMessage}
                 />
               )}
             </StyledMessageBox>
@@ -178,12 +186,12 @@ class MessagesBase extends Component {
               }
             >  
 
-              <StyledInput 
+              <StyledInput maxLength="64"
                 type="text"
                 value={text}
                 onChange={this.onChangeText}
               />
-              <button type="submit">Send</button>
+              <StyledSubmit type="submit">Send</StyledSubmit>
             </form>
           </div>
         )}
@@ -202,7 +210,7 @@ const MessageList = ({
       {messages.map(message => (
         <MessageItem
           key={message.uid}
-          message={message}
+          message={message}          
           //onEditMessage={onEditMessage}
           //onRemoveMessage={onRemoveMessage}
         />
