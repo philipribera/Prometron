@@ -27,7 +27,6 @@ class Firebase {
     }
     
     // *** Auth API ***
-    presenceListener
     
     doSendEmailVerification = () =>
     this.auth.currentUser.sendEmailVerification({
@@ -93,12 +92,23 @@ class Firebase {
     
     user = uid => this.db.ref(`users/${uid}`);
     users = () => this.db.ref('users');
+
+    // *** Presence API ***
+
     connectedRef = () => this.db.ref('.info/connected');
     presencesRef = () => this.db.ref(`presence`);
     presenceRef = uid => this.db.ref(`presence/${uid}`);
-    message = uid => this.db.ref(`messages/${uid}`);
 
+    // ***Message API ***
+
+    message = uid => this.db.ref(`messages/${uid}`);
     messages = () => this.db.ref('messages');
-}
+
+    // *** Game API ***
+
+    game = uid => this.db.ref(`game/${uid}`);
+    games = () => this.db.ref('games');
+
+};
 
 export default Firebase;
