@@ -13,6 +13,7 @@ import Styled from "styled-components";
 
 import Statistics from '../Statistics';
 import Avatars from '../Avatars';
+import UsernameChange from "../UsernameChange";
 
 /*** STYLED COMPONENTS ***/
 const StyledFlexContainer = Styled.div`
@@ -72,7 +73,9 @@ const AccountPage = () => (
         <StyledProfileEdit id="show-profile">
           <h3>Your account: {authUser.email}</h3>
           <br />
-          <h3>Password change</h3>
+          <h3>Change Username</h3>
+          <UsernameChange authUser = {authUser}/>
+          <h3>Change Password</h3>
           <PasswordChangeForm />
           <LoginManagement authUser={authUser} />
         </StyledProfileEdit>
