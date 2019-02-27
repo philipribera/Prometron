@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { withFirebase } from "../Firebase";
 // Avatars
 //import AvTrumpo from "../../images/lillaTrumpo.jpg";
+import UserNameChange from '../UsernameChange';
 import AvGirl from "../../images/girlAv_300.png";
 import AvDancer from "../../images/dancerAv_300.png";
 import AvPenguin from "../../images/pinguinAv_300.png";
@@ -93,6 +94,19 @@ const SelectTitle = Styled.h4`
   color: rgb(99, 99, 99);
   margin-bottom: 4px;
 `;
+const StyledSpan = Styled.span`
+  & p {
+    display: inline-block;
+    max-width: 230px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  & i {
+    margin-left: 8px;
+    cursor: pointer;
+  }
+`;
 /*** END ***/
 
 /*** HANDLES CHARACTER DATA AND ONLINE STATUS ***/
@@ -103,7 +117,8 @@ class Avatars extends Component {
     this.userId = null;
     this.statusLight = "rgb(83, 205, 13)";
     this.state = {
-      userData: {}
+      userData: {},
+      edit: false
     };
   }
 
@@ -147,6 +162,14 @@ class Avatars extends Component {
   showProfile = () => {
     document.getElementById("show-profile").style.display = "block";
   };
+
+  // Change state to edit 
+  // render usernamechange component
+  changeDesc() {
+    this.setState({edit:true})
+    console.log("Hello");
+    /*<UserNameChange />*/ 
+  }
 
   componentDidMount() {
     this.fetchUserData();
@@ -195,15 +218,14 @@ class Avatars extends Component {
           </StyledAvatar>
         </section>
 
-        <StyledCharData>         
+        <StyledCharData>
 
-          <StyledNameTitle>{this.state.userData.username}</StyledNameTitle>
+          <StyledNameTitle>{this.state.userData.username}</StyledNameTitle>       
           <StyledEditButton onClick={this.showProfile}>Edit profile</StyledEditButton>
           <br />
+          <br /> 
+            <StyledSpan><p>{this.state.userData.description}</p><i onClick={this.changeDesc} class="fas fa-pencil-alt"></i></StyledSpan>            
           <br />
-          <p>
-            <i>{this.state.userData.description}</i>
-          </p>
           <br />          
 
           <StyledSel id="status-ul" onClick={this.changeStatus}>

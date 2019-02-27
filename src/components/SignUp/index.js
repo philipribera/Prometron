@@ -143,6 +143,8 @@ class SignUpFormBase extends Component {
         <br />
         <StyledInput
           name="username"
+          minLength="3"
+          maxLength="15"
           value={username}
           onChange={this.onChange}
           type="text"

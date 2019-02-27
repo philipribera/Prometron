@@ -23,8 +23,10 @@ class UsernameChangeForm extends Component {
         return (
             <form onSubmit={this.onSubmit}>
                 <input
-                    name="username"
-                    value={this.state.username}
+                    minLength="3"
+                    maxLength="15"
+                    name= "username"
+                    value= {this.state.username}
                     onChange={this.onChange}
                     type="text"
                     placeholder={this.props.authUser.username}
