@@ -8,6 +8,7 @@ import AvDancer from "../../images/dancerAv_300.png";
 import AvPenguin from "../../images/pinguinAv_300.png";
 import AvBlue from "../../images/blueAv_300.png";
 import Styled from "styled-components";
+import ChangeDescriptionForm from "../DescriptionChange";
 
 /*** STYLED COMPONENTS ***/
 const StyledAvatarsList = Styled.div`
@@ -165,11 +166,9 @@ class Avatars extends Component {
 
   // Change state to edit 
   // render usernamechange component
-  changeDesc() {
-    this.setState({edit:true})
-    console.log("Hello");
-    /*<UserNameChange />*/ 
-  }
+  changeDesc = () => {
+    this.state.edit ? this.setState({ edit: false }) : this.setState({ edit: true });
+  };
 
   componentDidMount() {
     this.fetchUserData();
@@ -224,7 +223,10 @@ class Avatars extends Component {
           <StyledEditButton onClick={this.showProfile}>Edit profile</StyledEditButton>
           <br />
           <br /> 
-            <StyledSpan><p>{this.state.userData.description}</p><i onClick={this.changeDesc} class="fas fa-pencil-alt"></i></StyledSpan>            
+          
+          {this.state.edit ? <ChangeDescriptionForm userId={this.props.userId} /> : <StyledSpan><p>{this.state.userData.description}</p></StyledSpan>  }
+          <i onClick={this.changeDesc} class="fas fa-pencil-alt"></i>
+
           <br />
           <br />          
 
