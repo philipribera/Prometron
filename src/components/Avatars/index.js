@@ -230,9 +230,9 @@ class Avatars extends Component {
           <br />
           <br />          
 
-          <StyledSel id="status-ul" onClick={this.changeStatus}>
+          <StyledSel id="status-ul">
             <SelectTitle>Set your status</SelectTitle>
-            <select id="status">
+            <select id="status" onClick={this.changeStatus}>
               <option value="Online">Online</option>
               <option value="Idle">Idle</option>
               <option value="Do Not Disturb">Do not disturb</option>
