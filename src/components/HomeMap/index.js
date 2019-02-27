@@ -1,13 +1,17 @@
 import React, { Component } from "react";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import { withFirebase } from "../Firebase";
+import AntPath from "react-leaflet-ant-path";
 
+import FullscreenControl from 'react-leaflet-fullscreen';
+import 'react-leaflet-fullscreen/dist/styles.css'
 import PopupFactory from "../PopupFactory";
 
 class LocatedTwo extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      antPosition: [],
       browserCoords: null,
       dbCoords: null,
       onlineUsersCoords: []
@@ -34,7 +38,7 @@ class LocatedTwo extends Component {
     this.setState({
       browserCoords: {
         latitude: position.coords.latitude,
-        longitude: position.coords.longitude
+        longitude: position.coords.longitude,
       }
     });
     if (position.coords && this.state.dbCoords) {
@@ -43,6 +47,9 @@ class LocatedTwo extends Component {
       const { latitude: lat2, longitude: lng2 } = this.state.dbCoords;
       const dist = this.calculateDistance(lat1, lng1, lat2, lng2);
       if (dist > 1) {
+        const antArray = this.state.antPosition;
+        antArray.push([position.coords.latitude, position.coords.longitude])
+        this.setState({antPosition: antArray});
         this.writeUserPositionToDB(position.coords);
       }
     }
@@ -114,6 +121,14 @@ class LocatedTwo extends Component {
   componentWillMount() {
     this.getOnlineUsers();
     this.getUserPositionFromDB();
+    if (navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(e => {
+        this.firstPos = [e.coords.latitude, e.coords.longitude];
+        this.initialAntPos = this.state.antPosition;
+        this.initialAntPos.push(this.firstPos);
+        this.setState({antPosition: this.initialAntPos});
+      });
+    }
     this.watchId = navigator.geolocation.watchPosition(
       this.updatePosition,
       // might need to be in state
@@ -151,6 +166,7 @@ class LocatedTwo extends Component {
       {this.state.browserCoords ? (
         <MyMap
           markers={markers}
+          antPosition={this.state.antPosition}
           position={Object.values(this.state.browserCoords)}
           zoom={13}
           onlineUsers={Object.keys(this.state.onlineUsersCoords)}
@@ -160,15 +176,19 @@ class LocatedTwo extends Component {
       );
     }
   }
-      
+
+  const options = { color: "red", pulseColor: "#FFF", delay: 100 };
   // send all data of several user as props here
   const MyMap = props => (
     <Map
-      zoomControl={false}
-      scrollWheelZoom={false}
+      zoomControl={true}
+      scrollWheelZoom={true}
       center={props.position}
       zoom={props.zoom}
-    >
+      >
+      <FullscreenControl position="topright" />
+
+      <AntPath positions={props.antPosition} options={options} />
 
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
