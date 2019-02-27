@@ -78,27 +78,16 @@ const StyledChat = Styled.section`
         padding: 12px;
     }
 `;
-/*
-const StyledInput = Styled.input`
-    padding: 4px;
-    margin: 4px    
-`;
+/*** END ***/
 
-const StyledTarea = Styled.textarea`
-    max-height: 300px;
-    max-width: 492px;
-    @media (max-width: 767px) {
-        max-width: 330px;
-    }
-`;
-*/
+
 const HomePage = props => (
   <AuthUserContext.Consumer>
     {authUser => (
         <StyledFlexContainer>
           
           <StyledDivs>
-            <Link to={ROUTES.GAME}><StyledH1>Enter Game</StyledH1></Link>
+            <Link to={ROUTES.GAMEMENU}><StyledH1>Enter Game</StyledH1></Link>
           </StyledDivs>
 
           <StyledMap className="map-container">           
