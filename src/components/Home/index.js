@@ -3,7 +3,7 @@ import { compose } from "recompose";
 import { withFirebase } from "../Firebase";
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
-
+import Chat from '../Chat';
 import {
   AuthUserContext,
   withAuthorization,
@@ -106,12 +106,7 @@ const HomePage = props => (
           </StyledMap>
 
           <StyledChat>
-            <h2>MESSAGE BOARD</h2>
-            <StyledTarea cols="42" rows="8" />
-            <br />
-            <StyledInput type="text" />
-            <br />
-            <button>Send Message</button>
+        <Chat />
           </StyledChat>
           
 

@@ -15,7 +15,7 @@ import GamePage from '../Game';
 import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
 import Styled from 'styled-components';
-
+import Chat from '../Chat'
 
 /* STYLED COMPONENTS */
 const StyledFlexContainer = Styled.div`
@@ -82,6 +82,8 @@ const App = () => (
                     <Route path={ROUTES.ACCOUNT} component={AccountPage} />
                     <Route path={ROUTES.ADMIN} component={AdminPage} />
                     <Route path={ROUTES.GAME} component={GamePage} />
+                    <Route path={ROUTES.CHAT} component={Chat} />
+
                 </StyledFlexContainer>
             </div>
         </Router>

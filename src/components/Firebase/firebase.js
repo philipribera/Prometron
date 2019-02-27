@@ -19,6 +19,8 @@ class Firebase {
         this.emailAuthProvider = app.auth.EmailAuthProvider;
         this.auth = app.auth();
         this.db = app.database();
+        this.serverValue = app.database.ServerValue;
+
         
         this.googleProvider = new app.auth.GoogleAuthProvider();
         this.facebookProvider = new app.auth.FacebookAuthProvider();
@@ -94,6 +96,9 @@ class Firebase {
     connectedRef = () => this.db.ref('.info/connected');
     presencesRef = () => this.db.ref(`presence`);
     presenceRef = uid => this.db.ref(`presence/${uid}`);
+    message = uid => this.db.ref(`messages/${uid}`);
+
+    messages = () => this.db.ref('messages');
 }
 
 export default Firebase;

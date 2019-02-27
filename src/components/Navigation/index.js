@@ -53,6 +53,9 @@ const NavigationAuth = () => (
             <Link to={ROUTES.ADMIN}>Admin</Link>
         </StyledLi>        
         <StyledLi>
+            <Link to={ROUTES.CHAT}>Chat</Link>
+        </StyledLi>        
+        <StyledLi>
             <SignOutButton />
         </StyledLi>
     </StyledUl>
