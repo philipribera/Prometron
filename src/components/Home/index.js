@@ -78,7 +78,7 @@ const StyledChat = Styled.section`
         padding: 12px;
     }
 `;
-
+/*
 const StyledInput = Styled.input`
     padding: 4px;
     margin: 4px    
@@ -91,7 +91,7 @@ const StyledTarea = Styled.textarea`
         max-width: 330px;
     }
 `;
-
+*/
 const HomePage = props => (
   <AuthUserContext.Consumer>
     {authUser => (
