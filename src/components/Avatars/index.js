@@ -93,22 +93,6 @@ const SelectTitle = Styled.h4`
   color: rgb(99, 99, 99);
   margin-bottom: 4px;
 `;
-const StyledCharData = Styled.div`
-    flex-basis: 50%;
-    padding: 0 12px;
-    & h2 {
-      font-size: 1.85em;
-      color: rgb(251, 151, 0);
-      text-shadow: 1px 1px 0.5px rgb(57,57,57);
-    }
-    @media (max-width: 767px) {
-      flex-basis: 48%;      
-      margin-bottom: 72px;
-    }
-    @media (max-width: 492px) {
-      flex-basis: 100%;      
-    }
-`;
 /*** END ***/
 
 /*** HANDLES CHARACTER DATA AND ONLINE STATUS ***/
