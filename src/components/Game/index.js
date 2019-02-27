@@ -2,6 +2,7 @@ import React, { Component } from "react";
 //import GameMap from '../HomeMap';
 import Styled from 'styled-components';
 import HomeMap from "../HomeMap";
+import Chat from '../Chat'
 
 
 /*** STYLED COMPONENETS ***/
@@ -80,12 +81,7 @@ class Game extends Component {
                         <button onClick={this.ShowChat}>Chat</button>
                     </div><br />
                     <StyledChatWindow id="chat-window">
-                        <h2>MESSAGE BOARD</h2>
-                        <StyledTarea cols="42" rows="8" />
-                        <br />
-                        <StyledInput type="text" />
-                        <br />
-                        <button>Send Message</button>
+                    <Chat />
                     </StyledChatWindow>
                 </StyledChat>
             </StyledFlexContainer>
