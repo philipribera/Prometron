@@ -47,8 +47,8 @@ class LocatedTwo extends Component {
       const { latitude: lat2, longitude: lng2 } = this.state.dbCoords;
       const dist = this.calculateDistance(lat1, lng1, lat2, lng2);
       if (dist > 1) {
-        const antArray = this.state.antPosition;
-        antArray.push([position.coords.latitude, position.coords.longitude])
+        const antArray = this.state.antPosition.slice();
+        antArray.push([position.coords.latitude, position.coords.longitude]);
         this.setState({antPosition: antArray});
         this.writeUserPositionToDB(position.coords);
       }
