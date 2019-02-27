@@ -7,6 +7,7 @@ import PopupFactory from "../PopupFactory";
 import Styled from 'styled-components';
 
 /*** STYLED COMPONENTS ***/
+/*
 const StyledPosDiv = Styled.div` 
   display: flex;
   position: absolute;
@@ -19,7 +20,6 @@ const StyledPosDiv = Styled.div`
   text-shadow: 1px 1px 0.5px rgb(72,72,72);
   padding: 8px;
 `;
-/*
 const StyledCoords = Styled.div`
   flex-basis: 50%;
 `;*/

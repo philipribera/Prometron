@@ -18,20 +18,6 @@ const StyledMap = Styled.div`
     border: 1px solid rgb(177,177,177);    
     border-top: 1px solid rgb(252,252,252);
 `;
-const StyledChat = Styled.section`
-   
-`;
-const StyledInput = Styled.input`
-    padding: 4px;
-    margin: 4px 0;    
-`;
-const StyledTarea = Styled.textarea`
-    max-height: 300px;
-    max-width: 492px;
-    @media (max-width: 767px) {
-        max-width: 330px;
-    }
-`;
 /*
 const StyledChatWindowHd = Styled.div`
     display: none;
@@ -76,14 +62,12 @@ class Game extends Component {
                     <HomeMap />
                 </StyledMap>
 
-                <StyledChat>
                     <div>
                         <button onClick={this.ShowChat}>Chat</button>
                     </div><br />
                     <StyledChatWindow id="chat-window">
                     <Chat />
                     </StyledChatWindow>
-                </StyledChat>
             </StyledFlexContainer>
         );
     }

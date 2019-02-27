@@ -7,7 +7,7 @@ import {
   withEmailVerification
 } from "../Session";
 import { withFirebase } from "../Firebase";
-import { PasswordForgetForm } from "../PasswordForget";
+//import { PasswordForgetForm } from "../PasswordForget";
 import PasswordChangeForm from "../PasswordChange";
 import Styled from "styled-components";
 
@@ -21,8 +21,14 @@ const StyledFlexContainer = Styled.div`
     flex-wrap: wrap;
     width: 100%;
     height: auto;
-    min-height: 492px;  
+    min-height: 492px; 
+    padding: 22px; 
     @media (max-width: 767px) {
+      padding: 12px; 
+      margin-top: 22px;
+    } 
+    @media (max-width: 492px) {
+      padding: 0; 
       margin-top: 22px;
     } 
 `;

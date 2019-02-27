@@ -12,6 +12,7 @@ import HomePage from '../Home';
 import AccountPage from '../Account';
 import AdminPage from '../Admin';
 import GamePage from '../Game';
+import GameMenu from '../GameMenu';
 import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
 import Styled from 'styled-components';
@@ -22,14 +23,7 @@ const StyledFlexContainer = Styled.div`
     display: flex;
     flex-wrap: wrap;
     height: auto;
-    min-height: 492px;
-    padding: 22px 12px;
-    @media (max-width: 768px) {
-        padding: 10px;
-    }
-    @media (max-width: 468px) {
-        padding: 0;
-    }
+    min-height: 492px;    
 `;
 const StyledTitle = Styled.span`
     font-family: 'Orbitron', sans-serif;
@@ -82,6 +76,7 @@ const App = () => (
                     <Route path={ROUTES.ACCOUNT} component={AccountPage} />
                     <Route path={ROUTES.ADMIN} component={AdminPage} />
                     <Route path={ROUTES.GAME} component={GamePage} />
+                    <Route path={ROUTES.GAMEMENU} component={GameMenu} />
                     <Route path={ROUTES.CHAT} component={Chat} />
 
                 </StyledFlexContainer>

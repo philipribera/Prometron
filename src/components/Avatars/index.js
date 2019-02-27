@@ -49,6 +49,10 @@ const StyledCharData = Styled.div`
       color: rgb(251, 151, 0);
       text-shadow: 1px 1px 0.5px rgb(57,57,57);
     }
+    & i {
+      margin-left: 8px;
+      cursor: pointer; 
+    }
     @media (max-width: 767px) {
       flex-basis: 50%;    
       padding: 0 10px;  
@@ -103,11 +107,7 @@ const StyledSpan = Styled.span`
     overflow: hidden;
     white-space: nowrap;
   }
-  & i {
-    margin-left: 8px;
-    cursor: pointer;
-  }
-`;
+  `;
 /*** END ***/
 
 /*** HANDLES CHARACTER DATA AND ONLINE STATUS ***/
@@ -219,16 +219,16 @@ class Avatars extends Component {
 
         <StyledCharData>
 
-          <StyledNameTitle>{this.state.userData.username}</StyledNameTitle>       
+          <StyledNameTitle>{this.state.userData.username}</StyledNameTitle>
           <StyledEditButton onClick={this.showProfile}>Edit profile</StyledEditButton>
           <br />
-          <br /> 
-          
-          {this.state.edit ? <ChangeDescriptionForm userId={this.props.userId} /> : <StyledSpan><p>{this.state.userData.description}</p></StyledSpan>  }
-          <i onClick={this.changeDesc} class="fas fa-pencil-alt"></i>
-
           <br />
-          <br />          
+
+          {this.state.edit ? <ChangeDescriptionForm userId={this.props.userId} /> : <StyledSpan><p>{this.state.userData.description}</p></StyledSpan>}
+          <i onClick={this.changeDesc} class="fas fa-pencil-alt"></i>
+          <i class="fas fa-check"></i>
+          <br />
+          <br />
 
           <StyledSel id="status-ul" onClick={this.changeStatus}>
             <SelectTitle>Set your status</SelectTitle>
