@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { withFirebase } from "../Firebase";
 // Avatars
-//import AvTrumpo from "../../images/lillaTrumpo.jpg";
-import UserNameChange from '../UsernameChange';
 import AvGirl from "../../images/girlAv_300.png";
 import AvDancer from "../../images/dancerAv_300.png";
 import AvPenguin from "../../images/pinguinAv_300.png";

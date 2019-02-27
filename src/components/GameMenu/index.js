@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+import { withFirebase } from "../Firebase";
 import Styled from 'styled-components';
 
 /*** STYLED COMPONENETS ***/
+
 const StyledFlexContainer = Styled.div`
     display: flex;
     flex-wrap: wrap;
@@ -75,8 +77,8 @@ const StyledSetLi = Styled.li`
     cursor: pointer;
     padding: 4px 0;    
 `;
-/*** END ***/
 
+/*** END ***/
 
 class GameMenu extends Component {
     state = {
@@ -86,8 +88,28 @@ class GameMenu extends Component {
         parts: {
             ShowGames: false,
             ShowSetUpGame: false
+        },
+
+        currentGames: {
+            // list of game id's
+        },
+        
+        // Creategame-inputs goes in here
+        createGame: {
+            name: null,
+            password: null,
+            game_area: null,
+            game_time: null,
         }
-    }
+    };
+
+    getGames = () => {
+        //TODO
+    };
+
+    createGame = () => {
+        //TODO
+    };
 
 /*
     switch (part) {
@@ -165,8 +187,8 @@ class GameMenu extends Component {
                 </StyledSetGame><br />
             </StyledFlexContainer>
         );
-    }
-}
+    };
+};
 
-export default GameMenu;
+export default withFirebase(GameMenu);
 
