@@ -8,6 +8,27 @@ import {
 } from '../Session';
 import { withFirebase } from '../Firebase';
 
+import Styled from 'styled-components';
+
+
+/*** STYLED COMPONENETS ***/
+const StyledMessageBox = Styled.div`
+  max-height: 300px;
+  max-width: 492px;
+  background-color: rgb(37,37,37);
+  color: rgb(244,244,244);
+  padding: 4px;
+  @media (max-width: 767px) {
+    max-width: 330px;
+  }
+`;
+const StyledInput = Styled.input`
+    padding: 4px;
+    margin: 4px    
+`;
+/*** END ***/
+
+
 class Chat extends Component {
   constructor(props) {
     super(props);
@@ -32,7 +53,6 @@ class Chat extends Component {
   render() {
     return (
       <div>
-
         <Messages users={this.state.users} />
       </div>
     );
@@ -128,35 +148,37 @@ class MessagesBase extends Component {
       <AuthUserContext.Consumer>
         {authUser => (
           <div>
-            {!loading && messages && (
-              <button type="button" onClick={this.onNextPage}>
-                More
-              </button>
-            )}
+            
 
             {loading && <div>Loading ...</div>}
 
-            {messages && (
-              <MessageList
-                messages={messages.map(message => ({
-                  ...message,
-                  user: users
-                    ? users[message.userId]
-                    : { userId: message.userId },
-                }))}
-                onEditMessage={this.onEditMessage}
-                onRemoveMessage={this.onRemoveMessage}
-              />
-            )}
+
+            <StyledMessageBox>
+              {messages && (
+                <MessageList
+                  messages={messages.map(message => ({
+                    ...message,
+                    user: users
+                      ? users[message.userId]
+                      : { userId: message.userId },
+                  }))}
+                  onEditMessage={this.onEditMessage}
+                  onRemoveMessage={this.onRemoveMessage}
+                />
+              )}
+            </StyledMessageBox>
+
 
             {!messages && <div>There are no messages ...</div>}
+
 
             <form
               onSubmit={event =>
                 this.onCreateMessage(event, authUser)
               }
-            >
-              <input
+            >  
+
+              <StyledInput 
                 type="text"
                 value={text}
                 onChange={this.onChangeText}
@@ -170,23 +192,25 @@ class MessagesBase extends Component {
   }
 }
 
+
 const MessageList = ({
   messages,
-  onEditMessage,
-  onRemoveMessage,
+  //onEditMessage,
+  //onRemoveMessage,
 }) => (
-  <ul>
-    {messages.map(message => (
-      <MessageItem
-        key={message.uid}
-        message={message}
-        onEditMessage={onEditMessage}
-        onRemoveMessage={onRemoveMessage}
-      />
-    ))}
-  </ul>
-);
+    <ul>
+      {messages.map(message => (
+        <MessageItem
+          key={message.uid}
+          message={message}
+          //onEditMessage={onEditMessage}
+          //onRemoveMessage={onRemoveMessage}
+        />
+      ))}
+    </ul>
+  );
 
+  
 class MessageItem extends Component {
   constructor(props) {
     super(props);
@@ -227,35 +251,19 @@ class MessageItem extends Component {
             onChange={this.onChangeEditText}
           />
         ) : (
-          <span>
-            <strong>
-              {message.user.username || message.user.userId}
-            </strong>{' '}
-            {message.text} {message.editedAt && <span>(Edited)</span>}
-          </span>
-        )}
-
-        {editMode ? (
-          <span>
-            <button onClick={this.onSaveEditText}>Save</button>
-            <button onClick={this.onToggleEditMode}>Reset</button>
-          </span>
-        ) : (
-          <button onClick={this.onToggleEditMode}>Edit</button>
-        )}
-
-        {!editMode && (
-          <button
-            type="button"
-            onClick={() => onRemoveMessage(message.uid)}
-          >
-            Delete
-          </button>
-        )}
+            <span>
+              <strong>
+                {message.user.username || message.user.userId}
+              </strong>{' '}
+              {message.text} {message.editedAt && <span>(Edited)</span>}
+            </span>
+          )}
+        
       </li>
     );
   }
 }
+
 
 const Messages = withFirebase(MessagesBase);
 
