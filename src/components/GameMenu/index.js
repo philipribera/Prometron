@@ -142,6 +142,8 @@ class GameMenu extends Component {
             showSetUpGame: false
         },
 
+        currentGames: null,
+
         // Creategame-inputs goes in here
         name: null,
         password: null,
@@ -153,11 +155,13 @@ class GameMenu extends Component {
         this.props.firebase.games().once("value", snapshot => {
             this.data = snapshot.val()
         }).then(() =>  {
-            this.props.firebase.game().once("value")
             this.setState({currentGames: this.data});
+            console.log(this.state.currentGames)
         });  
-        // this.setState({currentGames: this.Games});
-        // console.log(this.Games)
+    };
+
+    joinGame = () => {
+        //TODO
     };
 
     createGame = (event) => {
@@ -238,16 +242,17 @@ class GameMenu extends Component {
                         : null}
 
                         {this.state.parts.showGameList ?
-                            <StyledGameList>
-                                {/* {this.state.currentGames.forEach(game => (
-                                    <StyledGameLi>{this.state.currentGames.game.name}</StyledGameLi>
-                                ))}; */}
-                                <br />
-                                {/* <StyledListTitle>GAMES IN PROGRESS</StyledListTitle><br />
-                                <StyledGameLi>Pinguin Game</StyledGameLi>
-                                <StyledGameLi>Blue Game</StyledGameLi>
-                                <StyledGameLi>Dancer Game</StyledGameLi> */}
-                            </StyledGameList>
+                                <StyledGameList>
+                                    <StyledListTitle>GAME FINDER</StyledListTitle>
+                                    {this.state.currentGames != null ? 
+                                        Object.keys(this.state.currentGames).map(gameId => 
+                                                <StyledGameLi>
+                                                    {this.state.currentGames[gameId].name}
+                                                </StyledGameLi>
+                                        ) : null
+                                    }
+                                    <br />
+                                </StyledGameList>
                         : null}
 
                         {this.state.parts.showSetUpGame ?                        
