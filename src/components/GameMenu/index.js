@@ -150,7 +150,7 @@ class GameMenu extends Component {
             showGameList: false,
             showSetUpGame: false
         },
-        part: "menu" || "create" || "join" || 
+/*        part: "menu" 
 
         currentGames: null,
 
@@ -158,7 +158,7 @@ class GameMenu extends Component {
         name: null,
         password: null,
         game_area: null,
-        game_time: null,
+        game_time: null,*/
     };
 
     getGames = () => {
@@ -220,12 +220,18 @@ class GameMenu extends Component {
                     showGameList: true,
                 }
             });
+            this.setState({
+                part: "join"
+            });
         } else if (trg === "create-game") {
             this.setState({
                 parts: {
                     ...this.state.parts,
                     showSetUpGame: true
                 }
+            });
+            this.setState({
+                part: "create"
             });
         };
     };
@@ -238,10 +244,20 @@ class GameMenu extends Component {
 
     render() {
 
+       /*
         switch(this.state.part) {
             case "menu":
-
+            parts.showGameMenu = true;
+            parts.showBack = true;
+            break;
+            case "join":
+            //...
+            break;
+            case "create":
+            // ...
+            break;
         }
+        */
         return (
             <AuthUserContext.Consumer>
                 {authUser => (
