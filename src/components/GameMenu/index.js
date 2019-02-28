@@ -79,7 +79,7 @@ const StyledGameLi = Styled.li`
 `;
 
 // Set up game
-const StyledSetGame = Styled.div`
+const StyledSetGame = Styled.form`
     padding: 22px;    
 `;
 const StyledSetSelect = Styled.div`
@@ -204,7 +204,7 @@ class GameMenu extends Component {
                     : null}
 
                 {this.state.parts.showSetUpGame ?
-                    <StyledSetGame>
+                    <StyledSetGame onSubmit={this.createGame}>
                         <StyledSetSelect>
                             Game Area
                         <select>
@@ -224,9 +224,16 @@ class GameMenu extends Component {
                                 <option value="Time1h"> 5 Hour</option>
                             </select>
                         </StyledSetSelect>
+                        <StyledSetLi>Give the game a name <input type="text" />
+                            <StyledIcon className="fas fa-check"></StyledIcon>
+                        </StyledSetLi><br />
+
                         <StyledSetLi>Password for your game <input type="text" />
                             <StyledIcon className="fas fa-check"></StyledIcon>
                         </StyledSetLi>
+                        <br />
+                        <button>Create Game</button>
+
                     </StyledSetGame>
                     : null}
 
