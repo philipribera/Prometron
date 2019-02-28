@@ -11,8 +11,8 @@ import {
 
 import Styled from 'styled-components';
 
-/*** STYLED COMPONENETS ***/
 
+/*** STYLED COMPONENETS ***/
 const StyledFlexContainer = Styled.div`
     display: flex;
     flex-wrap: wrap;
@@ -71,8 +71,7 @@ const StyledListTitle = Styled.h2`
     font-family: 'Orbitron',sans-serif;
     font-size: 1.9em;
     font-weight: 600;
-    color: rgb(102,102,102);
-    color: rgb(68, 109, 187);
+    color: rgb(102,102,102);    
     text-shadow: 1px 1px 0.5px rgb(252,252,252);
     @media (max-width: 767px) {
         font-size: 1.8;
@@ -101,6 +100,16 @@ const StyledGameLi = Styled.li`
 // Set up game
 const StyledSetGame = Styled.form`
     padding: 22px;    
+`;
+const StyledCreateTitle = Styled.h2`
+    font-family: 'Orbitron',sans-serif;
+    font-size: 1.9em;
+    font-weight: 600;    
+    color: rgb(68, 109, 187);
+    text-shadow: 1px 1px 0.5px rgb(252,252,252);
+    @media (max-width: 767px) {
+        font-size: 1.8;
+    }
 `;
 const StyledSetSelect = Styled.div`
     position: relative;
@@ -141,6 +150,7 @@ class GameMenu extends Component {
             showGameList: false,
             showSetUpGame: false
         },
+        part: "menu" || "create" || "join" || 
 
         currentGames: null,
 
@@ -196,27 +206,42 @@ class GameMenu extends Component {
 
         this.setState({
             parts: {
+                ...this.state.parts,
                 showGameMenu: false,
-                showBack: true
+                showBack: true,
+
             }
         });
 
         if (trg === "join-game") {
             this.setState({
                 parts: {
+                    ...this.state.parts,
                     showGameList: true,
                 }
             });
         } else if (trg === "create-game") {
             this.setState({
                 parts: {
+                    ...this.state.parts,
                     showSetUpGame: true
                 }
             });
         };
     };
+    parts = {
+        showBack: false,
+        showGameMenu: false,
+        showGameList: false,
+        showSetUpGame: false
+    };
 
     render() {
+
+        switch(this.state.part) {
+            case "menu":
+
+        }
         return (
             <AuthUserContext.Consumer>
                 {authUser => (
@@ -243,7 +268,7 @@ class GameMenu extends Component {
 
                         {this.state.parts.showGameList ?
                                 <StyledGameList>
-                                    <StyledListTitle>GAME FINDER</StyledListTitle>
+                                    <StyledListTitle>GAME FINDER</StyledListTitle><br />
                                     {this.state.currentGames != null ? 
                                         Object.keys(this.state.currentGames).map(gameId => 
                                                 <StyledGameLi>
@@ -259,7 +284,7 @@ class GameMenu extends Component {
                             <StyledSetGame onSubmit={this.createGame}>
                             
                             <br />
-                            <StyledListTitle>SET UP GAME</StyledListTitle>
+                            <StyledCreateTitle>SET UP GAME</StyledCreateTitle>
                             <br />
 
                                 <StyledSetSelect>

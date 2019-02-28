@@ -12,6 +12,25 @@ import Styled from 'styled-components';
 
 
 /*** STYLED COMPONENETS ***/
+const StyledChat = Styled.section`
+    flex-basis: 100%;
+    min-width: 332px;
+    min-height: 292px;
+    max-height: 500px;
+    padding: 12px;
+    border: 1px solid rgb(177,177,177);
+    border-top: none;
+    margin-bottom: 32px;
+    & h2 {
+        color: rgb(29, 134, 226);
+        text-shadow: 1px 1px 0.5px rgb(252,252,252);
+        margin-bottom: 12px;
+    }
+    @media (max-width: 767px) {
+        flex-basis: 100%;
+        padding: 12px;
+    }
+`;
 const StyledMessageBox = Styled.div`  
   max-width: 642px;  
   background-color: rgb(37,37,37);
@@ -159,9 +178,10 @@ class MessagesBase extends Component {
     return (
       
       <AuthUserContext.Consumer>
+        
         {authUser => (
           <div>
-            
+            <br />
             {loading && <div>Loading ...</div>}
 
             <StyledMessageBox>
@@ -169,10 +189,11 @@ class MessagesBase extends Component {
                 <MessageList style={styles}
                   messages={messages.map(message => ({
                     ...message,
-                    //...message.userId.style.color = "blue",
                     user: users
                       ? users[message.userId]
                       : { userId: message.userId },
+                      // New info!
+                    isOwned: (authUser.uid === message.userId) ? true : false
                   }))}
                   //onEditMessage={this.onEditMessage}
                   //onRemoveMessage={this.onRemoveMessage}
@@ -255,6 +276,7 @@ class MessageItem extends Component {
     const { editMode, editText } = this.state;
 
     return (
+     
       <li>
         {editMode ? (
           <input
@@ -263,6 +285,7 @@ class MessageItem extends Component {
             onChange={this.onChangeEditText}
           />
         ) : (
+            // if isOwned {}
             <span>
               <strong>
                 {message.user.username || message.user.userId}
@@ -271,7 +294,7 @@ class MessageItem extends Component {
             </span>
           )}
         
-      </li>
+      </li>     
     );
   }
 }
