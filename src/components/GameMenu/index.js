@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { withFirebase } from "../Firebase";
 import { compose } from "recompose";
-
+import { Link } from 'react-router-dom';
+import * as ROUTES from '../../constants/routes';
 import {
     AuthUserContext,
     withAuthorization,
@@ -26,11 +27,12 @@ const StyledFlexContainer = Styled.div`
 
 const StyledMenu = Styled.div`
     width: 206px;	
+    height: fit-content;
 	background-color: rgba(197,197,197, 0.7);	
 	font-size: 1.5em;
 	font-weight: 600;
 	text-align: center;
-	padding: 18px 10px 10px 10px;
+	padding: 18px 10px 18px 10px;
 	margin: 4% auto 0;	
 	border: 2px solid rgba(197,197,197, 0.9);	
 	border-radius: 4%;
@@ -47,7 +49,8 @@ const StyledBackToMenu = Styled.div`
     text-align: center;
 `;
 
-const StyledTitle = Styled.h1`    
+const StyledTitle = Styled.h1`   
+    font-family: 'Orbitron',sans-serif; 
     color: rgb(154,154,154);    
 `;
 
@@ -66,8 +69,14 @@ const StyledGameButton = Styled.button`
 // GAME LIST
 const StyledListTitle = Styled.h2`
     font-family: 'Orbitron',sans-serif;
+    font-size: 1.9em;
+    font-weight: 600;
     color: rgb(102,102,102);
-    text-shadow: 1px 1px 0.5px rgb(202,202,202);
+    color: rgb(68, 109, 187);
+    text-shadow: 1px 1px 0.5px rgb(252,252,252);
+    @media (max-width: 767px) {
+        font-size: 1.8;
+    }
 `;
 const StyledGameList = Styled.ul`
     flex-basis: 100%;
@@ -100,21 +109,27 @@ const StyledSetSelect = Styled.div`
     & select {
         cursor: pointer;
         padding: 4px;
-        margin: 12px;
-        background-color: rgb(55,55,55);    
+        margin: 8px;
+        background-color: rgb(117,117,117);    
         color: rgb(247,247,247);
         border: 1px solid rgb(122,122,122);
 }`;
 const StyledSetLi = Styled.li`
     list-style-type: none;
     cursor: pointer;
-    padding: 4px 0;    
+    padding: 4px 0;   
+    margin: 4px 0; 
 `;
+/*
 const StyledIcon = Styled.i`
     margin-left: 4px;
     &:hover {
         color: rgb(102,102,102);
     }
+`;*/
+const StyledCreateGame = Styled.button`
+    background-color: rgb(0, 78, 171);
+    color: rgb(252,252,252);
 `;
 /*** END ***/
 
@@ -212,7 +227,7 @@ class GameMenu extends Component {
                                 <StyledGameButton id="join-game" onClick={ this.getGames }>
                                     Join Game
                                 </StyledGameButton><br />
-                                <StyledGameButton id="create-game">
+                                <StyledGameButton id="create-game" onClick={ this.getGames }>
                                     Create Game
                                 </StyledGameButton><br />
                             </StyledMenu>
@@ -235,8 +250,13 @@ class GameMenu extends Component {
                             </StyledGameList>
                         : null}
 
-                        {this.state.parts.showSetUpGame ?
+                        {this.state.parts.showSetUpGame ?                        
                             <StyledSetGame onSubmit={this.createGame}>
+                            
+                            <br />
+                            <StyledListTitle>SET UP GAME</StyledListTitle>
+                            <br />
+
                                 <StyledSetSelect>
                                     Game Area
                                     <select name="game_area" onChange={this.onChange} value={this.state.game_area}>
@@ -257,14 +277,13 @@ class GameMenu extends Component {
                                     </select>
                                 </StyledSetSelect>
                                 <StyledSetLi>Give the game a name <input type="text" onChange={this.onChange} value={this.state.name} name="name" minLength="3" maxLength="15" />
-                                    <StyledIcon className="fas fa-check"></StyledIcon>
-                                </StyledSetLi><br />
+                                </StyledSetLi>
 
                                 <StyledSetLi>Password for your game <input type="text" onChange={this.onChange} value={this.state.password} name="password" />
-                                    <StyledIcon className="fas fa-check"></StyledIcon>
                                 </StyledSetLi>
                                 <br />
-                                <button type="submit">Create Game</button>
+                               
+                                <Link to={ROUTES.GAME}><StyledCreateGame>Create Game</StyledCreateGame></Link>
 
                             </StyledSetGame>
                         : null}

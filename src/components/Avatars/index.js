@@ -163,9 +163,9 @@ class Avatars extends Component {
   changeDesc = () => {
     this.state.edit ? this.setState({ edit: false }) : this.setState({ edit: true });
     
-    let foo = document.getElementById('pen-check');
-    foo.classList.toggle('fa-pencil-alt');
-    foo.classList.toggle('fa-check');
+    let descIcon = document.getElementById('pen-check');
+    descIcon.classList.toggle('fa-pencil-alt');
+    descIcon.classList.toggle('fa-check');
   };
 
   componentDidMount() {

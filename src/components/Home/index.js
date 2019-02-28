@@ -96,8 +96,7 @@ const HomePage = props => (
 
           <StyledChat>
         <Chat />
-          </StyledChat>
-          
+          </StyledChat>          
 
         </StyledFlexContainer>
     )}
