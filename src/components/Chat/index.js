@@ -13,7 +13,7 @@ import Styled from 'styled-components';
 
 /*** STYLED COMPONENETS ***/
 const StyledMessageBox = Styled.div`  
-  max-width: 492px;  
+  max-width: 642px;  
   background-color: rgb(37,37,37);
   color: rgb(244,244,244);
   padding: 4px;  
@@ -127,7 +127,6 @@ class MessagesBase extends Component {
     });
 
     this.setState({ text: '' });
-
     event.preventDefault();
   };
 
@@ -153,8 +152,12 @@ class MessagesBase extends Component {
   render() {
     const { users } = this.props;    
     const { text, messages, loading } = this.state;
+    const styles = {
+      color: "red"
+    }
 
     return (
+      
       <AuthUserContext.Consumer>
         {authUser => (
           <div>
@@ -163,9 +166,10 @@ class MessagesBase extends Component {
 
             <StyledMessageBox>
               {messages && (
-                <MessageList
+                <MessageList style={styles}
                   messages={messages.map(message => ({
                     ...message,
+                    //...message.userId.style.color = "blue",
                     user: users
                       ? users[message.userId]
                       : { userId: message.userId },
