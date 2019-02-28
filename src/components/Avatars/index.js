@@ -21,11 +21,7 @@ const StyledAvatarsList = Styled.div`
     }  
 `;
 const StyledAvatar = Styled.div`
-    /*flex-basis: 14%;*/
-    position: relative;   
-    @media (max-width: 767px) {
-      
-    }
+    position: relative;    
 `;
 const StyledFigure = Styled.figure`  
   & img {
@@ -100,9 +96,9 @@ const SelectTitle = Styled.h4`
 const StyledSpan = Styled.span`
   & p {
     display: inline-block;
-    max-width: 230px;
+    max-width: 230px;    
     text-overflow: ellipsis;
-    overflow: hidden;
+    /*overflow: hidden;*/
     white-space: nowrap;
   }
   `;
@@ -166,6 +162,10 @@ class Avatars extends Component {
   // render usernamechange component
   changeDesc = () => {
     this.state.edit ? this.setState({ edit: false }) : this.setState({ edit: true });
+    
+    let foo = document.getElementById('pen-check');
+    foo.classList.toggle('fa-pencil-alt');
+    foo.classList.toggle('fa-check');
   };
 
   componentDidMount() {
@@ -216,15 +216,14 @@ class Avatars extends Component {
         </section>
 
         <StyledCharData>
-
           <StyledNameTitle>{this.state.userData.username}</StyledNameTitle>
           <StyledEditButton onClick={this.showProfile}>Edit profile</StyledEditButton>
           <br />
           <br />
 
-          {this.state.edit ? <ChangeDescriptionForm userId={this.props.userId} /> : <StyledSpan><p>{this.state.userData.description}</p></StyledSpan>}
-          <i onClick={this.changeDesc} class="fas fa-pencil-alt"></i>
-          <i class="fas fa-check"></i>
+          {this.state.edit ? <ChangeDescriptionForm id="desc-text" userId={this.props.userId} /> : 
+          <StyledSpan id="desc-here"><p>{this.state.userData.description}</p></StyledSpan>}
+            <i id="pen-check" onClick={this.changeDesc} className="fas fa-pencil-alt"></i>
           <br />
           <br />
 

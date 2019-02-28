@@ -92,6 +92,7 @@ const AccountPage = () => (
 );
 
 
+// Move to own componenet - if time...
 class LoginManagementBase extends Component {
   constructor(props) {
     super(props);
