@@ -45,21 +45,47 @@ const StyledChatWindow = Styled.div`
 
 class Game extends Component {
     state = {
-        userInGame: false
-    }
+        gameID: null,
+        userCoordinates: null,
+        gameData: []
+    };
 
-    ShowChat = () => {
-        console.log("Hello from chat");
-        let chatWin = document.getElementById('chat-window');
-        chatWin.style.display = "inherit";
-    }
+    updatePosition = position => {
+        this.setState({
+            userCoordinates: {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+            }
+        });
+    };
+
+    watchUserPosition = () => {
+        this.watchId = navigator.geolocation.watchPosition(
+            this.updatePosition,
+            error => {
+              console.log("error" + error);
+            },
+            {
+              enableHighAccuracy: true,
+              timeout: 20000,
+              maximumAge: 0,
+              distanceFilter: 1
+            }
+        );
+    };
+
+
+    componentDidMount(){
+        this.watchUserPosition();
+        this.gameListener();
+    };
 
     render() {
         return (
             <StyledFlexContainer>
 
                 <StyledMap className="map-container">
-                    <HomeMap />
+                    <gameMap />
                 </StyledMap>
 
                     <div>
