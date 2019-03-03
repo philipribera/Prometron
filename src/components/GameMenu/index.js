@@ -148,47 +148,57 @@ class GameMenu extends Component {
     }
   };
 
-  getGames = () => {
-    this.props.firebase
-      .games()
-      .once("value", snapshot => {
-        this.data = snapshot.val();
-      })
-      .then(() => {
-        this.setState({ currentGames: this.data });
-        console.log(this.state.currentGames);
-      });
-  };
+   getGames = () => {
+        this.props.firebase.games().once("value", snapshot => {
+            this.data = snapshot.val()
+        }).then(() =>  {
+            this.setState({currentGames: this.data});
+        });  
+    };
 
-  joinGame = () => {
-    //TODO
-  };
+    joinGame = () => {
+        //TODO
+    };
 
-  createGame = event => {
-    const currentTime = Math.round(new Date().getTime() / 1000);
+    createGame = (event) => {
+        const currentTime = Math.round((new Date()).getTime() / 1000);
+        const key = this.props.firebase.db.ref("games").push().key;
+        const uid = this.props.firebase.auth.currentUser.uid;
 
-    this.props.firebase.games().push({
-      name: this.state.name,
-      password: this.state.password,
-      game_area: parseInt(this.state.game_area),
-      game_time: currentTime + parseInt(this.state.game_time),
-      users: {}
-    });
+        const data = {
+            name: this.state.name,
+            password: this.state.password,
+            game_area: parseInt(this.state.game_area),
+            game_time: currentTime + parseInt(this.state.game_time),
+            users: {
+                [uid]: {
+                    path: [[0,0]],
+                    points: 0,
+                }
+            }
+        };
 
-    this.setState({
-      name: "",
-      password: "",
-      game_area: "",
-      game_time: ""
-    });
-    event.preventDefault();
-  };
+        let updates = {};
 
-  onChange = event => {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
-  };
+        updates['/games/' + key] = data;
+        updates['/users/' + uid + '/games/' + key] = true;
+
+        this.props.firebase.db.ref().update(updates);
+
+        this.setState({
+            name: "",
+            password: "",
+            game_area: "",
+            game_time: ""
+        });
+        event.preventDefault();
+    };
+
+    onChange = event => {
+        this.setState({
+            [event.target.name]: event.target.value
+        });
+    };
 
   // Manages all changes of state on page 
   showParts = e => {

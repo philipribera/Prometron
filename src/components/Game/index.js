@@ -1,8 +1,9 @@
-import React, { Component } from "react";
-//import GameMap from '../HomeMap';
+import React, { Component } from 'react';
 import Styled from 'styled-components';
-import HomeMap from "../HomeMap";
-import Chat from '../Chat'
+import HomeMap from '../HomeMap';
+import GameMap from '../GameMap';
+import { withFirebase } from '../Firebase';
+import Chat from '../Chat';
 
 
 /*** STYLED COMPONENETS ***/
@@ -45,17 +46,28 @@ const StyledChatWindow = Styled.div`
 
 class Game extends Component {
     state = {
-        gameID: null,
-        userCoordinates: null,
-        gameData: []
+        gameId: null,
+        gameData: [],
+        userPath: [],
+        userPoints: 0
     };
 
-    updatePosition = position => {
-        this.setState({
-            userCoordinates: {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude
-            }
+    initializeGame = () => {
+        this.props.firebase.auth.onAuthStateChanged(authUser => {
+            if (authUser && navigator.geolocation) {
+                this.setState({uid: authUser.uid});
+                this.props.firebase.user(this.state.uid).once('value', snapshot => {
+                    const data = snapshot.val();
+                    const gameKey = Object.keys(data.games)[0];
+                    this.setState({gameId: gameKey});
+                    this.fetchGameData();
+                }).then(() => {
+                    if (this.timeRemaining){
+                        this.watchUserPosition();
+                        this.detectCollision();  
+                    };
+                });
+            };
         });
     };
 
@@ -74,30 +86,73 @@ class Game extends Component {
         );
     };
 
-
-    componentDidMount(){
-        this.watchUserPosition();
-        this.gameListener();
+    // Appends user path in DB
+    updatePosition = position => {
+        const newPosition = [position.coords.latitude, position.coords.longitude];
+        const userPath = this.state.userPath.slice();
+        userPath.push(newPosition);
+        this.setState({userPath: userPath}); 
+        this.setState({userPoints: this.state.userPoints + 1});
+        this.updateToDB();
     };
 
+    fetchGameData = () => {
+        this.props.firebase.game(this.state.gameId).once("value", snapshot => {
+            const data = snapshot.val();
+            this.setState({gameData: data});
+        });
+    };
+    
+    updateToDB = () => {
+        this.props.firebase.game(this.state.gameId + '/users/' + this.state.uid).set({
+            path: this.state.userPath,
+            points: this.state.userPoints
+        });
+    };
+
+    timeRemaining = () => {
+        const currentTime = Math.round((new Date()).getTime() / 1000);
+        if (currentTime < this.state.gameData.gametime) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    detectCollision = () => {
+        //TODO
+    }
+
+    componentDidMount(){
+        this.initializeGame()
+    };
+
+    componentWillUnmount() {
+        navigator.geolocation.clearWatch(this.watchId);
+    };
+    
     render() {
         return (
+
             <StyledFlexContainer>
 
                 <StyledMap className="map-container">
-                    <gameMap />
+                    <GameMap 
+                        userPosition={this.state.userPath[this.state.userPath.length - 1]}
+                        gameData={this.state.gameData}
+                        />
                 </StyledMap>
 
-                    <div>
+                    {/* <div>
                         <button onClick={this.ShowChat}>Chat</button>
-                    </div><br />
-                    <StyledChatWindow id="chat-window">
+                    </div><br /> */}
+                    {/* <StyledChatWindow id="chat-window">
                     <Chat />
-                    </StyledChatWindow>
+                    </StyledChatWindow> */}
             </StyledFlexContainer>
         );
     }
 }
 
-export default Game;
+export default withFirebase(Game);
 

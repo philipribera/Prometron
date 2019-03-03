@@ -177,7 +177,7 @@ class LocatedTwo extends Component {
     }
   }
 
-  const options = { color: "red", pulseColor: "#FFF", delay: 100 };
+  const options = { color: "red", pulseColor: "#FFF", delay: 300 };
   // send all data of several user as props here
   const MyMap = props => (
     <Map

@@ -106,7 +106,7 @@ class Firebase {
 
     // *** Game API ***
 
-    game = uid => this.db.ref(`game/${uid}`);
+    game = uid => this.db.ref(`games/${uid}`);
     games = () => this.db.ref('games');
 
 };
