@@ -123,7 +123,7 @@ class Game extends Component {
         //TODO
     }
 
-    componentDidMount(){
+    componentWillMount(){
         this.initializeGame()
     };
 
@@ -139,7 +139,7 @@ class Game extends Component {
                 <StyledMap className="map-container">
                     <GameMap 
                         userPosition={this.state.userPath[this.state.userPath.length - 1]}
-                        gameData={this.state.gameData}
+                        users={this.state.gameData.users}
                         />
                 </StyledMap>
 
