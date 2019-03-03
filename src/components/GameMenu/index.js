@@ -343,7 +343,7 @@ class GameMenu extends Component {
                 </StyledSetLi>
                 <br />
 
-                <Link to={ROUTES.GAME}>
+                <Link to={ROUTES.HOME}>
                 <StyledCreateGame onClick={this.createGame}>
                   Create Game
                 </StyledCreateGame>
