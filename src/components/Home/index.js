@@ -110,3 +110,4 @@ export default compose(
   withEmailVerification,
   withAuthorization(condition)
 )(HomePage);
+

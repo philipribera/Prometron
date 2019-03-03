@@ -1,19 +1,19 @@
 import React, { Component } from "react";
 import { withFirebase } from "../Firebase";
 import { compose } from "recompose";
-import { Link } from 'react-router-dom';
-import * as ROUTES from '../../constants/routes';
+import { Link } from "react-router-dom";
+import * as ROUTES from "../../constants/routes";
 import {
-    AuthUserContext,
-    withAuthorization,
-    withEmailVerification
-  } from "../Session";
+  AuthUserContext,
+  withAuthorization,
+  withEmailVerification
+} from "../Session";
 
-import Styled from 'styled-components';
-
+import Styled from "styled-components";
 
 /*** STYLED COMPONENETS ***/
 const StyledFlexContainer = Styled.div`
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     width: 100%;
@@ -39,13 +39,14 @@ const StyledMenu = Styled.div`
 `;
 
 const StyledBackToMenu = Styled.div`
-    position: fixed; 
-    left: 0; 
-    top: 0; 	
-    background-color: rgba(157,157,157, 0.7);
-    border: 1px solid rgb(77,77,77);
-    border-left: none;
-    vertical-align: 2%;
+    position: absolute; 
+    right: 0; 
+    top: 0; 	        
+    margin: 0 auto;
+    cursor: pointer;
+    background-color: rgba(255,255,255,1);
+    padding: 4px;
+    border: 1px solid rgb(77,77,77);    
     text-align: center;
 `;
 
@@ -63,15 +64,17 @@ const StyledGameButton = Styled.button`
     padding: 7px;
     margin-bottom: 12px;
     &:hover {   
-        opacity: 0.9;     
+        opacity: 0.9;  
+    }   
 `;
 
 // GAME LIST
 const StyledListTitle = Styled.h2`
     font-family: 'Orbitron',sans-serif;
-    font-size: 1.9em;
+    font-size: 1.95em;
     font-weight: 600;
     color: rgb(102,102,102);    
+    color: rgb(132, 132, 132);    
     text-shadow: 1px 1px 0.5px rgb(252,252,252);
     @media (max-width: 767px) {
         font-size: 1.8;
@@ -129,13 +132,6 @@ const StyledSetLi = Styled.li`
     padding: 4px 0;   
     margin: 4px 0; 
 `;
-/*
-const StyledIcon = Styled.i`
-    margin-left: 4px;
-    &:hover {
-        color: rgb(102,102,102);
-    }
-`;*/
 const StyledCreateGame = Styled.button`
     background-color: rgb(0, 78, 171);
     color: rgb(252,252,252);
@@ -143,25 +139,16 @@ const StyledCreateGame = Styled.button`
 /*** END ***/
 
 class GameMenu extends Component {
-    state = {
-        parts: {
-            showBack: false,
-            showGameMenu: true,
-            showGameList: false,
-            showSetUpGame: false
-        },
-        // part: "menu" 
+  state = {
+    parts: {
+      showBack: false,
+      showGameMenu: true,
+      showGameList: false,
+      showSetUpGame: false
+    }
+  };
 
-        // currentGames: null,
-
-        // Creategame-inputs goes in here
-        name: null,
-        password: null,
-        game_area: null,
-        game_time: null,
-    };
-
-    getGames = () => {
+   getGames = () => {
         this.props.firebase.games().once("value", snapshot => {
             this.data = snapshot.val()
         }).then(() =>  {
@@ -213,151 +200,157 @@ class GameMenu extends Component {
         });
     };
 
-    showParts = (e) => {
-        let trg = e.target.id;
+  // Manages all changes of state on page 
+  showParts = e => {
+    let trg = e.target.id;
 
-        this.setState({
-            parts: {
-                ...this.state.parts,
-                showGameMenu: false,
-                showBack: true,
-
-            }
-        });
-
-        if (trg === "join-game") {
-            this.setState({
-                parts: {
-                    ...this.state.parts,
-                    showGameList: true,
-                }
-            });
-            this.setState({
-                part: "join"
-            });
-        } else if (trg === "create-game") {
-            this.setState({
-                parts: {
-                    ...this.state.parts,
-                    showSetUpGame: true
-                }
-            });
-            this.setState({
-                part: "create"
-            });
-        };
-    };
-    parts = {
-        showBack: false,
-        showGameMenu: false,
-        showGameList: false,
-        showSetUpGame: false
-    };
-
-    render() {
-
-       /*
-        switch(this.state.part) {
-            case "menu":
-            parts.showGameMenu = true;
-            parts.showBack = true;
-            break;
-            case "join":
-            //...
-            break;
-            case "create":
-            // ...
-            break;
+    if (trg === "back-btn") {
+      this.setState({
+        parts: {
+          showBack: false,
+          showGameMenu: true,
+          showGameList: false,
+          showSetUpGame: false
         }
-        */
-        return (
-            <AuthUserContext.Consumer>
-                {authUser => (
-                    <StyledFlexContainer>
+      });
+    } else if (trg === "join-game") {
+      this.setState({
+        parts: {
+          //...this.state.parts,
+          showGameList: true,
+          showGameMenu: false,
+          showBack: true
+        }
+      });
+      this.setState({
+        part: "join"
+      });
+    } else if (trg === "create-game") {
+      this.setState({
+        parts: {
+          //...this.state.parts,
+          showSetUpGame: true,
+          showGameMenu: false,
+          showBack: true
+        }
+      });
+    }
+  };
 
-                        {this.state.parts.showGameMenu ?
+  render() {
+    return (
+      <AuthUserContext.Consumer>
+        {authUser => (
+          <StyledFlexContainer>
+            {this.state.parts.showGameMenu ? (
+              <StyledMenu onClick={this.showParts}>
+                <StyledTitle>MENU</StyledTitle>
+                <br />
+                <StyledGameButton id="join-game" onClick={this.getGames}>
+                  Join Game
+                </StyledGameButton>
+                <br />
+                <StyledGameButton id="create-game" onClick={this.getGames}>
+                  Create Game
+                </StyledGameButton>
+                <br />
+              </StyledMenu>
+            ) : null}
 
-                            <StyledMenu onClick={this.showParts}>
-                                <StyledTitle>
-                                    MENU
-                                </StyledTitle><br />
-                                <StyledGameButton id="join-game" onClick={ this.getGames }>
-                                    Join Game
-                                </StyledGameButton><br />
-                                <StyledGameButton id="create-game">
-                                    Create Game
-                                </StyledGameButton><br />
-                            </StyledMenu>
-                        : null}
+            {this.state.parts.showBack ? (
+              <StyledBackToMenu id="back-btn" onClick={this.showParts}>
+                Back to Menu
+              </StyledBackToMenu>
+            ) : null}
 
-                        {this.state.parts.showBack ?
-                            <StyledBackToMenu>Back to Menu</StyledBackToMenu>
-                        : null}
+            {this.state.parts.showGameList ? (
+              <StyledGameList>
+                <br />
+                <StyledListTitle>GAME FINDER</StyledListTitle>
+                <br />
+                {this.state.currentGames != null
+                  ? Object.keys(this.state.currentGames).map(gameId => (
+                      <StyledGameLi key={gameId}>
+                        {this.state.currentGames[gameId].name}
+                      </StyledGameLi>
+                    ))
+                  : null}
+                <br />
+              </StyledGameList>
+            ) : null}
 
-                        {this.state.parts.showGameList ?
-                                <StyledGameList>
-                                    <StyledListTitle>GAME FINDER</StyledListTitle><br />
-                                    {this.state.currentGames != null ? 
-                                        Object.keys(this.state.currentGames).map(gameId => 
-                                                <StyledGameLi>
-                                                    {this.state.currentGames[gameId].name}
-                                                </StyledGameLi>
-                                        ) : null
-                                    }
-                                    <br />
-                                </StyledGameList>
-                        : null}
+            {this.state.parts.showSetUpGame ? (
+              <StyledSetGame onSubmit={this.createGame}>
+                <br />
+                <StyledCreateTitle>SET UP GAME</StyledCreateTitle>
+                <br />
 
-                        {this.state.parts.showSetUpGame ?                        
-                            <StyledSetGame>
-                            
-                            <br />
-                            <StyledCreateTitle>SET UP GAME</StyledCreateTitle>
-                            <br />
+                <StyledSetSelect>
+                  Game Area
+                  <select
+                    name="game_area"
+                    onChange={this.onChange}
+                    value={this.state.game_area}
+                  >
+                    <option value="1"> Radius: 1 km</option>
+                    <option value="2"> Radius: 2 km</option>
+                    <option value="3"> Radius: 3 km</option>
+                    <option value="4"> Radius: 4 km</option>
+                  </select>
+                </StyledSetSelect>
+                <StyledSetSelect>
+                  Set Game Time
+                  <select
+                    name="game_time"
+                    onChange={this.onChange}
+                    value={this.state.game_time}
+                  >
+                    <option value="3600"> 1 Hour</option>
+                    <option value="7200"> 2 Hour</option>
+                    <option value="10800"> 3 Hour</option>
+                    <option value="14400"> 4 Hour</option>
+                    <option value="18000"> 5 Hour</option>
+                  </select>
+                </StyledSetSelect>
+                <StyledSetLi>
+                  Give the game a name{" "}
+                  <input
+                    type="text"
+                    onChange={this.onChange}
+                    value={this.state.name}
+                    name="name"
+                    minLength="3"
+                    maxLength="15"
+                  />
+                </StyledSetLi>
 
-                                <StyledSetSelect>
-                                    Game Area
-                                    <select name="game_area" onChange={this.onChange} value={this.state.game_area}>
-                                        <option value="1"> Radius: 1 km</option>
-                                        <option value="2"> Radius: 2 km</option>
-                                        <option value="3"> Radius: 3 km</option>
-                                        <option value="4"> Radius: 4 km</option>
-                                    </select>
-                                </StyledSetSelect>
-                                <StyledSetSelect>
-                                    Set Game Time
-                                    <select name="game_time" onChange={this.onChange} value={this.state.game_time}>
-                                        <option value="3600"> 1 Hour</option>
-                                        <option value="7200"> 2 Hour</option>
-                                        <option value="10800"> 3 Hour</option>
-                                        <option value="14400"> 4 Hour</option>
-                                        <option value="18000"> 5 Hour</option>
-                                    </select>
-                                </StyledSetSelect>
-                                <StyledSetLi>Give the game a name <input type="text" onChange={this.onChange} value={this.state.name} name="name" minLength="3" maxLength="15" />
-                                </StyledSetLi>
+                <StyledSetLi>
+                  Password for your game{" "}
+                  <input
+                    type="text"
+                    onChange={this.onChange}
+                    value={this.state.password}
+                    name="password"
+                  />
+                </StyledSetLi>
+                <br />
 
-                                <StyledSetLi>Password for your game <input type="text" onChange={this.onChange} value={this.state.password} name="password" />
-                                </StyledSetLi>
-                                <br />
-                               
-                                <Link to={ROUTES.GAME}><StyledCreateGame onClick={this.createGame}>Create Game</StyledCreateGame></Link>
-
-                            </StyledSetGame>
-                        : null}
-
-                    </StyledFlexContainer>
-                )}
-            </AuthUserContext.Consumer>
-        );
-    };
-};
+                <Link to={ROUTES.GAME}>
+                  <StyledCreateGame>Create Game</StyledCreateGame>
+                </Link>
+              </StyledSetGame>
+            ) : null}
+          </StyledFlexContainer>
+        )}
+      </AuthUserContext.Consumer>
+    );
+  }
+}
 
 const condition = authUser => !!authUser;
 
 export default compose(
-    withFirebase,
-    withEmailVerification,
-    withAuthorization(condition)
-  )(GameMenu);
-  
+  withFirebase,
+  withEmailVerification,
+  withAuthorization(condition)
+)(GameMenu);

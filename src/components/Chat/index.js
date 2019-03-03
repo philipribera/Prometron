@@ -1,15 +1,14 @@
-import React, { Component } from 'react';
-import { compose } from 'recompose';
+import React, { Component } from "react";
+import { compose } from "recompose";
 
 import {
   AuthUserContext,
   withAuthorization,
-  withEmailVerification,
-} from '../Session';
-import { withFirebase } from '../Firebase';
+  withEmailVerification
+} from "../Session";
+import { withFirebase } from "../Firebase";
 
-import Styled from 'styled-components';
-
+import Styled from "styled-components";
 
 /*** STYLED COMPONENETS ***/
 const StyledChat = Styled.section`
@@ -57,20 +56,19 @@ const StyledSubmit = Styled.button`
 `;
 /*** END ***/
 
-
 class Chat extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      users: null,
+      users: null
     };
   }
 
   componentDidMount() {
-    this.props.firebase.users().on('value', snapshot => {
+    this.props.firebase.users().on("value", snapshot => {
       this.setState({
-        users: snapshot.val(),
+        users: snapshot.val()
       });
     });
   }
@@ -93,10 +91,10 @@ class MessagesBase extends Component {
     super(props);
 
     this.state = {
-      text: '',
+      text: "",
       loading: false,
       messages: [],
-      limit: 8,
+      limit: 8
     };
   }
 
@@ -109,20 +107,20 @@ class MessagesBase extends Component {
 
     this.props.firebase
       .messages()
-      .orderByChild('createdAt')
+      .orderByChild("createdAt")
       .limitToLast(this.state.limit)
-      .on('value', snapshot => {
+      .on("value", snapshot => {
         const messageObject = snapshot.val();
 
         if (messageObject) {
           const messageList = Object.keys(messageObject).map(key => ({
             ...messageObject[key],
-            uid: key,
+            uid: key
           }));
 
           this.setState({
             messages: messageList,
-            loading: false,
+            loading: false
           });
         } else {
           this.setState({ messages: null, loading: false });
@@ -142,10 +140,10 @@ class MessagesBase extends Component {
     this.props.firebase.messages().push({
       text: this.state.text,
       userId: authUser.uid,
-      createdAt: this.props.firebase.serverValue.TIMESTAMP,
+      createdAt: this.props.firebase.serverValue.TIMESTAMP
     });
 
-    this.setState({ text: '' });
+    this.setState({ text: "" });
     event.preventDefault();
   };
 
@@ -153,7 +151,7 @@ class MessagesBase extends Component {
     this.props.firebase.message(message.uid).set({
       ...message,
       text,
-      editedAt: this.props.firebase.serverValue.TIMESTAMP,
+      editedAt: this.props.firebase.serverValue.TIMESTAMP
     });
   };
 
@@ -164,21 +162,16 @@ class MessagesBase extends Component {
   onNextPage = () => {
     this.setState(
       state => ({ limit: state.limit + 5 }),
-      this.onListenForMessages,
+      this.onListenForMessages
     );
   };
 
   render() {
-    const { users } = this.props;    
+    const { users } = this.props;
     const { text, messages, loading } = this.state;
-    const styles = {
-      color: "red"
-    }
-
+    
     return (
-      
       <AuthUserContext.Consumer>
-        
         {authUser => (
           <div>
             <br />
@@ -186,14 +179,13 @@ class MessagesBase extends Component {
 
             <StyledMessageBox>
               {messages && (
-                <MessageList style={styles}
+                <MessageList                  
                   messages={messages.map(message => ({
                     ...message,
                     user: users
                       ? users[message.userId]
-                      : { userId: message.userId },
-                      // New info!
-                    isOwned: (authUser.uid === message.userId) ? true : false
+                      : { userId: message.userId },                    
+                    isOwned: authUser.uid === message.userId ? true : false
                   }))}
                   //onEditMessage={this.onEditMessage}
                   //onRemoveMessage={this.onRemoveMessage}
@@ -201,17 +193,11 @@ class MessagesBase extends Component {
               )}
             </StyledMessageBox>
 
-
             {!messages && <div>There are no messages ...</div>}
 
-
-            <form
-              onSubmit={event =>
-                this.onCreateMessage(event, authUser)
-              }
-            >  
-
-              <StyledInput maxLength="64"
+            <form onSubmit={event => this.onCreateMessage(event, authUser)}>
+              <StyledInput
+                maxLength="64"
                 type="text"
                 value={text}
                 onChange={this.onChangeText}
@@ -225,58 +211,61 @@ class MessagesBase extends Component {
   }
 }
 
-
 const MessageList = ({
-  messages,
+  messages
   //onEditMessage,
   //onRemoveMessage,
 }) => (
-    <ul>
-      {messages.map(message => (
-        <MessageItem
-          key={message.uid}
-          message={message}          
-          //onEditMessage={onEditMessage}
-          //onRemoveMessage={onRemoveMessage}
-        />
-      ))}
-    </ul>
-  );
+  <ul>
+    {messages.map(message => (
+      <MessageItem
+        key={message.uid}
+        message={message}       
+        //onEditMessage={onEditMessage}
+        //onRemoveMessage={onRemoveMessage}
+      />
+    ))}
+  </ul>
+);
 
-  
+
 class MessageItem extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       editMode: false,
-      editText: this.props.message.text,
+      editText: this.props.message.text
     };
   }
 
   onToggleEditMode = () => {
     this.setState(state => ({
       editMode: !state.editMode,
-      editText: this.props.message.text,
+      editText: this.props.message.text
     }));
   };
 
-  onChangeEditText = event => {
-    this.setState({ editText: event.target.value });
+  onChangeEditText = e => {
+    this.setState({ editText: e.target.value });
   };
 
   onSaveEditText = () => {
     this.props.onEditMessage(this.props.message, this.state.editText);
-
     this.setState({ editMode: false });
   };
 
+  
   render() {
-    const { message, onRemoveMessage } = this.props;
+    const { message, onRemoveMessage } = this.props;    
+    //const msgId = this.props.message.userId;    
+    const msgOwn = this.props.message.isOwned;    
     const { editMode, editText } = this.state;
-
+    const styles = {
+      color: "rgb(226, 150, 55)"
+    };
+    
     return (
-     
       <li>
         {editMode ? (
           <input
@@ -285,20 +274,15 @@ class MessageItem extends Component {
             onChange={this.onChangeEditText}
           />
         ) : (
-            // if isOwned {}
-            <span>
-              <strong>
-                {message.user.username || message.user.userId}
-              </strong>{' '}
-              {message.text} {message.editedAt && <span>(Edited)</span>}
-            </span>
-          )}
-        
-      </li>     
+          <span>   
+            { msgOwn ? <strong style={styles}>{message.user.username} </strong> : <strong>{message.user.username} </strong> }             
+            {message.text} 
+          </span>
+        )}
+      </li>
     );
   }
 }
-
 
 const Messages = withFirebase(MessagesBase);
 
@@ -307,6 +291,5 @@ const condition = authUser => !!authUser;
 export default compose(
   withFirebase,
   withEmailVerification,
-  withAuthorization(condition),
+  withAuthorization(condition)
 )(Chat);
-
