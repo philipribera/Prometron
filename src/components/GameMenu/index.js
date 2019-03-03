@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withFirebase } from "../Firebase";
 import { compose } from "recompose";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import * as ROUTES from "../../constants/routes";
 import {
   AuthUserContext,
@@ -140,6 +140,7 @@ const StyledCreateGame = Styled.button`
 
 class GameMenu extends Component {
   state = {
+    Redirect: false,
     parts: {
       showBack: false,
       showGameMenu: true,
@@ -148,59 +149,64 @@ class GameMenu extends Component {
     }
   };
 
-   getGames = () => {
-        this.props.firebase.games().once("value", snapshot => {
-            this.data = snapshot.val()
-        }).then(() =>  {
-            this.setState({currentGames: this.data});
-        });  
+  getGames = () => {
+    this.props.firebase
+      .games()
+      .once("value", snapshot => {
+        this.data = snapshot.val();
+      })
+      .then(() => {
+        this.setState({ currentGames: this.data });
+      });
+  };
+
+  joinGame = () => {
+    //TODO
+  };
+
+  createGame = event => {
+    const currentTime = Math.round(new Date().getTime() / 1000);
+    const key = this.props.firebase.db.ref("games").push().key;
+    const uid = this.props.firebase.auth.currentUser.uid;
+
+    const data = {
+      name: this.state.name,
+      password: this.state.password,
+      game_area: parseInt(this.state.game_area),
+      game_time: currentTime + parseInt(this.state.game_time),
+      users: {
+        [uid]: {
+          path: [[0, 0]],
+          points: 0
+        }
+      }
     };
 
-    joinGame = () => {
-        //TODO
-    };
+    let updates = {};
 
-    createGame = (event) => {
-        const currentTime = Math.round((new Date()).getTime() / 1000);
-        const key = this.props.firebase.db.ref("games").push().key;
-        const uid = this.props.firebase.auth.currentUser.uid;
+    updates["/games/" + key] = data;
+    updates["/users/" + uid + "/games/" + key] = true;
 
-        const data = {
-            name: this.state.name,
-            password: this.state.password,
-            game_area: parseInt(this.state.game_area),
-            game_time: currentTime + parseInt(this.state.game_time),
-            users: {
-                [uid]: {
-                    path: [[0,0]],
-                    points: 0,
-                }
-            }
-        };
+    this.props.firebase.db.ref().update(updates);
 
-        let updates = {};
+    this.setState({
+      name: "",
+      password: "",
+      game_area: "",
+      game_time: "",
+      Redirect: true
+    });
 
-        updates['/games/' + key] = data;
-        updates['/users/' + uid + '/games/' + key] = true;
+    event.preventDefault();
+  };
 
-        this.props.firebase.db.ref().update(updates);
+  onChange = event => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  };
 
-        this.setState({
-            name: "",
-            password: "",
-            game_area: "",
-            game_time: ""
-        });
-        event.preventDefault();
-    };
-
-    onChange = event => {
-        this.setState({
-            [event.target.name]: event.target.value
-        });
-    };
-
-  // Manages all changes of state on page 
+  // Manages all changes of state on page
   showParts = e => {
     let trg = e.target.id;
 
@@ -228,7 +234,6 @@ class GameMenu extends Component {
     } else if (trg === "create-game") {
       this.setState({
         parts: {
-          //...this.state.parts,
           showSetUpGame: true,
           showGameMenu: false,
           showBack: true
@@ -238,6 +243,11 @@ class GameMenu extends Component {
   };
 
   render() {
+    
+    if (this.state.Redirect) {
+      return <Redirect push to="/sample" />;
+    }
+
     return (
       <AuthUserContext.Consumer>
         {authUser => (
@@ -284,7 +294,6 @@ class GameMenu extends Component {
                 <br />
                 <StyledCreateTitle>SET UP GAME</StyledCreateTitle>
                 <br />
-
                 <StyledSetSelect>
                   Game Area
                   <select
@@ -323,7 +332,6 @@ class GameMenu extends Component {
                     maxLength="15"
                   />
                 </StyledSetLi>
-
                 <StyledSetLi>
                   Password for your game{" "}
                   <input
@@ -336,10 +344,15 @@ class GameMenu extends Component {
                 <br />
 
                 <Link to={ROUTES.GAME}>
-                  <StyledCreateGame>Create Game</StyledCreateGame>
+                <StyledCreateGame onClick={this.createGame}>
+                  Create Game
+                </StyledCreateGame>
                 </Link>
+                <br />
+                
               </StyledSetGame>
             ) : null}
+
           </StyledFlexContainer>
         )}
       </AuthUserContext.Consumer>
