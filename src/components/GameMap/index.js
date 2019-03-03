@@ -8,7 +8,7 @@ const GameMap = props => {
       <Map
         zoomControl={true}
         scrollWheelZoom={true}
-        center={props.userCoordinates}
+        center={props.userPosition}
         zoom={13}
       >
 
@@ -16,11 +16,10 @@ const GameMap = props => {
       {/* Loop through all ingame users - Display their marker and path */}
 
       {/* <AntPath /> */}
-
-      {/* <Marker
-        position={[this.state.browserCoords.latitude, this.state.browserCoords.longitude]}
+      <Marker
+        position={props.userPosition}
       >
-      </Marker> */}
+      </Marker>
 
       
       <TileLayer

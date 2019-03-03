@@ -150,15 +150,15 @@ class GameMenu extends Component {
             showGameList: false,
             showSetUpGame: false
         },
-/*        part: "menu" 
+        // part: "menu" 
 
-        currentGames: null,
+        // currentGames: null,
 
         // Creategame-inputs goes in here
         name: null,
         password: null,
         game_area: null,
-        game_time: null,*/
+        game_time: null,
     };
 
     getGames = () => {
@@ -166,7 +166,6 @@ class GameMenu extends Component {
             this.data = snapshot.val()
         }).then(() =>  {
             this.setState({currentGames: this.data});
-            console.log(this.state.currentGames)
         });  
     };
 
@@ -176,15 +175,28 @@ class GameMenu extends Component {
 
     createGame = (event) => {
         const currentTime = Math.round((new Date()).getTime() / 1000);
+        const key = this.props.firebase.db.ref("games").push().key;
+        const uid = this.props.firebase.auth.currentUser.uid;
 
-        this.props.firebase.games().push({
+        const data = {
             name: this.state.name,
             password: this.state.password,
             game_area: parseInt(this.state.game_area),
             game_time: currentTime + parseInt(this.state.game_time),
             users: {
+                [uid]: {
+                    path: [[0,0]],
+                    points: 0,
+                }
             }
-        });
+        };
+
+        let updates = {};
+
+        updates['/games/' + key] = data;
+        updates['/users/' + uid + '/games/' + key] = true;
+
+        this.props.firebase.db.ref().update(updates);
 
         this.setState({
             name: "",
@@ -272,7 +284,7 @@ class GameMenu extends Component {
                                 <StyledGameButton id="join-game" onClick={ this.getGames }>
                                     Join Game
                                 </StyledGameButton><br />
-                                <StyledGameButton id="create-game" onClick={ this.getGames }>
+                                <StyledGameButton id="create-game">
                                     Create Game
                                 </StyledGameButton><br />
                             </StyledMenu>
@@ -297,7 +309,7 @@ class GameMenu extends Component {
                         : null}
 
                         {this.state.parts.showSetUpGame ?                        
-                            <StyledSetGame onSubmit={this.createGame}>
+                            <StyledSetGame>
                             
                             <br />
                             <StyledCreateTitle>SET UP GAME</StyledCreateTitle>
@@ -329,7 +341,7 @@ class GameMenu extends Component {
                                 </StyledSetLi>
                                 <br />
                                
-                                <Link to={ROUTES.GAME}><StyledCreateGame>Create Game</StyledCreateGame></Link>
+                                <Link to={ROUTES.GAME}><StyledCreateGame onClick={this.createGame}>Create Game</StyledCreateGame></Link>
 
                             </StyledSetGame>
                         : null}
