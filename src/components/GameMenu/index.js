@@ -245,7 +245,7 @@ class GameMenu extends Component {
   render() {
     
     if (this.state.Redirect) {
-      return <Redirect push to="/sample" />;
+      return <Redirect push to="../Game" />;
     }
 
     return (

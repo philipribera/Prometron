@@ -4,6 +4,8 @@ import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import AntPath from "react-leaflet-ant-path";
 
 const GameMap = props => {
+  // const users = Object.keys(props.gameData.users);
+
     return (
       <Map
         zoomControl={true}
@@ -16,10 +18,14 @@ const GameMap = props => {
       {/* Loop through all ingame users - Display their marker and path */}
 
       {/* <AntPath /> */}
-      <Marker
-        position={props.userPosition}
-      >
-      </Marker>
+
+      {/* {Object.keys(props.users).map(user => (
+        <Marker
+        position={props.users[user].path[props.users[user].path.length() - 1]}
+        >
+        </Marker>
+      ))} */}
+       
 
       
       <TileLayer
