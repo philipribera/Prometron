@@ -6,7 +6,11 @@ import { withFirebase } from '../Firebase';
 import Chat from '../Chat';
 import GameScore from '../GameScores';
 import { compose } from "recompose";
-import { withAuthorization } from '../Session';
+
+import {
+    AuthUserContext,
+    withAuthorization,
+} from "../Session";
 
 /*** STYLED COMPONENETS ***/
 const StyledFlexContainer = Styled.div`
@@ -28,9 +32,28 @@ const ScoreBoard = Styled.div`
     top: 2%;
     right: 2%;
     z-index: 999;
-    background: rgba(222,222,222,0.6);a
-    padding: 12px;
+    background: rgba(12,12,12,0.65);
+    color: rgb(255, 211, 45);
     border: 1px solid rgb(244,244,244);
+`;
+const StyledChat = Styled.section`
+    flex-basis: 100%;
+    min-width: 332px;
+    min-height: 292px;
+    max-height: 500px;
+    padding: 12px;
+    border: 1px solid rgb(177,177,177);
+    border-top: none;
+    margin-bottom: 32px;
+    & h2 {
+        color: rgb(29, 134, 226);
+        text-shadow: 1px 1px 0.5px rgb(252,252,252);
+        margin-bottom: 12px;
+    }
+    @media (max-width: 767px) {
+        flex-basis: 100%;
+        padding: 12px;
+    }
 `;
 /*
 const StyledChatWindowHd = Styled.div`
@@ -62,7 +85,11 @@ class Game extends Component {
         gameId: null,
         gameData: [],
         userPath: [],
-        userPoints: 0
+        userPoints: 0,
+        parts: {
+            scoreBoard: true,
+            chatBoard: false
+        }
     };
 
     calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -70,19 +97,20 @@ class Game extends Component {
         var dLat = ((lat2 - lat1) * Math.PI) / 180;
         var dLon = ((lon2 - lon1) * Math.PI) / 180;
         var a =
-          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-          Math.cos((lat1 * Math.PI) / 180) *
-          Math.cos((lat2 * Math.PI) / 180) *
-          Math.sin(dLon / 2) *
-          Math.sin(dLon / 2);
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos((lat1 * Math.PI) / 180) *
+            Math.cos((lat2 * Math.PI) / 180) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         var d = R * c;
-    
+
         return Math.round(d * 1000);
     };
 
     initializeGame = () => {
         const { authUser } = this.props;
+
             if (authUser && navigator.geolocation && this.timeRemaining) {
                 this.setState({uid: authUser.uid});
                 this.props.firebase.user(authUser.uid).once('value', snapshot => {
@@ -101,13 +129,13 @@ class Game extends Component {
         this.watchId = navigator.geolocation.watchPosition(
             this.updatePosition,
             error => {
-              console.log("error" + error);
+                console.log("error" + error);
             },
             {
-              enableHighAccuracy: true,
-              timeout: 20000,
-              maximumAge: 0,
-              distanceFilter: 1
+                enableHighAccuracy: true,
+                timeout: 20000,
+                maximumAge: 0,
+                distanceFilter: 1
             }
         );
     };
@@ -115,6 +143,7 @@ class Game extends Component {
     // Appends user path in DB
     updatePosition = position => {
         const newPosition = [position.coords.latitude, position.coords.longitude];
+
         const oldPosition = this.state.userPath[this.state.userPath.length - 1]
 
         if (this.calculateDistance(newPosition[0], newPosition[1], oldPosition[0], oldPosition[1]) > 1) {
@@ -128,10 +157,10 @@ class Game extends Component {
     fetchGameData = () => {
         this.props.firebase.game(this.state.gameId).on("value", snapshot => {
             const data = snapshot.val();
-            this.setState({gameData: data});
+            this.setState({ gameData: data });
         });
     };
-    
+
     updateToDB = () => {
         this.props.firebase.game(this.state.gameId + '/users/' + this.state.uid).set({
             username: this.props.authUser.username,
@@ -164,30 +193,36 @@ class Game extends Component {
         navigator.geolocation.clearWatch(this.watchId);
         this.props.firebase.game(this.state.gameId).off();
     };
-    
+
     render() {
         return (
+            <AuthUserContext.Consumer>
+                {authUser => (
+                    <StyledFlexContainer>
 
-            <StyledFlexContainer>
+                        <StyledMap className="map-container">
+                            <GameMap
+                                userPosition={this.state.userPath[this.state.userPath.length - 1]}
+                                users={this.state.gameData.users}
+                            />
+                            <ScoreBoard>
+                                <GameScore userId={authUser.uid} />
+                            </ScoreBoard>
+                        </StyledMap>
 
-                <StyledMap className="map-container">
-                    <GameMap 
-                        userPosition={this.state.userPath[this.state.userPath.length - 1]}
-                        users={this.state.gameData.users}
-                        />
-                    <ScoreBoard>
-                        <GameScore />
-                    </ScoreBoard>
-                </StyledMap>
+                        <div>
+                            <button onClick={this.ShowChat}>Chat</button>
+                        </div><br />
 
-                    {/* Add chat when activated by user
-                     <div>
-                        <button onClick={this.ShowChat}>Chat</button>
-                    </div><br /> */}
-                    {/* <StyledChatWindow id="chat-window">
-                    <Chat />
-                    </StyledChatWindow> */}
-            </StyledFlexContainer>
+                        { this.state.parts.chat ? (
+                        <StyledChat id="chat-window">
+                        <Chat />
+                        </StyledChat> 
+                        ) : null }
+                        
+                    </StyledFlexContainer>
+                )}
+            </AuthUserContext.Consumer>
         );
     }
 }
@@ -197,7 +232,7 @@ class Game extends Component {
 const condition = authUser => !!authUser;
 
 export default compose(
-  withFirebase,
-  withAuthorization(condition)
+    withFirebase,
+    withAuthorization(condition)
 )(Game);
 

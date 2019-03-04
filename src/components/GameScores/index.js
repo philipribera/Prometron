@@ -1,6 +1,5 @@
-import React, { Component } from "react";
+import React from "react";
 import { withFirebase } from "../Firebase";
-import { compose } from "recompose";
 
 import Styled from 'styled-components';
 
@@ -20,24 +19,48 @@ const StyledStat = Styled.div`
     }
     & span {
         color: rgb(122,122,222);
-        font-weight: 600;
-        padding: 4px;
+        font-weight: 600;        
     }    
     @media (max-width: 767px) {
         flex-basis: 100%;
         padding: 12px;
     }
 `;
-
+const GameNameTime = Styled.span`
+    display: inline-block;
+    margin-bottom: 12px;
+    & span {
+        margin-left: 12px;
+    }
+    h2 {
+        display: inline;
+        color: rgb(255, 143, 0);
+        text-shadow: none;
+    }
+`;
+const TimeData = Styled.span`
+    color: rgb(234,234,234);
+`;
 const PlayerScore = Styled.div`
-    border: 1px solid rgb(252,252,252);
-
+    margin-left: 4px;
+    & span {
+        margin-left: 12px;
+    }
 `;
 const OpponentScore = Styled.div`
-    border: 1px solid rgb(252,252,252);   
-
+   & ul {
+    margin-left: 4px;
+   } 
+   & h3 {
+    color: rgb(255, 143, 0);
+    margin-bottom: 12px;
+   } 
+   & span {
+       margin-left: 12px;
+   }
 `;
 /*** END ***/
+
 
 let userData = {
     statistics: {
@@ -48,33 +71,28 @@ let userData = {
     }
 };
 
-
 const GameScore = (props) => {
 
-    /*
     props.firebase.user(props.userId).once("value", snapshot => {
         userData = snapshot.val();
-    });*/
+    });
 
-    return (
+    return (            
         <StyledStat>
-            <h2>Game Score</h2>
+            <GameNameTime><h2>Game Score</h2><TimeData>Remaining time: 54:01</TimeData></GameNameTime>
             <br />
-            <PlayerScore>                
+            <PlayerScore>
                 <p>
-                    {/* Game <span>{userData.statistics.wongames}</span> */}
-                </p>
+                  Walked Distance <span>{userData.statistics.walkeddistance} km</span> 
+                </p>                
+                <p>
+                    Earned Points <span>{userData.statistics.points}</span>
+                </p>                                 
                 <br />
-                <p>
-                    {/* Walked Distance <span>{userData.statistics.walkeddistance} km</span> */}
-                </p>
-                <br />
-                <p>
-                    {/* Points <span>{userData.statistics.points}</span> */}
-                </p>
-                <br />                
-            </PlayerScore><br />
+            </PlayerScore >
+            <hr /><br />
             <OpponentScore>
+                <h3>Opponents</h3>
                 <ul>
                     <li>Carola</li>
                     <li>Blue</li>
@@ -86,4 +104,4 @@ const GameScore = (props) => {
 }
 
 
-export default GameScore;
+export default withFirebase(GameScore);
