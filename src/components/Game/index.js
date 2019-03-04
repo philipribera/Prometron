@@ -22,7 +22,8 @@ const StyledFlexContainer = Styled.div`
 `;
 const StyledMap = Styled.div`    
     position: relative;
-    flex-basis: 100%;    
+    flex-basis: 100%;  
+    height: 100vh;  
     border: 1px solid rgb(177,177,177);    
     border-top: 1px solid rgb(252,252,252);
 `;
@@ -33,7 +34,7 @@ const ScoreBoard = Styled.div`
     right: 2%;
     z-index: 999;
     background: rgba(12,12,12,0.65);
-    color: rgb(255, 211, 45);
+    color: rgb(244,244,244);
     border: 1px solid rgb(244,244,244);
 `;
 const StyledChat = Styled.section`
@@ -55,30 +56,7 @@ const StyledChat = Styled.section`
         padding: 12px;
     }
 `;
-/*
-const StyledChatWindowHd = Styled.div`
-    display: none;
-`;
-
-const StyledChatWindow = Styled.div`
-    flex-basis: 100%;
-    min-width: 332px;
-    min-height: 292px;
-    max-height: 500px;
-    padding: 12px;
-    margin-bottom: 32px;
-    & h2 {
-        color: rgb(29, 134, 226);
-        text-shadow: 1px 1px 0.5px rgb(252,252,252);
-        margin-bottom: 12px;
-    }
-    @media (max-width: 767px) {
-        flex-basis: 100%;
-        padding: 12px;
-    }
-`;*/
 /*** END ***/
-
 
 class Game extends Component {
     state = {
@@ -194,6 +172,23 @@ class Game extends Component {
         this.props.firebase.game(this.state.gameId).off();
     };
 
+    showChat = () => {
+        if( !this.state.parts.chatBoard ) {
+        this.setState({
+            parts: {
+                chatBoard: true
+            }
+        })
+    } else {
+        this.setState({
+            parts: {
+                chatBoard: false
+            }
+        })
+    }
+    }
+
+
     render() {
         return (
             <AuthUserContext.Consumer>
@@ -211,12 +206,12 @@ class Game extends Component {
                         </StyledMap>
 
                         <div>
-                            <button onClick={this.ShowChat}>Chat</button>
+                            <button onClick={this.showChat}>Chat Board</button>
                         </div><br />
 
-                        { this.state.parts.chat ? (
+                        { this.state.parts.chatBoard ? (
                         <StyledChat id="chat-window">
-                        <Chat />
+                            <Chat />
                         </StyledChat> 
                         ) : null }
                         
