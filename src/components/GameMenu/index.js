@@ -235,7 +235,6 @@ class GameMenu extends Component {
     } else if (trg === "join-game") {
       this.setState({
         parts: {
-          //...this.state.parts,
           showGameList: true,
           showGameMenu: false,
           showBack: true

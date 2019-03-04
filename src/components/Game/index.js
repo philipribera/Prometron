@@ -6,6 +6,7 @@ import { withFirebase } from '../Firebase';
 import Chat from '../Chat';
 import { compose } from "recompose";
 import { withAuthorization } from '../Session';
+
 /*** STYLED COMPONENETS ***/
 const StyledFlexContainer = Styled.div`
     display: flex;
@@ -15,15 +16,25 @@ const StyledFlexContainer = Styled.div`
     min-height: 492px;    
 `;
 const StyledMap = Styled.div`    
-    flex-basis: 100%;
+    position: relative;
+    flex-basis: 100%;    
     border: 1px solid rgb(177,177,177);    
     border-top: 1px solid rgb(252,252,252);
+`;
+
+const ScoreBoard = Styled.div`
+    position: absolut;
+    top: 2%;
+    right: 2%;
+    background: rgba(222,222,222,0.6);a
+    padding: 12px;
+    border: 1px solid rgb(244,244,244);
 `;
 /*
 const StyledChatWindowHd = Styled.div`
     display: none;
 `;
-*/
+
 const StyledChatWindow = Styled.div`
     flex-basis: 100%;
     min-width: 332px;
@@ -40,7 +51,7 @@ const StyledChatWindow = Styled.div`
         flex-basis: 100%;
         padding: 12px;
     }
-`;
+`;*/
 /*** END ***/
 
 
@@ -161,9 +172,13 @@ class Game extends Component {
                         userPosition={this.state.userPath[this.state.userPath.length - 1]}
                         users={this.state.gameData.users}
                         />
+                    <ScoreBoard>
+
+                    </ScoreBoard>
                 </StyledMap>
 
-                    {/* <div>
+                    {/* Add chat when activated by user
+                     <div>
                         <button onClick={this.ShowChat}>Chat</button>
                     </div><br /> */}
                     {/* <StyledChatWindow id="chat-window">
