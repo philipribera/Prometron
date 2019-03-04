@@ -10,6 +10,8 @@ const styles = {
 }
 
 const GameMap = props => {
+//   const users = Object.keys(props.gameData.users);
+
     return (
       <Map style={styles}
         zoomControl={true}
@@ -22,12 +24,14 @@ const GameMap = props => {
       {/* Loop through all ingame users - Display their marker and path */}
 
       {/* <AntPath /> */}
-      <Marker
-        position={props.userPosition}
-      >
-      </Marker>
 
-      
+      {/* {Object.keys(props.users).map(user => (
+        <Marker
+        position={props.users[user].path[props.users[user].path.length() - 1]}
+        >
+        </Marker>
+      ))} */}
+       
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"

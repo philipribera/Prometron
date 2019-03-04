@@ -160,14 +160,27 @@ class GameMenu extends Component {
       });
   };
 
-  joinGame = () => {
-    //TODO
+  joinGame = event => {
+    const key = event.target.name;
+    const uid = this.props.authUser.uid;
+    const initialData = {
+        path: [],
+        score: 0
+    }
+
+    let updates = {};
+
+    updates["/games/" + key + "/" + uid] = initialData;
+    updates["/users/" + uid + "/games/" + key] = true;
+
+    this.props.firebase.db.ref().update(updates);
+    this.setState({Redirect: true})
   };
 
   createGame = event => {
     const currentTime = Math.round(new Date().getTime() / 1000);
     const key = this.props.firebase.db.ref("games").push().key;
-    const uid = this.props.firebase.auth.currentUser.uid;
+    const uid = this.props.authUser.uid;
 
     const data = {
       name: this.state.name,
@@ -244,7 +257,7 @@ class GameMenu extends Component {
   render() {
     
     if (this.state.Redirect) {
-      return <Redirect push to="../Game" />;
+      return <Redirect push to="/game" />;
     }
 
     return (
@@ -279,7 +292,7 @@ class GameMenu extends Component {
                 <br />
                 {this.state.currentGames != null
                   ? Object.keys(this.state.currentGames).map(gameId => (
-                      <StyledGameLi key={gameId}>
+                      <StyledGameLi name={gameId} onClick={this.joinGame}>
                         {this.state.currentGames[gameId].name}
                       </StyledGameLi>
                     ))

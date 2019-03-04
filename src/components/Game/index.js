@@ -4,7 +4,8 @@ import HomeMap from '../HomeMap';
 import GameMap from '../GameMap';
 import { withFirebase } from '../Firebase';
 import Chat from '../Chat';
-//import GameScores from '../GameScores';
+import { compose } from "recompose";
+import { withAuthorization } from '../Session';
 
 /*** STYLED COMPONENETS ***/
 const StyledFlexContainer = Styled.div`
@@ -62,11 +63,29 @@ class Game extends Component {
         userPoints: 0
     };
 
+    calculateDistance = (lat1, lon1, lat2, lon2) => {
+        var R = 6371; // km (change this constant to get miles)
+        var dLat = ((lat2 - lat1) * Math.PI) / 180;
+        var dLon = ((lon2 - lon1) * Math.PI) / 180;
+        var a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos((lat1 * Math.PI) / 180) *
+          Math.cos((lat2 * Math.PI) / 180) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var d = R * c;
+    
+        return Math.round(d * 1000);
+    };
+
     initializeGame = () => {
-        this.props.firebase.auth.onAuthStateChanged(authUser => {
+        //this.props.firebase.auth.onAuthStateChanged(authUser => {
+        const { authUser } = this.props;
+        console.log(authUser);
             if (authUser && navigator.geolocation) {
                 this.setState({uid: authUser.uid});
-                this.props.firebase.user(this.state.uid).once('value', snapshot => {
+                this.props.firebase.user(authUser.uid).once('value', snapshot => {
                     const data = snapshot.val();
                     const gameKey = Object.keys(data.games)[0];
                     this.setState({gameId: gameKey});
@@ -78,7 +97,7 @@ class Game extends Component {
                     };
                 });
             };
-        });
+      //  });
     };
 
     watchUserPosition = () => {
@@ -99,15 +118,16 @@ class Game extends Component {
     // Appends user path in DB
     updatePosition = position => {
         const newPosition = [position.coords.latitude, position.coords.longitude];
+        console.log(newPosition)
         const userPath = this.state.userPath.slice();
         userPath.push(newPosition);
-        this.setState({userPath: userPath}); 
-        this.setState({userPoints: this.state.userPoints + 1});
+        //this.setState({userPath: userPath}); 
+        this.setState(prevState => ({userPoints: prevState.userPoints + 1, userPath: userPath}));
         this.updateToDB();
     };
 
     fetchGameData = () => {
-        this.props.firebase.game(this.state.gameId).once("value", snapshot => {
+        this.props.firebase.game(this.state.gameId).on("value", snapshot => {
             const data = snapshot.val();
             this.setState({gameData: data});
         });
@@ -133,12 +153,13 @@ class Game extends Component {
         //TODO
     }
 
-    componentDidMount(){
+    componentWillMount(){
         this.initializeGame()
     };
 
     componentWillUnmount() {
         navigator.geolocation.clearWatch(this.watchId);
+        this.props.firebase.game(this.state.gameId).off();
     };
     
     render() {
@@ -149,7 +170,7 @@ class Game extends Component {
                 <StyledMap className="map-container">
                     <GameMap 
                         userPosition={this.state.userPath[this.state.userPath.length - 1]}
-                        gameData={this.state.gameData}
+                        users={this.state.gameData.users}
                         />
                     <ScoreBoard>
 
@@ -168,5 +189,12 @@ class Game extends Component {
     }
 }
 
-export default withFirebase(Game);
+//export default withFirebase(withAuthorization(Game)(() => true);
+
+const condition = authUser => !!authUser;
+
+export default compose(
+  withFirebase,
+  withAuthorization(condition)
+)(Game);
 
