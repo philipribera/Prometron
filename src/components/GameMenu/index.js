@@ -195,6 +195,7 @@ class GameMenu extends Component {
 
     updates["/games/" + key] = data;
     updates["/users/" + uid + "/games/" + key] = true;
+
     this.props.firebase.user(uid).child("games").remove();
     this.props.firebase.db.ref().update(updates);
 
@@ -207,6 +208,19 @@ class GameMenu extends Component {
     });
 
     event.preventDefault();
+  };
+
+  componentWillMount() {
+      this.checkIfUserInGame();
+  }
+
+  checkIfUserInGame = () => {
+      this.props.firebase.user(this.props.authUser.uid).child("games").once("value", snapshot => {
+          this.isInGame = snapshot.val()
+      });
+      if (this.isInGame !== null){
+          this.setState({Redirect: true})
+      };
   };
 
   onChange = event => {
@@ -251,7 +265,6 @@ class GameMenu extends Component {
   };
 
   render() {
-    
     if (this.state.Redirect) {
       return <Redirect push to="/game" />;
     }
