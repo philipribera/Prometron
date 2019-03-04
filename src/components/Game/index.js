@@ -4,6 +4,7 @@ import HomeMap from '../HomeMap';
 import GameMap from '../GameMap';
 import { withFirebase } from '../Firebase';
 import Chat from '../Chat';
+import GameScore from '../GameScores';
 import { compose } from "recompose";
 import { withAuthorization } from '../Session';
 
@@ -23,9 +24,10 @@ const StyledMap = Styled.div`
 `;
 
 const ScoreBoard = Styled.div`
-    position: absolut;
+    position: absolute;
     top: 2%;
     right: 2%;
+    z-index: 999;
     background: rgba(222,222,222,0.6);a
     padding: 12px;
     border: 1px solid rgb(244,244,244);
@@ -173,7 +175,7 @@ class Game extends Component {
                         users={this.state.gameData.users}
                         />
                     <ScoreBoard>
-
+                        <GameScore />
                     </ScoreBoard>
                 </StyledMap>
 
