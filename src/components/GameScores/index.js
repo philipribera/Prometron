@@ -72,7 +72,7 @@ let userData = {
 };
 
 const GameScore = (props) => {
-
+    console.log(props.gameData)
     props.firebase.user(props.userId).once("value", snapshot => {
         userData = snapshot.val();
     });

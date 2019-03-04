@@ -149,7 +149,7 @@ class Game extends Component {
         if (this.calculateDistance(newPosition[0], newPosition[1], oldPosition[0], oldPosition[1]) > 1) {
             const userPath = this.state.userPath.slice();
             userPath.push(newPosition);
-            this.setState(prevState => ({userPoints: prevState.userPoints + 1, userPath: userPath}));
+            this.setState(prevState => ({userPoints: prevState.gameData.users[this.props.authUser.uid].points + 1, userPath: userPath}));
             this.updateToDB();
         };
     };
@@ -206,7 +206,10 @@ class Game extends Component {
                                 users={this.state.gameData.users}
                             />
                             <ScoreBoard>
-                                <GameScore userId={authUser.uid} />
+                                <GameScore 
+                                    userId={authUser.uid}
+                                    gameData={this.state.gameData}
+                            />
                             </ScoreBoard>
                         </StyledMap>
 

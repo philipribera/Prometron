@@ -2,15 +2,20 @@ import React, { Component } from "react";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 
 import AntPath from "react-leaflet-ant-path";
-import { AuthUserContext } from "../Session";
-
 
 const styles = {
   height: "100%" 
 }
 
 const GameMap = props => {
-//   const users = Object.keys(props.gameData.users);
+    console.log(props.users)
+    // if (props.users !== undefined) {
+    //     const userMarkers = []
+    //     const userUids = Object.keys(props.gameData.users);
+    //     userUids.forEach(uid => {
+    //         userMarkers.push(props.users[uid].path[props.users[uid].path.length - 1]);
+    //     });
+    // };
 
     return (
       <Map style={styles}
