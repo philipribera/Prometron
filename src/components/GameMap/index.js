@@ -4,7 +4,7 @@ import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import AntPath from "react-leaflet-ant-path";
 
 const GameMap = props => {
-  // const users = Object.keys(props.gameData.users);
+//   const users = Object.keys(props.gameData.users);
 
     return (
       <Map
@@ -26,8 +26,6 @@ const GameMap = props => {
         </Marker>
       ))} */}
        
-
-      
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
