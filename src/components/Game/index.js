@@ -109,24 +109,20 @@ class Game extends Component {
     };
 
     initializeGame = () => {
-        //this.props.firebase.auth.onAuthStateChanged(authUser => {
         const { authUser } = this.props;
-        console.log(authUser);
-        if (authUser && navigator.geolocation) {
-            this.setState({ uid: authUser.uid });
-            this.props.firebase.user(authUser.uid).once('value', snapshot => {
-                const data = snapshot.val();
-                const gameKey = Object.keys(data.games)[0];
-                this.setState({ gameId: gameKey });
-                this.fetchGameData();
-            }).then(() => {
-                if (this.timeRemaining) {
+
+            if (authUser && navigator.geolocation && this.timeRemaining) {
+                this.setState({uid: authUser.uid});
+                this.props.firebase.user(authUser.uid).once('value', snapshot => {
+                    const data = snapshot.val();
+                    const gameKey = Object.keys(data.games)[0];
+                    this.setState({gameId: gameKey});
+                    this.fetchGameData();
+                }).then(() => {
                     this.watchUserPosition();
-                    this.detectCollision();
-                };
-            });
-        };
-        //  });
+                    this.detectCollision();  
+                });
+            };
     };
 
     watchUserPosition = () => {
@@ -147,12 +143,15 @@ class Game extends Component {
     // Appends user path in DB
     updatePosition = position => {
         const newPosition = [position.coords.latitude, position.coords.longitude];
-        console.log(newPosition)
-        const userPath = this.state.userPath.slice();
-        userPath.push(newPosition);
-        //this.setState({userPath: userPath}); 
-        this.setState(prevState => ({ userPoints: prevState.userPoints + 1, userPath: userPath }));
-        this.updateToDB();
+
+        const oldPosition = this.state.userPath[this.state.userPath.length - 1]
+
+        if (this.calculateDistance(newPosition[0], newPosition[1], oldPosition[0], oldPosition[1]) > 1) {
+            const userPath = this.state.userPath.slice();
+            userPath.push(newPosition);
+            this.setState(prevState => ({userPoints: prevState.userPoints + 1, userPath: userPath}));
+            this.updateToDB();
+        };
     };
 
     fetchGameData = () => {
@@ -164,6 +163,7 @@ class Game extends Component {
 
     updateToDB = () => {
         this.props.firebase.game(this.state.gameId + '/users/' + this.state.uid).set({
+            username: this.props.authUser.username,
             path: this.state.userPath,
             points: this.state.userPoints
         });
@@ -182,7 +182,10 @@ class Game extends Component {
         //TODO
     }
 
-    componentWillMount() {
+    componentWillMount(){
+        navigator.geolocation.getCurrentPosition(position => {
+            this.setState({userPath: [[position.coords.latitude, position.coords.longitude]]})
+        });
         this.initializeGame()
     };
 
