@@ -56,16 +56,18 @@ const StyledH2 = Styled.h2`
 
 const App = () => (
     <div className="wrapper">
-        
+
         <h1><StyledTitle>PROMETRON</StyledTitle></h1>
         <StyledH2>Take a walk with Prometron...</StyledH2>
         <br />
 
         <Router>
             <div>
-                <Navigation />
-                <hr />
-                <StyledFlexContainer>                    
+                <div id="nav-bar">
+                    <Navigation />
+                    <hr />
+                </div>
+                <StyledFlexContainer>
                     <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
                     <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
                     <Route
@@ -77,13 +79,14 @@ const App = () => (
                     <Route path={ROUTES.ADMIN} component={AdminPage} />
                     
                     <Route path={ROUTES.GAME} component={GamePage} />
+                    
                     <Route path={ROUTES.GAMEMENU} component={GameMenu} />
                     <Route path={ROUTES.CHAT} component={Chat} />
 
                 </StyledFlexContainer>
             </div>
         </Router>
-        
+
     </div>
 );
 
