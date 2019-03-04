@@ -83,7 +83,9 @@ const StyledChatWindow = Styled.div`
 class Game extends Component {
     state = {
         gameId: null,
-        gameData: [],
+        gameData: {
+            users: null
+        },
         userPath: [],
         userPoints: 0,
         parts: {
@@ -200,18 +202,22 @@ class Game extends Component {
                 {authUser => (
                     <StyledFlexContainer>
 
-                        <StyledMap className="map-container">
-                            <GameMap
-                                userPosition={this.state.userPath[this.state.userPath.length - 1]}
-                                users={this.state.gameData.users}
-                            />
-                            <ScoreBoard>
-                                <GameScore 
-                                    userId={authUser.uid}
-                                    gameData={this.state.gameData}
-                            />
-                            </ScoreBoard>
-                        </StyledMap>
+                        {this.state.gameData.users ? 
+                            <StyledMap className="map-container">
+                                <GameMap
+                                    userPosition={this.state.userPath[this.state.userPath.length - 1]}
+                                    users={this.state.gameData.users}
+                                />
+                                <ScoreBoard>
+                                    <GameScore 
+                                        userId={authUser.uid}
+                                        gameData={this.state.gameData}
+                                />
+                                </ScoreBoard>
+                            </StyledMap>
+                        
+                        : null }
+
 
                         <div>
                             <button onClick={this.ShowChat}>Chat</button>

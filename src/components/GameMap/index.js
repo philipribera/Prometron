@@ -4,45 +4,47 @@ import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import AntPath from "react-leaflet-ant-path";
 
 const styles = {
-  height: "100%" 
+  height: "100%"
 }
 
 const GameMap = props => {
-    console.log(props.users)
-    // if (props.users !== undefined) {
-    //     const userMarkers = []
-    //     const userUids = Object.keys(props.gameData.users);
-    //     userUids.forEach(uid => {
-    //         userMarkers.push(props.users[uid].path[props.users[uid].path.length - 1]);
-    //     });
-    // };
+  const userMarkers = []
+  const userTrails = []
+  const userUids = Object.keys(props.users);
+  userUids.forEach(uid => {
+    userMarkers.push(props.users[uid].path[props.users[uid].path.length - 1]);
+    userTrails.push(props.users[uid].path)
+  });
 
-    return (
-      <Map style={styles}
-        zoomControl={true}
-        scrollWheelZoom={true}
-        center={props.userPosition}
-        zoom={13}
-      >
+  const options = { color: "red", pulseColor: "#FFF", delay: 300 };
+
+  return (
+    <Map style={styles}
+      zoomControl={true}
+      scrollWheelZoom={true}
+      center={props.userPosition}
+      zoom={13}
+    >
 
 
       {/* Loop through all ingame users - Display their marker and path */}
+      {userTrails.map((positions, index) => (
+        <AntPath key={index} positions={positions} options={options} />
+      ))}
 
-      {/* <AntPath /> */}
-
-      {/* {Object.keys(props.users).map(user => (
+      {userMarkers.map((position, index) => (
         <Marker
-        position={props.users[user].path[props.users[user].path.length() - 1]}
+          key={index} position={position}
         >
         </Marker>
-      ))} */}
-       
+      ))}
+
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
       />
-      </Map>
-    );
+    </Map>
+  );
 };
 
 export default GameMap;
