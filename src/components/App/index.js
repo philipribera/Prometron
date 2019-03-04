@@ -75,6 +75,7 @@ const App = () => (
                     <Route path={ROUTES.HOME} component={HomePage} />
                     <Route path={ROUTES.ACCOUNT} component={AccountPage} />
                     <Route path={ROUTES.ADMIN} component={AdminPage} />
+                    
                     <Route path={ROUTES.GAME} component={GamePage} />
                     <Route path={ROUTES.GAMEMENU} component={GameMenu} />
                     <Route path={ROUTES.CHAT} component={Chat} />
