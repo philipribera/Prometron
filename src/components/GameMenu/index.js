@@ -161,18 +161,14 @@ class GameMenu extends Component {
   };
 
   joinGame = event => {
-    const key = event.target.name;
+    const key = event.target.id;
     const uid = this.props.authUser.uid;
-    const initialData = {
-        path: [],
-        score: 0
-    }
 
     let updates = {};
 
-    updates["/games/" + key + "/" + uid] = initialData;
     updates["/users/" + uid + "/games/" + key] = true;
 
+    this.props.firebase.user(uid).child("games").remove();
     this.props.firebase.db.ref().update(updates);
     this.setState({Redirect: true})
   };
@@ -199,7 +195,7 @@ class GameMenu extends Component {
 
     updates["/games/" + key] = data;
     updates["/users/" + uid + "/games/" + key] = true;
-
+    this.props.firebase.user(uid).child("games").remove();
     this.props.firebase.db.ref().update(updates);
 
     this.setState({
@@ -292,7 +288,7 @@ class GameMenu extends Component {
                 <br />
                 {this.state.currentGames != null
                   ? Object.keys(this.state.currentGames).map(gameId => (
-                      <StyledGameLi name={gameId} onClick={this.joinGame}>
+                      <StyledGameLi id={gameId} onClick={this.joinGame}>
                         {this.state.currentGames[gameId].name}
                       </StyledGameLi>
                     ))
