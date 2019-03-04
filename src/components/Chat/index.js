@@ -11,6 +11,7 @@ import { withFirebase } from "../Firebase";
 import Styled from "styled-components";
 
 /*** STYLED COMPONENETS ***/
+/*
 const StyledChat = Styled.section`
     flex-basis: 100%;
     min-width: 332px;
@@ -30,6 +31,7 @@ const StyledChat = Styled.section`
         padding: 12px;
     }
 `;
+*/
 const StyledMessageBox = Styled.div`  
   max-width: 642px;  
   background-color: rgb(37,37,37);
@@ -257,12 +259,16 @@ class MessageItem extends Component {
 
   
   render() {
-    const { message, onRemoveMessage } = this.props;    
+    //const { message, onRemoveMessage } = this.props;    
+    const { message } = this.props;    
     //const msgId = this.props.message.userId;    
     const msgOwn = this.props.message.isOwned;    
     const { editMode, editText } = this.state;
     const styles = {
-      color: "rgb(226, 150, 55)"
+      color: "rgb(250, 182, 91)"
+    };
+    const styles2 = {
+      color: "rgb(130, 189, 206)"
     };
     
     return (
@@ -275,7 +281,7 @@ class MessageItem extends Component {
           />
         ) : (
           <span>   
-            { msgOwn ? <strong style={styles}>{message.user.username} </strong> : <strong>{message.user.username} </strong> }             
+            { msgOwn ? <strong style={styles}>{message.user.username} </strong> : <strong style={styles2}>{message.user.username} </strong> }             
             {message.text} 
           </span>
         )}

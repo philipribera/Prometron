@@ -2,10 +2,16 @@ import React, { Component } from "react";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 
 import AntPath from "react-leaflet-ant-path";
+import { AuthUserContext } from "../Session";
+
+
+const styles = {
+  height: "100%" 
+}
 
 const GameMap = props => {
     return (
-      <Map
+      <Map style={styles}
         zoomControl={true}
         scrollWheelZoom={true}
         center={props.userPosition}

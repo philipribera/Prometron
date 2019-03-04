@@ -222,7 +222,6 @@ class GameMenu extends Component {
     } else if (trg === "join-game") {
       this.setState({
         parts: {
-          //...this.state.parts,
           showGameList: true,
           showGameMenu: false,
           showBack: true
@@ -245,7 +244,7 @@ class GameMenu extends Component {
   render() {
     
     if (this.state.Redirect) {
-      return <Redirect push to="/sample" />;
+      return <Redirect push to="../Game" />;
     }
 
     return (
