@@ -163,14 +163,20 @@ class GameMenu extends Component {
   joinGame = event => {
     const key = event.target.id;
     const uid = this.props.authUser.uid;
+    const data = {
+      username: this.props.authUser.username,
+      path: [[0, 0]],
+      points: 0
+    };
 
     let updates = {};
 
+    updates["/games/" + key + "/users/" + uid] = data;
     updates["/users/" + uid + "/games/" + key] = true;
 
     this.props.firebase.user(uid).child("games").remove();
     this.props.firebase.db.ref().update(updates);
-    this.setState({Redirect: true})
+    this.setState({Redirect: true});
   };
 
   createGame = event => {
@@ -185,6 +191,7 @@ class GameMenu extends Component {
       game_time: currentTime + parseInt(this.state.game_time),
       users: {
         [uid]: {
+          username: this.props.authUser.username,
           path: [[0, 0]],
           points: 0
         }

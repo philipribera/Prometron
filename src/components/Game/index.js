@@ -116,6 +116,7 @@ class Game extends Component {
 
     // Appends user path in DB
     updatePosition = position => {
+        
         const newPosition = [position.coords.latitude, position.coords.longitude];
 
         const oldPosition = this.state.userPath[this.state.userPath.length - 1]
@@ -125,6 +126,7 @@ class Game extends Component {
             userPath.push(newPosition);
             this.setState(prevState => ({ userPoints: prevState.gameData.users[this.props.authUser.uid].points + 1, userPath: userPath }));
             this.updateToDB();
+            this.newFindNearestCoordinates(position)
         };
     };
 
@@ -136,8 +138,7 @@ class Game extends Component {
     };
 
     updateToDB = () => {
-        this.props.firebase.game(this.state.gameId + '/users/' + this.state.uid).set({
-            username: this.props.authUser.username,
+        this.props.firebase.game(this.state.gameId + '/users/' + this.state.uid).update({
             path: this.state.userPath,
             points: this.state.userPoints
         });
@@ -149,18 +150,60 @@ class Game extends Component {
             return true
         } else {
             return false
+        };
+    };
+
+    // findNearestCoordinates = (position) => {
+    //     if (this.state.gameData !== null){
+    //         const users = Object.keys(this.state.gameData.users);
+    //         let distance = 10000
+    //         // this.closestCoordinate:
+    //         users.forEach(user => {
+    //             if (user !== this.props.authUser.uid){
+    //                 this.state.gameData.users[user].path.forEach((coordinates, index) => {
+    //                     let tempDistance = this.calculateDistance(position.coords.latitude, position.coords.longitude, coordinates[0], coordinates[1]);
+    //                     if (tempDistance < distance){
+                            
+                            
+    //                     } 
+    //                 });
+    //             };
+    //         });
+    //     };
+    // };
+
+    newFindNearestCoordinates = (position) => {
+        // [ {a: {lat: 52, lng: 18, dist: 12}, b: {....}}, {a: }
+        const { users } = this.state.gameData;
+        let pathDist = [], distUsers;
+        if (users) {
+            Object.keys(users).forEach(user => {
+                if (user !== this.props.authUser.uid) {
+                    distUsers = users[user].path.map((point) => ({
+                        lat: point[0], lng: point[1], dist: this.calculateDistance(point[0], point[1], position.coords.latitude, position.coords.longitude), name: users[user].username
+                    }));
+                    console.log(distUsers);
+                    distUsers.sort((a, b) => a.dist - b.dist);
+        
+                    // ta ut 2 med lägst dist
+                    console.log(distUsers);
+                    //pathDist.push(distUsers)
+                };
+                // indata vara en array av object, varje objekt ska ha två koordinater. denna data ska foreachas och kordinater ska in i linjecollisonmojängen
+            });
         }
     }
 
     detectCollision = () => {
         //TODO
-    }
+    };
 
     componentWillMount() {
         navigator.geolocation.getCurrentPosition(position => {
-            this.setState({ userPath: [[position.coords.latitude, position.coords.longitude]] })
+
+            this.setState({userPath: [[position.coords.latitude, position.coords.longitude]]});
         });
-        this.initializeGame()
+        this.initializeGame();
     };
 
     componentWillUnmount() {
@@ -199,7 +242,8 @@ class Game extends Component {
                                 <ScoreBoard>
                                     <GameScore
                                         userId={authUser.uid}
-                                        gameData={this.state.gameData}
+
+                                        users={this.state.gameData.users}
                                     />
                                 </ScoreBoard>
                             </StyledMap>
