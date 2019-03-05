@@ -7,8 +7,8 @@ import Styled from 'styled-components';
 const StyledStat = Styled.div`
     flex-basis: 30%;
     min-width: 332px;
-    min-height: 270px;
-    max-height: 302px;
+    min-height: 192px;
+    max-height: 240px;
     overflow-hidden;
     padding: 12px;
     border: 2px solid rgb(192,192,192);
@@ -77,6 +77,44 @@ let userData = {
     }
 };
 
+const timeDownCounter = (props) => {
+    // Set the date we're counting down to
+    let countDownDate = new Date("Jan 5, 2021 15:37:25").getTime();
+
+    // Update the count down every 1 second
+    let x = setInterval(function () {
+        // Get todays date and time
+        let now = new Date().getTime();
+
+        // Find the distance between now and the count down date
+        let distance = countDownDate - now;
+
+        // Time calculations for days, hours, minutes and seconds
+        let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        //now = 1970 ms + 3600 000 
+        //now + hours;
+
+        hours = 3600000;
+        let timeRem = `${hours}:${minutes}:${seconds}`;
+        console.log(timeRem);
+
+        // Output the result in an element with id="demo"            
+        /*document.getElementById("demo").innerHTML = hours + "h "
+            + minutes + "m " + seconds + "s ";
+        */
+
+        // If the count down is over, write some text 
+        if (distance < 0) {
+            clearInterval(x);
+            //document.getElementById("demo").innerHTML = "GAME IS OVER";
+            console.log("GAME IS OVER");
+        }
+    }, 1000);
+}
+
 const GameScore = (props) => {
     props.firebase.user(props.userId).once("value", snapshot => {
         userData = snapshot.val();
@@ -87,11 +125,12 @@ const GameScore = (props) => {
     const users = Object.keys(props.users)
 
 
-    return (            
+    return (
         <StyledStat>
+            <div><p>Remaining time: {timeDownCounter()} </p></div>
             <GameNameTime><h2>Game Score</h2><TimeData>Remaining time: 54:01</TimeData></GameNameTime>
             <br />
-            <PlayerScore>
+            {/* <PlayerScore>
                 <p>
                   Walked Distance <span>{userData.statistics.walkeddistance} km</span> 
                 </p>                
@@ -100,14 +139,14 @@ const GameScore = (props) => {
                 </p>                                   
                 <br />
             </PlayerScore >
-            <hr /><br />
+            <hr /><br /> */}
             <OpponentScore>
-                <h3>Opponents</h3>
+
                 <ul>
 
                     {users.map(user => (
                         <li>{props.users[user].username} <span>{props.users[user].points}</span></li>
-                   ))}
+                    ))}
 
                 </ul>
             </OpponentScore>
