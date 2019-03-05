@@ -10,6 +10,7 @@ const StyledStat = Styled.div`
     min-width: 332px;
     min-height: 270px;
     max-height: 302px;
+    overflow-hidden;
     padding: 12px;
     border: 2px solid rgb(192,192,192);
     & h2 {
@@ -22,8 +23,14 @@ const StyledStat = Styled.div`
         font-weight: 600;        
     }    
     @media (max-width: 767px) {
+        font-size: 0.85em;
         flex-basis: 100%;
-        padding: 12px;
+        min-height: 158px;
+        max-height: 222px;
+        padding: 8px 6px;
+        & h2 {
+            margin-bottom: 6px;
+        }
     }
 `;
 const GameNameTime = Styled.span`

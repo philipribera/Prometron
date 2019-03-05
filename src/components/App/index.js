@@ -17,6 +17,7 @@ import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
 import Styled from 'styled-components';
 import Chat from '../Chat'
+import SignOutButton from '../SignOut';
 
 /* STYLED COMPONENTS */
 const StyledFlexContainer = Styled.div`
@@ -64,8 +65,8 @@ const App = () => (
         <Router>
             <div>
                 <div id="nav-bar">
-                    <Navigation />
-                    <hr />
+                <Route path="/(home|account|admin|gamemenu|chat)" component={Navigation}/>
+                <Route path="/game" component={SignOutButton}/> 
                 </div>
                 <StyledFlexContainer>
                     <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
@@ -76,10 +77,8 @@ const App = () => (
                     />
                     <Route path={ROUTES.HOME} component={HomePage} />
                     <Route path={ROUTES.ACCOUNT} component={AccountPage} />
-                    <Route path={ROUTES.ADMIN} component={AdminPage} />
-                    
-                    <Route path={ROUTES.GAME} component={GamePage} />
-                    
+                    <Route path={ROUTES.ADMIN} component={AdminPage} />                    
+                    <Route path={ROUTES.GAME} component={GamePage} />                    
                     <Route path={ROUTES.GAMEMENU} component={GameMenu} />
                     <Route path={ROUTES.CHAT} component={Chat} />
 

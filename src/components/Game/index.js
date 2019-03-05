@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Styled from 'styled-components';
-import HomeMap from '../HomeMap';
+//import HomeMap from '../HomeMap';
 import GameMap from '../GameMap';
 import { withFirebase } from '../Firebase';
 import Chat from '../Chat';
@@ -37,14 +37,25 @@ const ScoreBoard = Styled.div`
     color: rgb(244,244,244);
     border: 1px solid rgb(244,244,244);
 `;
+const StyledBtnDiv = Styled.div`
+    flex-basis: 100%;
+    width: 100%;
+    & button { 
+       background: rgb(77,77,77);
+        color: rgb(242,242,242);
+        &:hover {
+            background: rgb(17,17,17);
+            color: rgb(255,255,255);    
+        }
+    }
+`;
+/*
 const StyledChat = Styled.section`
     flex-basis: 100%;
+    width: 100%;
     min-width: 332px;
     min-height: 292px;
-    max-height: 500px;
-    padding: 12px;
-    border: 1px solid rgb(177,177,177);
-    border-top: none;
+    max-height: 500px;    
     margin-bottom: 32px;
     & h2 {
         color: rgb(29, 134, 226);
@@ -55,7 +66,11 @@ const StyledChat = Styled.section`
         flex-basis: 100%;
         padding: 12px;
     }
-`;
+    @media (max-width: 767px) {
+        flex-basis: 100%;
+        padding: 0;
+    }
+`;*/
 /*** END ***/
 
 class Game extends Component {
@@ -213,15 +228,14 @@ class Game extends Component {
                         
                         : null }
 
-
-                        <div>
+                        <StyledBtnDiv>
                             <button onClick={this.showChat}>Chat Board</button>
-                        </div><br />
+                        </StyledBtnDiv>
 
                         { this.state.parts.chatBoard ? (
-                        <StyledChat id="chat-window">
+                        // <StyledChat id="chat-window">
                             <Chat />
-                        </StyledChat> 
+                        // </StyledChat> 
                         ) : null }
                         
                     </StyledFlexContainer>
