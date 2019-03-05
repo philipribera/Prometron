@@ -6,6 +6,9 @@ import Chat from '../Chat';
 import GameScore from '../GameScores';
 import GameResults from '../GameResults';
 import { compose } from "recompose";
+// TESTING!
+import { Link } from 'react-router-dom';
+import * as ROUTES from '../../constants/routes';
 
 import {
     AuthUserContext,
@@ -46,6 +49,21 @@ const StyledBtnDiv = Styled.div`
         &:hover {
             background: rgb(17,17,17);
             color: rgb(255,255,255);    
+        }
+    }
+`;
+const StyledLeaveLink = Styled.div`
+    position: absolute;
+    left: 7%;
+    top: 1%;
+    z-index: 999;    
+    & a {
+        background: rgb(77,77,77);
+        color: rgb(242,242,242);
+        padding: 6px;
+        &:hover {
+            background: rgb(17,17,17);
+            color: rgb(255,255,255);        
         }
     }
 `;
@@ -227,6 +245,11 @@ class Game extends Component {
         }
     }
 
+    leaveGameHandler = () => {
+        return <Link to={ROUTES.HOME}>Home</Link>;
+    }
+
+
     render() {
         return (
             <AuthUserContext.Consumer>
@@ -242,10 +265,12 @@ class Game extends Component {
                                 <ScoreBoard>
                                     <GameScore
                                         userId={authUser.uid}
-
                                         users={this.state.gameData.users}
                                     />
                                 </ScoreBoard>
+                                <StyledLeaveLink>
+                                    <Link to={ROUTES.HOME}>Leave Game</Link>
+                                </StyledLeaveLink>
                             </StyledMap>
                             : null}
 

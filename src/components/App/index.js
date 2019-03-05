@@ -69,8 +69,9 @@ const App = () => (
         <Router>
             <div>                
                 <Route path="/( *|signin|signout|signup|home|account|admin|gamemenu|chat)" component={Navigation}/>
-                <Route path="/game" component={SignOutButton}/> 
-                
+                {/* <Route path="/game" component={SignOutButton}/>  */}
+                <Route path="/game" />
+
                 <StyledFlexContainer>
                     <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
                     <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
