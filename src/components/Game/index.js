@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import Styled from 'styled-components';
-//import HomeMap from '../HomeMap';
 import GameMap from '../GameMap';
 import { withFirebase } from '../Firebase';
 import Chat from '../Chat';
 import GameScore from '../GameScores';
+import GameResults from '../GameResults';
 import { compose } from "recompose";
 
 import {
@@ -49,28 +49,6 @@ const StyledBtnDiv = Styled.div`
         }
     }
 `;
-/*
-const StyledChat = Styled.section`
-    flex-basis: 100%;
-    width: 100%;
-    min-width: 332px;
-    min-height: 292px;
-    max-height: 500px;    
-    margin-bottom: 32px;
-    & h2 {
-        color: rgb(29, 134, 226);
-        text-shadow: 1px 1px 0.5px rgb(252,252,252);
-        margin-bottom: 12px;
-    }
-    @media (max-width: 767px) {
-        flex-basis: 100%;
-        padding: 12px;
-    }
-    @media (max-width: 767px) {
-        flex-basis: 100%;
-        padding: 0;
-    }
-`;*/
 /*** END ***/
 
 class Game extends Component {
@@ -83,7 +61,8 @@ class Game extends Component {
         userPoints: 0,
         parts: {
             scoreBoard: true,
-            chatBoard: false
+            chatBoard: false,
+            gameResults: false
         }
     };
 
@@ -106,18 +85,18 @@ class Game extends Component {
     initializeGame = () => {
         const { authUser } = this.props;
 
-            if (authUser && navigator.geolocation && this.timeRemaining) {
-                this.setState({uid: authUser.uid});
-                this.props.firebase.user(authUser.uid).once('value', snapshot => {
-                    const data = snapshot.val();
-                    const gameKey = Object.keys(data.games)[0];
-                    this.setState({gameId: gameKey});
-                    this.fetchGameData();
-                }).then(() => {
-                    this.watchUserPosition();
-                    this.detectCollision();  
-                });
-            };
+        if (authUser && navigator.geolocation && this.timeRemaining) {
+            this.setState({ uid: authUser.uid });
+            this.props.firebase.user(authUser.uid).once('value', snapshot => {
+                const data = snapshot.val();
+                const gameKey = Object.keys(data.games)[0];
+                this.setState({ gameId: gameKey });
+                this.fetchGameData();
+            }).then(() => {
+                this.watchUserPosition();
+                this.detectCollision();
+            });
+        };
     };
 
     watchUserPosition = () => {
@@ -145,7 +124,7 @@ class Game extends Component {
         if (this.calculateDistance(newPosition[0], newPosition[1], oldPosition[0], oldPosition[1]) > 1) {
             const userPath = this.state.userPath.slice();
             userPath.push(newPosition);
-            this.setState(prevState => ({userPoints: prevState.gameData.users[this.props.authUser.uid].points + 1, userPath: userPath}));
+            this.setState(prevState => ({ userPoints: prevState.gameData.users[this.props.authUser.uid].points + 1, userPath: userPath }));
             this.updateToDB();
             this.newFindNearestCoordinates(position)
         };
@@ -219,8 +198,9 @@ class Game extends Component {
         //TODO
     };
 
-    componentWillMount(){
+    componentWillMount() {
         navigator.geolocation.getCurrentPosition(position => {
+
             this.setState({userPath: [[position.coords.latitude, position.coords.longitude]]});
         });
         this.initializeGame();
@@ -232,21 +212,20 @@ class Game extends Component {
     };
 
     showChat = () => {
-        if( !this.state.parts.chatBoard ) {
-        this.setState({
-            parts: {
-                chatBoard: true
-            }
-        })
-    } else {
-        this.setState({
-            parts: {
-                chatBoard: false
-            }
-        })
+        if (!this.state.parts.chatBoard) {
+            this.setState({
+                parts: {
+                    chatBoard: true
+                }
+            })
+        } else {
+            this.setState({
+                parts: {
+                    chatBoard: false
+                }
+            })
+        }
     }
-    }
-
 
     render() {
         return (
@@ -254,40 +233,40 @@ class Game extends Component {
                 {authUser => (
                     <StyledFlexContainer>
 
-                        {this.state.gameData.users ? 
+                        {this.state.gameData.users ?
                             <StyledMap className="map-container">
                                 <GameMap
                                     userPosition={this.state.userPath[this.state.userPath.length - 1]}
                                     users={this.state.gameData.users}
                                 />
                                 <ScoreBoard>
-                                    <GameScore 
+                                    <GameScore
                                         userId={authUser.uid}
+
                                         users={this.state.gameData.users}
                                     />
                                 </ScoreBoard>
                             </StyledMap>
-                        
-                        : null }
+                            : null}
+
+                        {this.state.parts.gameResults ? (
+                            <GameResults />
+                        ) : null}
 
                         <StyledBtnDiv>
                             <button onClick={this.showChat}>Chat Board</button>
                         </StyledBtnDiv>
 
-                        { this.state.parts.chatBoard ? (
-                        // <StyledChat id="chat-window">
+                        {this.state.parts.chatBoard ? (
                             <Chat />
-                        // </StyledChat> 
-                        ) : null }
-                        
+                        ) : null}
+
                     </StyledFlexContainer>
                 )}
             </AuthUserContext.Consumer>
         );
     }
 }
-
-//export default withFirebase(withAuthorization(Game)(() => true);
 
 const condition = authUser => !!authUser;
 

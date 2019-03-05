@@ -1,6 +1,5 @@
 import React from "react";
 import { withFirebase } from "../Firebase";
-
 import Styled from 'styled-components';
 
 
@@ -103,9 +102,11 @@ const GameScore = (props) => {
             <OpponentScore>
                 <h3>Opponents</h3>
                 <ul>
+
                     {users.map(user => (
                         <li>{props.users[user].username} <span>{props.users[user].points}</span></li>
-                    ))}
+                   ))}
+
                 </ul>
             </OpponentScore>
         </StyledStat>
