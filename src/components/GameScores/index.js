@@ -82,6 +82,8 @@ const GameScore = (props) => {
         userData = snapshot.val();
     });
 
+    console.log(props.gameData)
+
     const users = Object.keys(props.users)
 
 

@@ -182,13 +182,22 @@ class Game extends Component {
                     distUsers = users[user].path.map((point) => ({
                         lat: point[0], lng: point[1], dist: this.calculateDistance(point[0], point[1], position.coords.latitude, position.coords.longitude), name: users[user].username
                     }));
-                    console.log(distUsers);
                     distUsers.sort((a, b) => a.dist - b.dist);
-        
+                    if (distUsers.length > 1) {
+                        const nearestCoordinates = distUsers.slice(0,2)
+                        pathDist.push(nearestCoordinates)
+                        console.log(pathDist)
+                    };
+       
                     // ta ut 2 med lägst dist
-                    console.log(distUsers);
-                    //pathDist.push(distUsers)
                 };
+                pathDist.forEach(path => {
+                    this.nearestCoordinates = [[path[0].lat, path[0].long], [path[1].lat, path[1].long]]
+                    // path.forEach(coordinates => {
+
+                        // this.intersect(coordinates[0].lat, coordinates[1])
+                    // })
+                })
                 // indata vara en array av object, varje objekt ska ha två koordinater. denna data ska foreachas och kordinater ska in i linjecollisonmojängen
             });
         }
@@ -200,7 +209,6 @@ class Game extends Component {
 
     componentWillMount() {
         navigator.geolocation.getCurrentPosition(position => {
-
             this.setState({userPath: [[position.coords.latitude, position.coords.longitude]]});
         });
         this.initializeGame();
@@ -242,7 +250,7 @@ class Game extends Component {
                                 <ScoreBoard>
                                     <GameScore
                                         userId={authUser.uid}
-
+                                        gameData={this.state.gameData}
                                         users={this.state.gameData.users}
                                     />
                                 </ScoreBoard>
