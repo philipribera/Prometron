@@ -81,7 +81,7 @@ class Game extends Component {
             scoreBoard: true,
             chatBoard: false,
             gameResults: false
-        }
+        },        
     };
 
     calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -126,7 +126,7 @@ class Game extends Component {
                 enableHighAccuracy: true,
                 timeout: 20000,
                 maximumAge: 0,
-                distanceFilter: 1
+                distanceFilter: 1                
             }
             );
         };
@@ -169,6 +169,7 @@ class Game extends Component {
     };
 
     
+
     seeGameStatus = () => {
         const currentTime = Math.round((new Date()).getTime() / 1000);
         console.log(currentTime);
@@ -218,6 +219,7 @@ class Game extends Component {
               this.state.userPoints - 500
           );
     };
+
 
     newFindNearestCoordinates = (position) => {
         const { users } = this.state.gameData;
@@ -305,10 +307,11 @@ class Game extends Component {
                                     users={this.state.gameData.users}
                                     collision={this.collision}
                                 />
+                                
                                 <ScoreBoard>
-                                    <GameScore
+                                    <GameScore                                        
                                         userId={authUser.uid}
-                                        //date={this.state.gameData.game_time}
+                                        //date={this.state...}                                        
                                         users={this.state.gameData.users}
                                     />
                                 </ScoreBoard>

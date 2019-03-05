@@ -71,11 +71,10 @@ let userData = {
     }
 };
 
-const timeDownCounter = (props) => {
-
-    // console.log(props);
+/*
+const timeDownCounter = (props) => {    
     // Set the date we're counting down to
-    let countDownDate = new Date("Jan 5, 2021 15:37:25").getTime();
+    let countDownDate = new Date().getTime();
     //let countDownDate = new Date(props.date).getTime();
 
     // Update the count down every 1 second
@@ -91,13 +90,7 @@ const timeDownCounter = (props) => {
         let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         let seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        
-        //hours = 0;
-        //minutes = 0;
-        //seconds = 3600;
-
         let timeRem = `${hours}:${minutes}:${seconds}`;
-        // console.log(timeRem);
 
         // Output the result in an element with id="demo"            
         /*document.getElementById("demo").innerHTML = hours + "h "
@@ -105,49 +98,33 @@ const timeDownCounter = (props) => {
         */
 
         // If the count down is over, write some text 
+        /*
         if (distance < 0) {
             clearInterval(x);
             //document.getElementById("demo").innerHTML = "GAME IS OVER";
             console.log("GAME IS OVER");
         }
     }, 1000);
-}
+}*/
+
 
 const GameScore = (props) => {
     props.firebase.user(props.userId).once("value", snapshot => {
         userData = snapshot.val();
     });
-
-    // Date in milliseconds
-    console.log("Test", props.date);
-
-    let now = new Date().getTime();
-    console.log("Now", now)
-
-
+    
     const users = Object.keys(props.users)
-
 
     return (
         <StyledStat>
-            <div><p>Remaining time: {timeDownCounter()} </p></div>
+            <div><p>Remaining time: </p></div>
             <GameNameTime><h2>Game Score</h2><TimeData>Remaining time: 54:01</TimeData></GameNameTime>
-            <br />
-            {/* <PlayerScore>
-                <p>
-                  Walked Distance <span>{userData.statistics.walkeddistance} km</span> 
-                </p>                
-                <p>
-                    Earned Points <span>{userData.statistics.points}</span>
-                </p>                                   
-                <br />
-            </PlayerScore >
-            <hr /><br /> */}
+            <br />            
             <OpponentScore>
 
                 <ul>
                     {users.map(user => (
-                        <li>{props.users[user].username} <span>{props.users[user].points}</span></li>
+                        <li key={props.userId}>{props.users[user].username} <span>{props.users[user].points}</span></li>
                     ))}
                 </ul>
             </OpponentScore>
