@@ -42,6 +42,7 @@ const Navigation = () => (
 );
 
 const NavigationAuth = () => (
+    <React.Fragment>
     <StyledUl>        
         <StyledLi>
             <Link to={ROUTES.HOME}>Home</Link>
@@ -59,14 +60,20 @@ const NavigationAuth = () => (
             <SignOutButton />
         </StyledLi>
     </StyledUl>
+    
+    <hr />
+    </React.Fragment>
 );
 
 const NavigationNonAuth = () => (
+    <React.Fragment>
     <StyledUl>        
         <StyledLi>
             <Link to={ROUTES.SIGN_IN}>Sign In</Link>
         </StyledLi>
     </StyledUl>
+    <hr />
+    </React.Fragment>
 );
 
 export default Navigation;

@@ -58,7 +58,7 @@ const StyledMap = Styled.div`
     border: 1px solid rgb(177,177,177);    
     border-top: 1px solid rgb(252,252,252);
 `;
-
+/*
 const StyledChat = Styled.section`
     flex-basis: 100%;
     min-width: 332px;
@@ -77,7 +77,7 @@ const StyledChat = Styled.section`
         flex-basis: 100%;
         padding: 12px;
     }
-`;
+`;*/
 /*** END ***/
 
 
@@ -94,9 +94,9 @@ const HomePage = props => (
             <HomeMap userId={authUser.uid} />
           </StyledMap>
 
-          <StyledChat>
+          {/* <StyledChat> */}
         <Chat />
-          </StyledChat>          
+          {/* </StyledChat>           */}
 
         </StyledFlexContainer>
     )}

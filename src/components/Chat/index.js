@@ -10,17 +10,14 @@ import { withFirebase } from "../Firebase";
 
 import Styled from "styled-components";
 
+
 /*** STYLED COMPONENETS ***/
-/*
 const StyledChat = Styled.section`
-    flex-basis: 100%;
-    min-width: 332px;
-    min-height: 292px;
-    max-height: 500px;
-    padding: 12px;
-    border: 1px solid rgb(177,177,177);
-    border-top: none;
-    margin-bottom: 32px;
+    flex-basis: 100%;    
+    width: 100%;
+    min-width: 336px;
+    max-height: 500px;    
+    margin-bottom: 12px;
     & h2 {
         color: rgb(29, 134, 226);
         text-shadow: 1px 1px 0.5px rgb(252,252,252);
@@ -30,13 +27,16 @@ const StyledChat = Styled.section`
         flex-basis: 100%;
         padding: 12px;
     }
+    @media (max-width: 492px) {
+        flex-basis: 100%;
+        padding: 0;
+    }
 `;
-*/
 const StyledMessageBox = Styled.div`  
   max-width: 642px;  
   background-color: rgb(37,37,37);
   color: rgb(244,244,244);
-  padding: 4px;  
+  padding: 4px 6px;  
   border: 2px solid rgb(206,202,202);
   & ul {
     overflow-y: auto;
@@ -179,6 +179,7 @@ class MessagesBase extends Component {
             <br />
             {loading && <div>Loading ...</div>}
 
+            <StyledChat>
             <StyledMessageBox>
               {messages && (
                 <MessageList                  
@@ -194,7 +195,8 @@ class MessagesBase extends Component {
                 />
               )}
             </StyledMessageBox>
-
+            </StyledChat>
+            
             {!messages && <div>There are no messages ...</div>}
 
             <form onSubmit={event => this.onCreateMessage(event, authUser)}>

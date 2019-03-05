@@ -3,6 +3,14 @@ import { compose } from 'recompose';
 import { withFirebase } from '../Firebase';
 import { withAuthorization, withEmailVerification } from '../Session';
 import * as ROLES from '../../constants/roles';
+import Styled from 'styled-components';
+
+/*** STYLED COMPONENTS ***/
+const StyledTitle = Styled.h1`
+    font-size: 2em;
+    color: rgb(35, 123, 226);
+`;
+/*** END ***/
 
 
 class AdminPage extends Component {
@@ -38,7 +46,9 @@ class AdminPage extends Component {
         const { users, loading } = this.state;
         return (
             <div>
-                <h1>Admin</h1>
+                <br />
+                <StyledTitle>Admin</StyledTitle><br />
+                <h3>Logged in users</h3>
                 {loading && <div>Loading ...</div>}
                 <UserList users={users} />
             </div>
@@ -47,21 +57,24 @@ class AdminPage extends Component {
 }
 
 const UserList = ({ users }) => (
-    <ul>
-        {users.map(user => (
-            <li key={user.uid}>
-                <span>
-                    <strong>ID:</strong> {user.uid}
-                </span>
-                <span>
-                    <strong>E-Mail:</strong> {user.email}
-                </span>
-                <span>
-                    <strong>Username:</strong> {user.username}
-                </span>
-            </li>
-        ))}
-    </ul>
+    <React.Fragment>
+        <br />
+        <ul>
+            {users.map(user => (
+                <li key={user.uid}>
+                    <span>
+                        <strong>ID:</strong> {user.uid}
+                    </span>
+                    <span>
+                        <strong>E-Mail:</strong> {user.email}
+                    </span>
+                    <span>
+                        <strong>Username:</strong> {user.username}
+                    </span>
+                </li>
+            ))}
+        </ul>
+    </React.Fragment>
 );
 
 const condition = authUser =>
