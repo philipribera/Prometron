@@ -19,6 +19,10 @@ import Styled from 'styled-components';
 import Chat from '../Chat'
 import SignOutButton from '../SignOut';
 
+// TESTING !
+import GameResults from '../GameResults';
+
+
 /* STYLED COMPONENTS */
 const StyledFlexContainer = Styled.div`
     display: flex;
@@ -44,7 +48,7 @@ const StyledH2 = Styled.h2`
     font-size: 1.7em;
     font-style: oblique;
     color: rgb(255, 183, 77);
-    text-shadow: rgb(57, 57, 57) 1px 1px 0.5px;    
+    text-shadow: 1px 1px 0.5px rgb(57, 57, 57);    
     @media (max-width: 768px) {
         font-size: 1.5em;
     }
@@ -63,11 +67,10 @@ const App = () => (
         <br />
 
         <Router>
-            <div>
-                <div id="nav-bar">
-                <Route path="/(home|account|admin|gamemenu|chat)" component={Navigation}/>
+            <div>                
+                <Route path="/( *|signin|signout|signup|home|account|admin|gamemenu|chat)" component={Navigation}/>
                 <Route path="/game" component={SignOutButton}/> 
-                </div>
+                
                 <StyledFlexContainer>
                     <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
                     <Route path={ROUTES.SIGN_UP} component={SignUpPage} />
@@ -81,6 +84,8 @@ const App = () => (
                     <Route path={ROUTES.GAME} component={GamePage} />                    
                     <Route path={ROUTES.GAMEMENU} component={GameMenu} />
                     <Route path={ROUTES.CHAT} component={Chat} />
+                    
+                    <Route path={ROUTES.GAMERESULTS} component={GameResults} />
 
                 </StyledFlexContainer>
             </div>
