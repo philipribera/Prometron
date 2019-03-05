@@ -91,7 +91,6 @@ const timeDownCounter = (props) => {
         let seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
         let timeRem = `${hours}:${minutes}:${seconds}`;
-        //console.log(timeRem);
 
         // Output the result in an element with id="demo"            
         /*document.getElementById("demo").innerHTML = hours + "h "
