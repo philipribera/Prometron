@@ -79,10 +79,12 @@ let userData = {
 };
 
 const GameScore = (props) => {
-    console.log(props.gameData)
     props.firebase.user(props.userId).once("value", snapshot => {
         userData = snapshot.val();
     });
+
+    const users = Object.keys(props.users)
+
 
     return (            
         <StyledStat>
@@ -94,16 +96,16 @@ const GameScore = (props) => {
                 </p>                
                 <p>
                     Earned Points <span>{userData.statistics.points}</span>
-                </p>                                 
+                </p>                                   
                 <br />
             </PlayerScore >
             <hr /><br />
             <OpponentScore>
                 <h3>Opponents</h3>
                 <ul>
-                    <li>Carola</li>
-                    <li>Blue</li>
-                    <li>Penguin</li>
+                    {users.map(user => (
+                        <li>{props.users[user].username} <span>{props.users[user].points}</span></li>
+                    ))}
                 </ul>
             </OpponentScore>
         </StyledStat>
