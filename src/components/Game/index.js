@@ -162,6 +162,7 @@ class Game extends Component {
         });
     };
 
+    /*
     timeRemaining = () => {
         const currentTime = Math.round((new Date()).getTime() / 1000);
         if (currentTime < this.state.gameData.gametime) {
@@ -169,7 +170,7 @@ class Game extends Component {
         } else {
             return false
         };
-    };
+    };*/
 
     // findNearestCoordinates = (position) => {
     //     if (this.state.gameData !== null){
@@ -273,7 +274,7 @@ class Game extends Component {
                                 <ScoreBoard>
                                     <GameScore
                                         userId={authUser.uid}
-                                        gameData={this.state.gameData}
+                                        //date={this.state.gameData.game_time}
                                         users={this.state.gameData.users}
                                     />
                                 </ScoreBoard>
