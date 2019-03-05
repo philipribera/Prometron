@@ -81,7 +81,7 @@ class Game extends Component {
             scoreBoard: true,
             chatBoard: false,
             gameResults: false
-        }
+        },        
     };
 
     calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -127,7 +127,7 @@ class Game extends Component {
                 enableHighAccuracy: true,
                 timeout: 20000,
                 maximumAge: 0,
-                distanceFilter: 1
+                distanceFilter: 1                
             }
         );
     };
@@ -162,7 +162,7 @@ class Game extends Component {
         });
     };
 
-    /*
+    
     timeRemaining = () => {
         const currentTime = Math.round((new Date()).getTime() / 1000);
         if (currentTime < this.state.gameData.gametime) {
@@ -170,7 +170,7 @@ class Game extends Component {
         } else {
             return false
         };
-    };*/
+    };
 
     // findNearestCoordinates = (position) => {
     //     if (this.state.gameData !== null){
@@ -190,6 +190,7 @@ class Game extends Component {
     //         });
     //     };
     // };
+
 
     newFindNearestCoordinates = (position) => {
         // [ {a: {lat: 52, lng: 18, dist: 12}, b: {....}}, {a: }
@@ -271,13 +272,15 @@ class Game extends Component {
                                     userPosition={this.state.userPath[this.state.userPath.length - 1]}
                                     users={this.state.gameData.users}
                                 />
+                                
                                 <ScoreBoard>
-                                    <GameScore
+                                    <GameScore                                        
                                         userId={authUser.uid}
-                                        //date={this.state.gameData.game_time}
+                                        //date={this.state...}                                        
                                         users={this.state.gameData.users}
                                     />
                                 </ScoreBoard>
+                                
                                 <StyledLeaveLink>
                                     <Link to={ROUTES.HOME}>Leave Game</Link>
                                 </StyledLeaveLink>

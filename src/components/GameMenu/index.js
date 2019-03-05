@@ -174,9 +174,12 @@ class GameMenu extends Component {
     updates["/games/" + key + "/users/" + uid] = data;
     updates["/users/" + uid + "/games/" + key] = true;
 
-    this.props.firebase.user(uid).child("games").remove();
+    this.props.firebase
+      .user(uid)
+      .child("games")
+      .remove();
     this.props.firebase.db.ref().update(updates);
-    this.setState({Redirect: true});
+    this.setState({ Redirect: true });
   };
 
   createGame = event => {
@@ -187,23 +190,32 @@ class GameMenu extends Component {
     const data = {
       name: this.state.name,
       password: this.state.password,
-      game_area: parseInt(this.state.game_area),
-      game_time: currentTime + parseInt(this.state.game_time),
+      game_area: parseInt(this.state.game_area),      
+
+      game_minutes: this.state.game_time,
+      game_time: currentTime + parseInt(this.state.game_time),       
       users: {
         [uid]: {
           username: this.props.authUser.username,
           path: [[0, 0]],
           points: 0
         }
-      }
+      }      
     };
+
+    // We get game time and call starttimer    
+    this.startTimer(this.state.game_time);
+    // END
 
     let updates = {};
 
     updates["/games/" + key] = data;
     updates["/users/" + uid + "/games/" + key] = true;
 
-    this.props.firebase.user(uid).child("games").remove();
+    this.props.firebase
+      .user(uid)
+      .child("games")
+      .remove();
     this.props.firebase.db.ref().update(updates);
 
     this.setState({
@@ -217,17 +229,41 @@ class GameMenu extends Component {
     event.preventDefault();
   };
 
+
+  // Calculate time count down with argument duration from state
+  startTimer(duration) {
+    var timer = duration,
+      minutes,
+      seconds;
+    setInterval(function() {
+      minutes = parseInt(timer / 60, 10);
+      seconds = parseInt(timer % 60, 10);
+
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+
+      console.log(minutes + ":" + seconds);      
+      if (--timer < 0) {
+        timer = duration;
+      }
+    }, 1000);    
+  }
+
+
   componentWillMount() {
-      this.checkIfUserInGame();
+    this.checkIfUserInGame();
   }
 
   checkIfUserInGame = () => {
-      this.props.firebase.user(this.props.authUser.uid).child("games").once("value", snapshot => {
-          this.isInGame = snapshot.val()
+    this.props.firebase
+      .user(this.props.authUser.uid)
+      .child("games")
+      .once("value", snapshot => {
+        this.isInGame = snapshot.val();
       });
-      if (this.isInGame !== null){
-          this.setState({Redirect: true})
-      };
+    if (this.isInGame !== null) {
+      this.setState({ Redirect: true });
+    }
   };
 
   onChange = event => {
@@ -329,10 +365,22 @@ class GameMenu extends Component {
                     onChange={this.onChange}
                     value={this.state.game_area}
                   >
-                    <option value="1"> Radius: 1 km</option>
-                    <option value="2"> Radius: 2 km</option>
-                    <option value="3"> Radius: 3 km</option>
-                    <option value="4"> Radius: 4 km</option>
+                    <option id="time1" value="1">
+                      {" "}
+                      Radius: 1 km
+                    </option>
+                    <option id="time2" value="2">
+                      {" "}
+                      Radius: 2 km
+                    </option>
+                    <option id="time3" value="3">
+                      {" "}
+                      Radius: 3 km
+                    </option>
+                    <option id="time4" value="4">
+                      {" "}
+                      Radius: 4 km
+                    </option>
                   </select>
                 </StyledSetSelect>
                 <StyledSetSelect>
@@ -372,15 +420,13 @@ class GameMenu extends Component {
                 <br />
 
                 <Link to={ROUTES.HOME}>
-                <StyledCreateGame onClick={this.createGame}>
-                  Create Game
-                </StyledCreateGame>
+                  <StyledCreateGame onClick={this.createGame}>
+                    Create Game
+                  </StyledCreateGame>
                 </Link>
                 <br />
-                
               </StyledSetGame>
             ) : null}
-
           </StyledFlexContainer>
         )}
       </AuthUserContext.Consumer>
@@ -389,6 +435,7 @@ class GameMenu extends Component {
 }
 
 const condition = authUser => !!authUser;
+
 
 export default compose(
   withFirebase,
