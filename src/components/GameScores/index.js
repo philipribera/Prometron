@@ -47,12 +47,6 @@ const GameNameTime = Styled.span`
 const TimeData = Styled.span`
     color: rgb(234,234,234);
 `;
-const PlayerScore = Styled.div`
-    margin-left: 4px;
-    & span {
-        margin-left: 12px;
-    }
-`;
 const OpponentScore = Styled.div`
    & ul {
     margin-left: 4px;
@@ -78,8 +72,11 @@ let userData = {
 };
 
 const timeDownCounter = (props) => {
+
+    console.log(props);
     // Set the date we're counting down to
     let countDownDate = new Date("Jan 5, 2021 15:37:25").getTime();
+    //let countDownDate = new Date(props.date).getTime();
 
     // Update the count down every 1 second
     let x = setInterval(function () {
@@ -94,10 +91,11 @@ const timeDownCounter = (props) => {
         let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         let seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        //now = 1970 ms + 3600 000 
-        //now + hours;
+        
+        //hours = 0;
+        //minutes = 0;
+        //seconds = 3600;
 
-        hours = 3600000;
         let timeRem = `${hours}:${minutes}:${seconds}`;
         console.log(timeRem);
 
@@ -120,7 +118,12 @@ const GameScore = (props) => {
         userData = snapshot.val();
     });
 
-    console.log(props.gameData)
+    // Date in milliseconds
+    console.log("Test", props.date);
+
+    let now = new Date().getTime();
+    console.log("Now", now)
+
 
     const users = Object.keys(props.users)
 
@@ -143,11 +146,9 @@ const GameScore = (props) => {
             <OpponentScore>
 
                 <ul>
-
                     {users.map(user => (
                         <li>{props.users[user].username} <span>{props.users[user].points}</span></li>
                     ))}
-
                 </ul>
             </OpponentScore>
         </StyledStat>

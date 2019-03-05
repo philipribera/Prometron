@@ -162,6 +162,7 @@ class Game extends Component {
         });
     };
 
+    /*
     timeRemaining = () => {
         const currentTime = Math.round((new Date()).getTime() / 1000);
         if (currentTime < this.state.gameData.gametime) {
@@ -169,7 +170,7 @@ class Game extends Component {
         } else {
             return false
         };
-    };
+    };*/
 
     detectIntersect = (x1, y1, x2, y2) =>  {
         const currentPosition = this.state.userPath[this.state.userPath.length - 1];
@@ -280,7 +281,7 @@ class Game extends Component {
                                 <ScoreBoard>
                                     <GameScore
                                         userId={authUser.uid}
-                                        gameData={this.state.gameData}
+                                        //date={this.state.gameData.game_time}
                                         users={this.state.gameData.users}
                                     />
                                 </ScoreBoard>
