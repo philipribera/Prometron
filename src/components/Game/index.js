@@ -221,8 +221,8 @@ class Game extends Component {
                                 <ScoreBoard>
                                     <GameScore 
                                         userId={authUser.uid}
-                                        gameData={this.state.gameData}
-                                />
+                                        users={this.state.gameData.users}
+                                    />
                                 </ScoreBoard>
                             </StyledMap>
                         
