@@ -171,27 +171,46 @@ class Game extends Component {
         };
     };
 
-    // findNearestCoordinates = (position) => {
-    //     if (this.state.gameData !== null){
-    //         const users = Object.keys(this.state.gameData.users);
-    //         let distance = 10000
-    //         // this.closestCoordinate:
-    //         users.forEach(user => {
-    //             if (user !== this.props.authUser.uid){
-    //                 this.state.gameData.users[user].path.forEach((coordinates, index) => {
-    //                     let tempDistance = this.calculateDistance(position.coords.latitude, position.coords.longitude, coordinates[0], coordinates[1]);
-    //                     if (tempDistance < distance){
-                            
-                            
-    //                     } 
-    //                 });
-    //             };
-    //         });
-    //     };
-    // };
+    detectIntersect = (x1, y1, x2, y2) =>  {
+        const currentPosition = this.state.userPath[this.state.userPath.length - 1];
+        const lastPosition = this.state.userPath[this.state.userPath.length - 2];
+
+        const x3 = currentPosition[0];
+        const x4 = lastPosition[0];
+        const y3 = currentPosition[1];
+        const y4 = lastPosition[1];
+
+        // Check if none of the lines are of length 0
+          if ((x1 === x2 && y1 === y2) || (x3 === x4 && y3 === y4)) {
+            console.log("false")
+            return false
+          };
+      
+          const denominator = ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1))
+      
+        // Lines are parallel
+          if (denominator === 0) {
+            console.log("false")
+            return false
+          };
+      
+          const ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denominator
+          const ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denominator
+      
+        // is the intersection along the segments
+          if (ua < 0 || ua > 1 || ub < 0 || ub > 1) {
+            console.log("false")
+            return false
+          };
+
+          this.props.firebase.game(this.state.gameId).child("/users/" + this.props.authUser.uid + "/points").set(
+              this.state.userPoints - 500
+          );
+
+          console.log("collision")
+    };
 
     newFindNearestCoordinates = (position) => {
-        // [ {a: {lat: 52, lng: 18, dist: 12}, b: {....}}, {a: }
         const { users } = this.state.gameData;
         let pathDist = [], distUsers;
         if (users) {
@@ -201,28 +220,16 @@ class Game extends Component {
                         lat: point[0], lng: point[1], dist: this.calculateDistance(point[0], point[1], position.coords.latitude, position.coords.longitude), name: users[user].username
                     }));
                     distUsers.sort((a, b) => a.dist - b.dist);
-                    if (distUsers.length > 1) {
+                    // if (distUsers.length > 1) {
                         const nearestCoordinates = distUsers.slice(0,2)
                         pathDist.push(nearestCoordinates)
-                        console.log(pathDist)
-                    };
-       
-                    // ta ut 2 med lägst dist
+                    // };
                 };
                 pathDist.forEach(path => {
-                    this.nearestCoordinates = [[path[0].lat, path[0].long], [path[1].lat, path[1].long]]
-                    // path.forEach(coordinates => {
-
-                        // this.intersect(coordinates[0].lat, coordinates[1])
-                    // })
-                })
-                // indata vara en array av object, varje objekt ska ha två koordinater. denna data ska foreachas och kordinater ska in i linjecollisonmojängen
+                    this.detectIntersect(path[0].lat, path[0].lng, path[1].lat, path[1].lng)
+                });
             });
-        }
-    }
-
-    detectCollision = () => {
-        //TODO
+        };
     };
 
     componentWillMount() {
