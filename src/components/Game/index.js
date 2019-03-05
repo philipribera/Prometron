@@ -102,7 +102,7 @@ class Game extends Component {
 
     initializeGame = () => {
         const { authUser } = this.props;
-
+        
         if (authUser && navigator.geolocation) {
             this.setState({ uid: authUser.uid });
             this.props.firebase.user(authUser.uid).once('value', snapshot => {
@@ -115,7 +115,7 @@ class Game extends Component {
             });
         };
     };
-
+    
     watchUserPosition = () => {
         this.watchId = navigator.geolocation.watchPosition(
             this.updatePosition,
@@ -128,31 +128,38 @@ class Game extends Component {
                 maximumAge: 0,
                 distanceFilter: 1
             }
-        );
-    };
-
-    // Appends user path in DB
-    updatePosition = position => {
-        
-        const newPosition = [position.coords.latitude, position.coords.longitude];
-
-        const oldPosition = this.state.userPath[this.state.userPath.length - 1]
-
-        if (this.calculateDistance(newPosition[0], newPosition[1], oldPosition[0], oldPosition[1]) > 1) {
-            const userPath = this.state.userPath.slice();
-            userPath.push(newPosition);
-            this.setState(prevState => ({ userPoints: prevState.gameData.users[this.props.authUser.uid].points + 1, userPath: userPath }));
-            this.updateToDB();
-            this.newFindNearestCoordinates(position)
+            );
         };
-    };
-
-    fetchGameData = () => {
-        this.props.firebase.game(this.state.gameId).on("value", snapshot => {
-            const data = snapshot.val();
-            this.setState({ gameData: data });
-        });
-    };
+        
+        // Appends user path in DB
+        updatePosition = position => {
+            this.seeGameStatus();
+            
+            const newPosition = [position.coords.latitude, position.coords.longitude];
+            
+            const oldPosition = this.state.userPath[this.state.userPath.length - 1]
+            
+            if (this.calculateDistance(newPosition[0], newPosition[1], oldPosition[0], oldPosition[1]) > 1) {
+                const userPath = this.state.userPath.slice();
+                userPath.push(newPosition);
+                this.setState(prevState => ({ userPoints: prevState.gameData.users[this.props.authUser.uid].points + 1, userPath: userPath }));
+                this.updateToDB();
+                this.newFindNearestCoordinates(position)
+            };
+        };
+        
+        fetchGameData = () => {
+            this.props.firebase.game(this.state.gameId).once("value", snapshot => {
+                const data = snapshot.val();
+                this.setState({ gameData: data });
+            }).then(() => {
+                this.seeGameStatus();
+            });
+            this.props.firebase.game(this.state.gameId).on("value", snapshot => {
+                const data = snapshot.val();
+                this.setState({ gameData: data });
+            });
+        };
 
     updateToDB = () => {
         this.props.firebase.game(this.state.gameId + '/users/' + this.state.uid).update({
@@ -161,53 +168,55 @@ class Game extends Component {
         });
     };
 
-    /*
-    timeRemaining = () => {
+    
+    seeGameStatus = () => {
         const currentTime = Math.round((new Date()).getTime() / 1000);
-        if (currentTime < this.state.gameData.gametime) {
-            return true
-        } else {
-            return false
-        };
-    };*/
+        console.log(currentTime);
+        console.log(this.state.gameData.game_time)
+        currentTime < this.state.gameData.game_time ? this.setState({status: "gameIsOver"}) : this.setState({status: "gameInProgress"})
+    };
 
     detectIntersect = (x1, y1, x2, y2) =>  {
         const currentPosition = this.state.userPath[this.state.userPath.length - 1];
         const lastPosition = this.state.userPath[this.state.userPath.length - 2];
 
-        const x3 = currentPosition[0];
+        const x3 = currentPosition[0]; 
         const x4 = lastPosition[0];
         const y3 = currentPosition[1];
         const y4 = lastPosition[1];
 
         // Check if none of the lines are of length 0
-          if ((x1 === x2 && y1 === y2) || (x3 === x4 && y3 === y4)) {
+        if ((x1 === x2 && y1 === y2) || (x3 === x4 && y3 === y4)) {
             console.log("false")
             return false
-          };
+        };
       
-          const denominator = ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1))
+        const denominator = ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1))
       
         // Lines are parallel
-          if (denominator === 0) {
+        if (denominator === 0) {
             console.log("false")
             return false
-          };
+        };
       
-          const ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denominator
-          const ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denominator
-      
+        const ua = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denominator
+        const ub = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denominator
+    
         // is the intersection along the segments
-          if (ua < 0 || ua > 1 || ub < 0 || ub > 1) {
+        if (ua < 0 || ua > 1 || ub < 0 || ub > 1) {
             console.log("false")
             return false
-          };
+        };
 
-          this.props.firebase.game(this.state.gameId).child("/users/" + this.props.authUser.uid + "/points").set(
+        // Return a object with the x and y coordinates of the intersection
+        let x = x1 + ua * (x2 - x1)
+        let y = y1 + ua * (y2 - y1)
+
+            this.collision = [x, y]
+
+            this.props.firebase.game(this.state.gameId).child("/users/" + this.props.authUser.uid + "/points").set(
               this.state.userPoints - 500
           );
-
-          console.log("collision")
     };
 
     newFindNearestCoordinates = (position) => {
@@ -220,10 +229,10 @@ class Game extends Component {
                         lat: point[0], lng: point[1], dist: this.calculateDistance(point[0], point[1], position.coords.latitude, position.coords.longitude), name: users[user].username
                     }));
                     distUsers.sort((a, b) => a.dist - b.dist);
-                    // if (distUsers.length > 1) {
+                    if (distUsers.length > 1) {
                         const nearestCoordinates = distUsers.slice(0,2)
                         pathDist.push(nearestCoordinates)
-                    // };
+                    };
                 };
                 pathDist.forEach(path => {
                     this.detectIntersect(path[0].lat, path[0].lng, path[1].lat, path[1].lng)
@@ -260,9 +269,27 @@ class Game extends Component {
         };
     };
 
-    leaveGameHandler = () => {
-        return <Link to={ROUTES.HOME}>Home</Link>;
-    }
+    // leaveGameHandler = () => {
+    //     return <Link to={ROUTES.HOME}>Home</Link>;
+    // };
+
+    updateStatistics = (points, distance, playedGames, wonGames) => {
+        this.props.firebase.user(this.props.authUser.uid).child("statistics").once("value", snapshot => {
+            this.statistics = snapshot.val()
+            this.statistics.points += points;
+            this.statistics.walkeddistance += distance/100;
+            this.statistics.playedgames += playedGames;
+            this.statistics.wongames += wonGames;
+        }).then(() => 
+            this.props.firebase.user(this.props.authUser.uid).child("statistics").update(this.statistics)
+        );
+    };
+
+    leaveGame = () => {
+        this.updateStatistics(this.state.userPoints, this.state.userPoints, 1, 0);
+
+        this.props.firebase.user(this.props.authUser.uid).child("games").remove();
+    };
 
 
     render() {
@@ -276,6 +303,7 @@ class Game extends Component {
                                 <GameMap
                                     userPosition={this.state.userPath[this.state.userPath.length - 1]}
                                     users={this.state.gameData.users}
+                                    collision={this.collision}
                                 />
                                 <ScoreBoard>
                                     <GameScore
@@ -284,7 +312,7 @@ class Game extends Component {
                                         users={this.state.gameData.users}
                                     />
                                 </ScoreBoard>
-                                <StyledLeaveLink>
+                                <StyledLeaveLink onClick={this.leaveGame}>
                                     <Link to={ROUTES.HOME}>Leave Game</Link>
                                 </StyledLeaveLink>
                             </StyledMap>

@@ -73,7 +73,7 @@ let userData = {
 
 const timeDownCounter = (props) => {
 
-    console.log(props);
+    // console.log(props);
     // Set the date we're counting down to
     let countDownDate = new Date("Jan 5, 2021 15:37:25").getTime();
     //let countDownDate = new Date(props.date).getTime();
@@ -97,7 +97,7 @@ const timeDownCounter = (props) => {
         //seconds = 3600;
 
         let timeRem = `${hours}:${minutes}:${seconds}`;
-        console.log(timeRem);
+        // console.log(timeRem);
 
         // Output the result in an element with id="demo"            
         /*document.getElementById("demo").innerHTML = hours + "h "

@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import { withFirebase } from "../Firebase";
-import AntPath from "react-leaflet-ant-path";
-
 import FullscreenControl from 'react-leaflet-fullscreen';
 import 'react-leaflet-fullscreen/dist/styles.css'
 import PopupFactory from "../PopupFactory";
@@ -47,12 +45,9 @@ class LocatedTwo extends Component {
       const { latitude: lat2, longitude: lng2 } = this.state.dbCoords;
       const dist = this.calculateDistance(lat1, lng1, lat2, lng2);
       if (dist > 1) {
-        const antArray = this.state.antPosition.slice();
-        antArray.push([position.coords.latitude, position.coords.longitude]);
-        this.setState({antPosition: antArray});
         this.writeUserPositionToDB(position.coords);
-      }
-    }
+      };
+    };
   };
 
   getUserPositionFromDB = () => {
@@ -166,7 +161,6 @@ class LocatedTwo extends Component {
       {this.state.browserCoords ? (
         <MyMap
           markers={markers}
-          antPosition={this.state.antPosition}
           position={Object.values(this.state.browserCoords)}
           zoom={13}
           onlineUsers={Object.keys(this.state.onlineUsersCoords)}
@@ -187,8 +181,6 @@ class LocatedTwo extends Component {
       zoom={props.zoom}
       >
       <FullscreenControl position="topright" />
-
-      <AntPath positions={props.antPosition} options={options} />
 
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
