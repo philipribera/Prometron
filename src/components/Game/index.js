@@ -103,7 +103,7 @@ class Game extends Component {
     initializeGame = () => {
         const { authUser } = this.props;
 
-        if (authUser && navigator.geolocation && this.timeRemaining) {
+        if (authUser && navigator.geolocation) {
             this.setState({ uid: authUser.uid });
             this.props.firebase.user(authUser.uid).once('value', snapshot => {
                 const data = snapshot.val();
@@ -112,7 +112,6 @@ class Game extends Component {
                 this.fetchGameData();
             }).then(() => {
                 this.watchUserPosition();
-                this.detectCollision();
             });
         };
     };
@@ -251,15 +250,15 @@ class Game extends Component {
                 parts: {
                     chatBoard: true
                 }
-            })
+            });
         } else {
             this.setState({
                 parts: {
                     chatBoard: false
                 }
-            })
-        }
-    }
+            });
+        };
+    };
 
     leaveGameHandler = () => {
         return <Link to={ROUTES.HOME}>Home</Link>;
