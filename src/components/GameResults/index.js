@@ -84,25 +84,20 @@ const StyledSpanPos = Styled.span`
 `;
 /*** END ***/
 
-
-let userData = {
-    statistics: {
-        result: "Loss",
-        position: 1,
-        walkeddistance: 0,
-        timeWalked: 0,
-        timePlayed: 0,
-        points: 0
-    }
-};
-
 const GameResults = (props) => {
-    let gameData = {};
     let uid = props.authUser.uid;
+    let gameData = {};
+    let usersPoints = {};
+    let users = []
     props.firebase.game(props.gameId).once("value", snapshot => {
         gameData = snapshot.val()
+    })
+    users = Object.keys(gameData.users);
+    users.forEach(user => {
+        usersPoints[gameData[users][user]] = gameData[users][user].points
     });
-    let users = Object.keys(gameData.users)
+    console.log(usersPoints)
+
 
 
     return (
@@ -111,7 +106,7 @@ const GameResults = (props) => {
             <hr />
             <br />
             <StyledResultStatistic>
-            Game Result: {userData.statistics.result} </StyledResultStatistic><br />
+            Game Result: </StyledResultStatistic><br />
             <hr /><br />
             {/* <StyledResultGame>{userData.statistics.result}</StyledResultGame><br /> */}
 
@@ -119,7 +114,7 @@ const GameResults = (props) => {
                 <h4>STATISTICS</h4><br />
                 <ul>
                     <StyledResultLi>
-                        Position in game: <span>{userData.statistics.position} </span>
+                        Position in game: <span></span>
                     </StyledResultLi>
                     <StyledResultLi>
                         Earned Points: <span>{gameData.users[uid].points} </span>
@@ -128,7 +123,7 @@ const GameResults = (props) => {
                         Walked Distance: <span>{gameData.users[uid].points / 100} km</span>
                     </StyledResultLi>
                     <StyledResultLi>
-                        Time Played: <span>{userData.statistics.timePlayed} </span>
+                        Time Played: <span></span>
                     </StyledResultLi>
                 </ul>
             </StyledStatisticDiv>
@@ -137,11 +132,13 @@ const GameResults = (props) => {
             <StyledStatisticDiv>
                 <h4>OPPONENTS</h4><br />
                 <ul>
-                    {users.map(user => (
-                        user !== uid ?
-                        <li key={props.userId}>{gameData.users[user].username} <span>{gameData.users[user].points}</span></li>
-                        : null
-                    ))}
+                    {users.length > 1 ? 
+                        users.map(user => (
+                            user !== uid ?
+                            <li key={props.userId}>{gameData.users[user].username} <span>{gameData.users[user].points}</span></li>
+                            : null
+                        )) : null
+                    }
                 </ul>
             </StyledStatisticDiv>
 

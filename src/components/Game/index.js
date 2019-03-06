@@ -186,7 +186,6 @@ class Game extends Component {
 
         // Check if none of the lines are of length 0
         if ((x1 === x2 && y1 === y2) || (x3 === x4 && y3 === y4)) {
-            console.log("false")
             return false
         };
       
@@ -194,7 +193,6 @@ class Game extends Component {
       
         // Lines are parallel
         if (denominator === 0) {
-            console.log("false")
             return false
         };
       
@@ -203,7 +201,6 @@ class Game extends Component {
     
         // is the intersection along the segments
         if (ua < 0 || ua > 1 || ub < 0 || ub > 1) {
-            console.log("false")
             return false
         };
 
