@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { withFirebase } from "../Firebase";
 import Styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import * as ROUTES from '../../constants/routes';
 
 /*** STYLED COMPONENTS ***/
 const StyledResultsDiv = Styled.div`   
@@ -102,39 +100,40 @@ const StyledSpanPos = Styled.span`
 `;
 /*** END ***/
 class GameResults extends Component {
-    state = {
-    };
 
     calculatePosition = () => {
-        this.users = Object.keys(this.state.gameData.users);
+        this.users = Object.keys(this.props.data.users);
         this.users.forEach(user => {
-            this.positions[user] = this.state.gameData.users[user].points
+            this.positions[user] = this.props.data.users[user].points
         });
-        this.setState({positions: this.positions})
-        const positionsSorted = Object.keys(this.state.positions).sort(function(a,b){return this.state.positions[a]-this.state.positions[b]})
-        console.log(this.state.positions);
-        console.log(positionsSorted);
+        this.setState({positionsSorted: Object.keys(this.positions).sort((a,b) => (this.positions[b] - this.positions[a]))})
+        ;
     };
 
-    componentDidMount(){
+    componentWillMount(){
         this.uid = this.props.authUser.uid;
         this.positions = {};
-        this.props.firebase.game(this.props.gameId).once("value", snapshot => {
-            this.setState({ gameData: snapshot.val() });
-        }).then(() => 
-            this.calculatePosition()
-        );
+        this.calculatePosition()
     };
 
     render() {
         return (
-            this.state.gameData ? 
+            this.props.data && this.state ? 
             <StyledResultsDiv><br />
                 <StyledPlayerTitle>Player: {this.props.authUser.username}</StyledPlayerTitle>
                 <hr />
                 <br />
                 <StyledResultStatistic>
-                    Game Result: </StyledResultStatistic><br />
+                Game Result: {this.state.positionsSorted[0] === this.uid ? 
+                    <span style={{color: "green"}}>
+                        You Won!
+                    </span>
+                    :
+                    <span style={{color: "red"}}>
+                        You lost..
+                    </span>
+                }
+                </StyledResultStatistic><br />
                 <hr /><br />
                 <StyledResultGame></StyledResultGame><br />
 
@@ -142,13 +141,13 @@ class GameResults extends Component {
                     <h4>STATISTICS</h4><br />
                     <ul>
                         <StyledResultLi>
-                            Position in game: <span></span>
+                            Placement: {this.state.positionsSorted.indexOf(this.uid) + 1}<span></span>
                         </StyledResultLi>
                         <StyledResultLi>
-                            Earned Points: <span>{this.state.gameData.users[this.uid].points} </span>
+                            Earned Points: <span>{this.props.data.users[this.uid].points} </span>
                         </StyledResultLi>
                         <StyledResultLi>
-                            Walked Distance: <span>{this.state.gameData.users[this.uid].points / 100} km</span>
+                            Walked Distance: <span>{this.props.data.users[this.uid].points / 100} km</span>
                         </StyledResultLi>
                     </ul>
                 </StyledStatisticDiv>
@@ -158,85 +157,20 @@ class GameResults extends Component {
                 <StyledStatisticDiv>
                     <h4>OPPONENTS</h4><br />
                     <ul>
-                        {this.state.gameData.users.length > 1 ? 
-                        this.state.gameData.users.map(user => (
+                        {this.state.positionsSorted.map(user => (
                             user !== this.uid ?
-                            <li>{this.state.gameData.users[user].username} <span>{this.state.gameData.users[user].points}</span></li>
+                            <li>{this.props.data.users[user].username}
+                                <span> &nbsp; &nbsp; {this.props.data.users[user].points}</span>
+                            </li>
                             : null
-                        )) : null 
-                        }
-                </ul>
-                    <StyledLeaveLink onClick={this.leaveGame}>
-                        <Link to={ROUTES.HOME}>Leave Game</Link>
-                    </StyledLeaveLink>
+                        ))}
+            
+                    </ul>
                 </StyledStatisticDiv>
-
             </StyledResultsDiv>
             : null
         );
     }
 }
-
-// const GameResultz = (props) => {
-
-//     // users = Object.keys(gameData.users);
-//     // users.forEach(user => {
-//     //     usersPoints[gameData[users][user]] = gameData[users][user].points
-//     // });
-//     // console.log(usersPoints)
-
-
-
-//     return (
-//         <StyledResultsDiv><br />
-//             <StyledPlayerTitle>Player: {props.authUser.username}</StyledPlayerTitle>
-//             <hr />
-//             <br />
-//             <StyledResultStatistic>
-//                 Game Result: </StyledResultStatistic><br />
-//             <hr /><br />
-//             {/* <StyledResultGame>{userData.statistics.result}</StyledResultGame><br /> */}
-
-//             <StyledStatisticDiv>
-//                 <h4>STATISTICS</h4><br />
-//                 <ul>
-//                     <StyledResultLi>
-//                         Position in game: <span></span>
-//                     </StyledResultLi>
-//                     <StyledResultLi>
-//                         Earned Points: <span>{gameData.users[uid].points} </span>
-//                     </StyledResultLi>
-//                     <StyledResultLi>
-//                         Walked Distance: <span>{gameData.users[uid].points / 100} km</span>
-//                     </StyledResultLi>
-//                     <StyledResultLi>
-//                         Time Played: <span></span>
-//                     </StyledResultLi>
-//                 </ul>
-//             </StyledStatisticDiv>
-//             <hr /><br />
-
-
-//             <StyledStatisticDiv>
-//                 <h4>OPPONENTS</h4><br />
-//                 <ul>
-//                     {/* {users.length > 1 ? 
-//                         users.map(user => (
-//                             user !== uid ?
-//                             <li key={props.userId}>{gameData.users[user].username} <span>{gameData.users[user].points}</span></li>
-//                             : null
-//                         )) : null */}
-//                     }
-//                 </ul>
-//             </StyledStatisticDiv>
-
-//             <StyledLeaveLink onClick={this.leaveGame}>
-//                 <Link to={ROUTES.HOME}>Leave Game</Link>
-//             </StyledLeaveLink>
-
-//         </StyledResultsDiv>
-//     );
-// }
-
 
 export default withFirebase(GameResults);

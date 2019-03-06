@@ -172,6 +172,10 @@ class Avatars extends Component {
     this.fetchUserData();
   }
 
+  componentWillUnmount() {
+    this.props.firebase.user(this.props.userId).off()
+  }
+
   /*** SHOW AVATAR CHOICES ***/
   showAvatarList = () => {
     document.getElementById("show-avatars").style.display = "block";

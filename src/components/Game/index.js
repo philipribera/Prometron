@@ -111,6 +111,7 @@ class Game extends Component {
                 this.setState({ gameId: gameKey });
                 this.fetchGameData();
             }).then(() => {
+                this.seeGameStatus();
                 this.watchUserPosition();
             });
         };
@@ -180,8 +181,8 @@ class Game extends Component {
         const lastPosition = this.state.userPath[this.state.userPath.length - 2];
 
         const x3 = currentPosition[0]; 
-        const x4 = lastPosition[0];
         const y3 = currentPosition[1];
+        const x4 = lastPosition[0];
         const y4 = lastPosition[1];
 
         // Check if none of the lines are of length 0
@@ -266,20 +267,41 @@ class Game extends Component {
         };
     };
 
-    updateStatistics = (points, distance, playedGames, wonGames) => {
+    calculatePosition = () => {
+        if (this.state.status === "gameInProgress") {
+            return 0
+        };
+
+        const users = Object.keys(this.state.gameData.users);
+        const positions =  {};
+        users.forEach(user => {
+            positions[user] = this.state.gameData.users[user].points
+        });
+
+        const positionsSorted = Object.keys(positions).sort((a,b) => (positions[b] - positions[a]));
+
+        if (positionsSorted[0] === this.props.authUser.uid) {
+            return 1
+        };
+        return 0
+    };
+
+    updateStatistics = (points, distance, playedGames) => {
+        const winOrLose = this.calculatePosition()
+
         this.props.firebase.user(this.props.authUser.uid).child("statistics").once("value", snapshot => {
             this.statistics = snapshot.val()
             this.statistics.points += points;
             this.statistics.walkeddistance += distance/100;
             this.statistics.playedgames += playedGames;
-            this.statistics.wongames += wonGames;
+            this.statistics.wongames += winOrLose;
         }).then(() => 
             this.props.firebase.user(this.props.authUser.uid).child("statistics").update(this.statistics)
         );
     };
 
     leaveGame = () => {
-        this.updateStatistics(this.state.userPoints, this.state.userPoints, 1, 0);
+        this.updateStatistics(this.state.userPoints, this.state.userPoints, 1);
         this.props.firebase.game(this.state.gameId + "/presence").once("value", snapshot => {
             let presence = snapshot.val()
             this.props.firebase.game(this.state.gameId + "/presence/" + this.props.authUser.uid).remove();
@@ -298,7 +320,15 @@ class Game extends Component {
                     <StyledFlexContainer>
                         {this.state.status === "gameIsOver" ? (
                             <div>
-                                <GameResults authUser={authUser} gameId={this.state.gameId} />
+                                <GameResults
+                                    authUser={authUser}
+                                    data={this.state.gameData}
+                                    id={this.state.gameId}
+                                  />
+                                <StyledLeaveLink onClick={this.leaveGame}>
+                                    <Link to={ROUTES.HOME}>Leave Game</Link>
+                                </StyledLeaveLink>
+
                             </div>
                         ) : 
                         this.state.gameData.users ?
@@ -312,7 +342,6 @@ class Game extends Component {
                                 <ScoreBoard>
                                     <GameScore                                        
                                         userId={authUser.uid}
-                                        //date={this.state...}                                        
                                         users={this.state.gameData.users}
                                     />
                                 </ScoreBoard>

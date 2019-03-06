@@ -78,10 +78,8 @@ class LocatedTwo extends Component {
         };
         let data = snapshot.val();
         onlineUsersCoords[uid] = data.position;
-        // if (this.calculateDistance(this.state.browserCoords.latitude, this.state.browserCoords.longitude, data.position.latitude, data.position.longitude) < 2000) {
-            this.setState({onlineUsersCoords: onlineUsersCoords})
-            this.updateUsersCoords();
-        // };
+        this.setState({onlineUsersCoords: onlineUsersCoords})
+        this.updateUsersCoords();
       })
     );
   };
@@ -118,12 +116,14 @@ class LocatedTwo extends Component {
     this.getUserPositionFromDB();
     if (navigator.geolocation){
       navigator.geolocation.getCurrentPosition(e => {
-        this.firstPos = [e.coords.latitude, e.coords.longitude];
-        this.initialAntPos = this.state.antPosition;
-        this.initialAntPos.push(this.firstPos);
-        this.setState({antPosition: this.initialAntPos});
+        this.setState({browserCoords: {
+          latitude: e.coords.latitude,
+          longitude: e.coords.longitude
+        }
       });
-    }
+      });
+    };
+
     this.watchId = navigator.geolocation.watchPosition(
       this.updatePosition,
       // might need to be in state
@@ -142,11 +142,9 @@ class LocatedTwo extends Component {
     // To stop following the user
     componentWillUnmount() {
       navigator.geolocation.clearWatch(this.watchId);
-      this.props.firebase.user(this.props.userId).off();
-      const users = Object.keys(this.state.onlineUsersCoords);
-      users.forEach(user => {
-        this.props.firebase.user(user).off()
-      });
+      Object.keys(this.state.onlineUsersCoords).forEach(uid =>
+      this.props.firebase.user(uid).off());
+      this.props.firebase.presencesRef().off()
     }
     
     render() {
