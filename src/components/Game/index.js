@@ -54,8 +54,8 @@ const StyledBtnDiv = Styled.div`
 `;
 const StyledLeaveLink = Styled.div`
     position: absolute;
-    left: 7%;
-    top: 1%;
+    left: 1%;
+    bottom: 1%;
     z-index: 999;    
     & a {
         background: rgb(77,77,77);
@@ -298,9 +298,6 @@ class Game extends Component {
                     <StyledFlexContainer>
                         {this.state.status === "gameIsOver" ? (
                             <div>
-                                <StyledLeaveLink onClick={this.leaveGame}>
-                                    <Link to={ROUTES.HOME}>Leave Game</Link>
-                                </StyledLeaveLink>
                                 <GameResults authUser={authUser} gameId={this.state.gameId} />
                             </div>
                         ) : 
@@ -322,13 +319,13 @@ class Game extends Component {
                                 <StyledLeaveLink onClick={this.leaveGame}>
                                     <Link to={ROUTES.HOME}>Leave Game</Link>
                                 </StyledLeaveLink>
+                                <StyledBtnDiv>
+                                    <button onClick={this.showChat}>Chat Board</button>
+                                </StyledBtnDiv>
                             </StyledMap>
                             : null}
 
 
-                        <StyledBtnDiv>
-                            <button onClick={this.showChat}>Chat Board</button>
-                        </StyledBtnDiv>
 
                         {this.state.parts.chatBoard ? (
                             <Chat />
