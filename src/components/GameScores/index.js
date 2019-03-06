@@ -6,7 +6,6 @@ import Styled from 'styled-components';
 /*** STYLED COMPONENTS ***/
 const StyledStat = Styled.div`
     flex-basis: 30%;
-    min-width: 332px;
     min-height: 192px;
     max-height: 240px;
     overflow-hidden;
@@ -117,8 +116,7 @@ const GameScore = (props) => {
 
     return (
         <StyledStat>
-            <div><p>Remaining time: </p></div>
-            <GameNameTime><h2>Game Score</h2><TimeData>Remaining time: 54:01</TimeData></GameNameTime>
+            <GameNameTime><h2>Game Score</h2></GameNameTime>
             <br />            
             <OpponentScore>
 
