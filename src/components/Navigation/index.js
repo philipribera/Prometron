@@ -53,9 +53,9 @@ const NavigationAuth = () => (
         <StyledLi>
             <Link to={ROUTES.ADMIN}>Admin</Link>
         </StyledLi>        
-        <StyledLi>
+        {/* <StyledLi>
             <Link to={ROUTES.CHAT}>Chat</Link>
-        </StyledLi>        
+        </StyledLi>         */}
         <StyledLi>
             <SignOutButton />
         </StyledLi>
