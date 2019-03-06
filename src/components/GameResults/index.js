@@ -97,13 +97,21 @@ let userData = {
 };
 
 const GameResults = (props) => {
+    let gameData = {};
+    let uid = props.authUser.uid;
+    props.firebase.game(props.gameId).once("value", snapshot => {
+        gameData = snapshot.val()
+    });
+    let users = Object.keys(gameData.users)
+
 
     return (
         <StyledResultsDiv><br />
-            <StyledPlayerTitle>Player: Penguin</StyledPlayerTitle>
+            <StyledPlayerTitle>Player: {props.authUser.username}</StyledPlayerTitle>
             <hr />
             <br />
-            <StyledResultStatistic>Game Result: {userData.statistics.result} </StyledResultStatistic><br />
+            <StyledResultStatistic>
+            Game Result: {userData.statistics.result} </StyledResultStatistic><br />
             <hr /><br />
             {/* <StyledResultGame>{userData.statistics.result}</StyledResultGame><br /> */}
 
@@ -114,16 +122,13 @@ const GameResults = (props) => {
                         Position in game: <span>{userData.statistics.position} </span>
                     </StyledResultLi>
                     <StyledResultLi>
-                        Walked Distance: <span>{userData.statistics.walkeddistance} km</span>
+                        Earned Points: <span>{gameData.users[uid].points} </span>
                     </StyledResultLi>
                     <StyledResultLi>
-                        Time Walked: <span>{userData.statistics.timeWalked} </span>
+                        Walked Distance: <span>{gameData.users[uid].points / 100} km</span>
                     </StyledResultLi>
                     <StyledResultLi>
                         Time Played: <span>{userData.statistics.timePlayed} </span>
-                    </StyledResultLi>
-                    <StyledResultLi>
-                        Earned Points: <span>{userData.statistics.points} </span>
                     </StyledResultLi>
                 </ul>
             </StyledStatisticDiv>
@@ -131,18 +136,13 @@ const GameResults = (props) => {
 
             <StyledStatisticDiv>
                 <h4>OPPONENTS</h4><br />
-                <StyledResultLi>
-                    <StyledSpanPos>{userData.statistics.position} <span>Carola:</span></StyledSpanPos>
-                    <span>Score: {userData.statistics.point} </span>
-                </StyledResultLi>
-                <StyledResultLi>
-                    <StyledSpanPos>{userData.statistics.position} <span>Penguin:</span></StyledSpanPos>
-                    <span>Score: {userData.statistics.point} </span>
-                </StyledResultLi>
-                <StyledResultLi>
-                    <StyledSpanPos>{userData.statistics.position} <span>Blue:</span></StyledSpanPos>
-                    <span>Score: {userData.statistics.point} </span>
-                </StyledResultLi>
+                <ul>
+                    {users.map(user => (
+                        user !== uid ?
+                        <li key={props.userId}>{gameData.users[user].username} <span>{gameData.users[user].points}</span></li>
+                        : null
+                    ))}
+                </ul>
             </StyledStatisticDiv>
 
         </StyledResultsDiv>
@@ -150,4 +150,4 @@ const GameResults = (props) => {
 }
 
 
-export default GameResults;
+export default withFirebase(GameResults);
