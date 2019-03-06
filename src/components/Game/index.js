@@ -172,8 +172,6 @@ class Game extends Component {
 
     seeGameStatus = () => {
         const currentTime = Math.round((new Date()).getTime() / 1000);
-        console.log(currentTime);
-        console.log(this.state.gameData.game_time)
         currentTime < this.state.gameData.game_time ? this.setState({status: "gameIsOver"}) : this.setState({status: "gameInProgress"})
     };
 
@@ -271,10 +269,6 @@ class Game extends Component {
         };
     };
 
-    // leaveGameHandler = () => {
-    //     return <Link to={ROUTES.HOME}>Home</Link>;
-    // };
-
     updateStatistics = (points, distance, playedGames, wonGames) => {
         this.props.firebase.user(this.props.authUser.uid).child("statistics").once("value", snapshot => {
             this.statistics = snapshot.val()
@@ -289,8 +283,14 @@ class Game extends Component {
 
     leaveGame = () => {
         this.updateStatistics(this.state.userPoints, this.state.userPoints, 1, 0);
-
-        this.props.firebase.user(this.props.authUser.uid).child("games").remove();
+        this.props.firebase.game(this.state.gameId + "/presence").once("value", snapshot => {
+            let presence = snapshot.val()
+            this.props.firebase.game(this.state.gameId + "/presence/" + this.props.authUser.uid).remove();
+            this.props.firebase.user(this.props.authUser.uid).child("games").remove();
+            if (Object.keys(presence).length === 1){
+                this.props.firebase.game(this.state.gameId).remove();
+            };
+        });
     };
 
 
@@ -299,8 +299,15 @@ class Game extends Component {
             <AuthUserContext.Consumer>
                 {authUser => (
                     <StyledFlexContainer>
-
-                        {this.state.gameData.users ?
+                        {this.state.status === "gameIsOver" ? (
+                            <div>
+                                <StyledLeaveLink onClick={this.leaveGame}>
+                                    <Link to={ROUTES.HOME}>Leave Game</Link>
+                                </StyledLeaveLink>
+                                <GameResults authUser={authUser} gameId={this.state.gameId} />
+                            </div>
+                        ) : 
+                        this.state.gameData.users ?
                             <StyledMap className="map-container">
                                 <GameMap
                                     userPosition={this.state.userPath[this.state.userPath.length - 1]}
@@ -321,9 +328,6 @@ class Game extends Component {
                             </StyledMap>
                             : null}
 
-                        {this.state.parts.gameResults ? (
-                            <GameResults />
-                        ) : null}
 
                         <StyledBtnDiv>
                             <button onClick={this.showChat}>Chat Board</button>
@@ -332,7 +336,7 @@ class Game extends Component {
                         {this.state.parts.chatBoard ? (
                             <Chat />
                         ) : null}
-
+                        
                     </StyledFlexContainer>
                 )}
             </AuthUserContext.Consumer>

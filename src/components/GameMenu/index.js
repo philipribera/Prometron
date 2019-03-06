@@ -170,8 +170,9 @@ class GameMenu extends Component {
     };
 
     let updates = {};
-
+    
     updates["/games/" + key + "/users/" + uid] = data;
+    updates["/games/" + key + "/presence/" + uid] = true;
     updates["/users/" + uid + "/games/" + key] = true;
 
     this.props.firebase
@@ -191,9 +192,11 @@ class GameMenu extends Component {
       name: this.state.name,
       password: this.state.password,
       game_area: parseInt(this.state.game_area),      
-
       game_minutes: this.state.game_time,
-      game_time: currentTime + parseInt(this.state.game_time),       
+      game_time: currentTime + parseInt(this.state.game_time),
+      presence: {
+        [uid]: true
+      },
       users: {
         [uid]: {
           username: this.props.authUser.username,
