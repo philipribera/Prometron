@@ -33,7 +33,7 @@ All the Javascript is written with Camelcase.
 
 Most of the Javascript logic is structured with anchors coming first followed by eventlisteners, followed by callbacks.
 
-## libraries and stylesheets(with the exception of React)
+## Libraries and stylesheets (with the exception of React)
 
 [Google font](https://fonts.googleapis.com)
 
