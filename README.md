@@ -7,7 +7,7 @@ The task was to create a mobil application with the help of Firebase realtime da
 The project has been done as part of our Front-end education and the course Work methodology. The purpose has been to learn how to use realtime database Firebase and to work in a group in an efficient way, following the Scrum methodlogy.
 
 ## Requirements
-A phone device with geolocation.
+A mobile device with geolocation.
 
 ## Language and tools
 
