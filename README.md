@@ -42,9 +42,6 @@ Most of the Javascript logic is structured with anchors coming first followed by
 ## Project status
 This is the first version of the Quire editor, being a Beta version. The development will continue and the final product will be released later in 2019.
 
-## Installation
-Geolocation needs to be enabled in order to play this game.
-
 ## How to use
 Create an account at xxxxx. Then verify your email address and sign in. That's all, you're now ready to jump into a game!
 
