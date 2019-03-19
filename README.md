@@ -53,11 +53,11 @@ Inspired by the Disney movie Tron from 1982.
 
 ## Contributers
 
-1.Emil Wertwein
+1. Emil Wertwein
 
-2.Philip Ribera
+2. Philip Ribera
 
-3.Seuan Rahman
+3. Seuan Rahman
 
 ## Link to Trello
 [Cake](https://trello.com/b/VbyAeTe2/cake)
