@@ -2,7 +2,7 @@
 A mobile game created by team-Cake.
 
 ## Motivation
-The task was to create a mobil application with the help of Firebase realtime database. The game is played against other players on a predefined game area decided by the game creator. The game creator also decides the game time. Points are given for the distance the player walks and for other actions taken during the game including such actions that affects the opponents. The game is inspired by the movie 'Tron' from 1982. 
+The task was to create a mobile application with the help of Firebase realtime database. The game is played against other players on a predefined game area decided by the game creator. The game creator also decides the game time. Points are given for the distance the player walks and for other actions taken during the game including such actions that affects the opponents. The game is inspired by the movie 'Tron' from 1982. 
 
 The project has been done as part of our Front-end education and the course Work methodology. The purpose has been to learn how to use realtime database Firebase and to work in a group in an efficient way, following the Scrum methodlogy.
 
