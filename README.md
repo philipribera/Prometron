@@ -46,7 +46,7 @@ This is the first version of the Quire editor, being a Beta version. The develop
 Geolocation needs to be enabled in order to play this game.
 
 ## How to use
-
+Create an account at xxxxx. Then verify your email address and sign in. That's all, you're now ready to jump into a game!
 
 ## Inspiration
 Inspired by the Disney movie Tron from 1982.
