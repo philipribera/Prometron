@@ -40,7 +40,7 @@ Most of the Javascript logic is structured with anchors coming first followed by
 [Fontawesome](https://use.fontawesome.com)
 
 ## Project status
-This is the first version of the Quire editor, being a Beta version. The development will continue and the final product will be released later in 2019.
+This is a Beta version. No decision has been taken yet about releasing any future version/s. 
 
 ## How to use
 Create an account at xxxxx. Then verify your email address and sign in. That's all, you're now ready to jump into a game!
@@ -53,8 +53,6 @@ Inspired by the Disney movie Tron from 1982.
 1. Emil Wertwein
 
 2. Philip Ribera
-
-3. Seuan Rahman
 
 ## Link to Trello
 [Cake](https://trello.com/b/VbyAeTe2/cake)
